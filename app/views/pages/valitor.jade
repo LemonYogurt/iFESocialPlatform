@@ -1,0 +1,43 @@
+extend ../layout
+
+block headerContent
+	link(rel="stylesheet",href="/css/valitor.css")
+
+block content
+	.ife_valitorBg.animated.swing
+	#J_valitorBgCanvas.ife_valitorBgCanvas
+	.ife_valitorWrap.animated.fadeInUp
+		.ife_logo
+			img(src="/images/ifeValitorLogo.png",alt="iFE社交平台",title="iFE社交平台",width="333",height="122")
+		.ife_valitorContent
+			.ife_control
+				a#J_login.ife_controlBtn.active(href="javascript:void(0);") 登录
+				a#J_register.ife_controlBtn(href="javascript:void(0);") 注册
+		#J_formLogin.ife_formContent
+			form.form-horizontal
+				.form-group
+					label.col-sm-2.control-label(for="loginName") 昵称：
+					.col-sm-10
+						input#loginName.form-control(type="email",name="loginName",placeholder="请输入昵称")
+				.form-group
+					label.col-sm-2.control-label(for="loginPassword") 密码：
+					.col-sm-10
+						input#loginPassword.form-control(type="password",name="loginPassword",placeholder="请输入密码")
+				a#J_loginBtn.btn.btn-success.btn-block(href="javascript:void(0);") 登录
+		#J_formRegister.ife_formContent
+			form.form-horizontal
+				.form-group
+					label.col-sm-2.control-label(for="registerName") 昵称：
+					.col-sm-10
+						input#registerName.form-control(type="email",name="registerName",placeholder="请输入昵称")
+				.form-group
+					label.col-sm-2.control-label(for="registerPassword") 密码：
+					.col-sm-10
+						input#registerPassword.form-control(type="password",name="registerPassword",placeholder="请输入密码")
+				a#J_registerBtn.btn.btn-info.btn-block(href="javascript:void(0);") 注册
+
+block footerContent
+	script(src="/js/particles.min.js")
+	script(src="/js/particles.config.js")
+	script(src="/js/valitor.js")
+

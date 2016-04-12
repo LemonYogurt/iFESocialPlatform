@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>deferred</title>
+	<link rel="stylesheet" href="./libs/bootstrap/dist/css/bootstrap.min.css">
+	<script src="./libs/jquery/dist/jquery.min.js"></script>
+	<script src="./libs/bootstrap/dist/js/bootstrap.min.js"></script>
+</head>
+<body>
+	<script>
+		$(function () {
+			var dtd = $.Deferred();
+
+			var wait = function (dtd) {
+				var task = function () {
+					console.log('success');
+					dtd.resolve();// 
+				}
+				setTimeout(task, 5000);
+				return dtd.promise(); // 
+			};
+
+			var d = wait(dtd);
+			$.when(d).done(function () {
+				console.log('success');
+			}).fail(function () {
+				console.log('fail');
+			});
+			// 通过promise方法生成的defer对象，没有提供reject和resolve方法
+			// d.resolve();
+			// d.reject();
+		});
+	</script>
+</body>
+</html>

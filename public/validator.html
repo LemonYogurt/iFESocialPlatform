@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>iFE - 记录生活，记录感动</title>
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <link rel="stylesheet" href="./css/CSSReset.css">
+    <link rel="stylesheet" href="./css/CSSAnimate.css">
+    <link rel="stylesheet" href="./css/bootstrap.min.css">
+    <link rel="stylesheet" href="./css/toastr.min.css">
+    <link rel="stylesheet" href="./css/valitor.css">
+</head>
+
+<body>
+    <div class="ife_valitorBg animated swing"></div>
+    <div id="J_valitorBgCanvas" class="ife_valitorBgCanvas"></div>
+    <div class="ife_valitorWrap animated fadeInUp">
+        <div class="ife_logo">
+            <img src="./images/ifeValitorLogo.png" alt="iFE社交平台" title="iFE社交平台" width="333" height="122" />
+        </div>
+        <div class="ife_valitorContent">
+            <div class="ife_control">
+                <a id="J_login" class="ife_controlBtn active" href="javascript:void(0);">登录</a>
+                <a id="J_register" class="ife_controlBtn" href="javascript:void(0);">注册</a>
+            </div>
+            <div class="ife_formContent" id="J_formLogin">
+                <form class="form-horizontal">
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label" for="loginName">昵称：</label>
+                        <div class="col-sm-10">
+                            <input type="email" name="loginName" id="loginName" class="col-sm-10 form-control" placeholder="请输入昵称">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label" for="loginPassword">密码：</label>
+                        <div class="col-sm-10">
+                            <input type="password" name="loginPassword" class="form-control" id="loginPassword" placeholder="请输入密码">
+                        </div>
+                    </div>
+                    <a href="javascript:void(0);" id="J_loginBtn" class="btn btn-success btn-block">登录</a>
+                </form>
+            </div>
+            <div class="ife_formContent" id="J_formRegister">
+                <form class="form-horizontal">
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label" for="registerName">昵称：</label>
+                        <div class="col-sm-10">
+                            <input type="email" name="registerName" id="registerName" class="col-sm-10 form-control" placeholder="请输入昵称">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label" for="registerPassword">密码：</label>
+                        <div class="col-sm-10 ">
+                            <input type="password" class="col-sm-10 form-control" name="registerPassword" id="registerPassword" placeholder="请输入密码">
+                        </div>
+                    </div>
+                    <a href="javascript:void(0);" id="J_registerBtn" class="btn btn-info btn-block">注册</a>
+                </form>
+            </div>
+        </div>
+    </div>
+    <script src="./js/particles.min.js"></script>
+    <script src="./js/particles.config.js"></script>
+    <script src="./js/jquery.min.js"></script>
+    <script src="./js/toastr.min.js"></script>
+    <script src="./js/toastr.config.js"></script>
+    <script type="text/javascript">
+        var valitor = new Valitor();
+        function Valitor() {}
+
+        // 添加点击事件
+        Valitor.prototype.addClickEvent = function () {
+            var self = this;
+            // 选项卡切换
+            $('#J_register').click(function(e) {
+                $(e.target).addClass('active');
+                $('#J_login').removeClass('active');
+                $('#J_formLogin').hide();
+                $('#J_formLogin input').val('');
+                $('#J_formRegister').show();
+            });
+            $('#J_login').click(function(e) {
+                $(e.target).addClass('active');
+                $('#J_register').removeClass('active');
+                $('#J_formRegister').hide();
+                $('#J_formRegister input').val('');
+                $('#J_formLogin').show();
+            });
+            // 登录和注册按钮
+            $('#J_loginBtn').click(function () {
+                // 验证用户名和密码
+                var username = $.trim($('#loginName').val());
+                var password = $.trim($('#loginPassword').val());
+                var regName = /^[a-zA-Z\u4e00-\u9fa5]+$/;
+
+                if (!regName.test(username)) {
+                    window.message['warning'](window.message.errorCode['userError']);
+                    return false;
+                } else if (password.length < 6){
+                    window.message['warning'](window.message.errorCode['passwordError']);
+                    return false;
+                }
+
+                // 发送数据
+                var fd = new FormData();
+                fd.append('username', username);
+                fd.append('password', password);
+
+                self.sendData('/user/login', fd, $('#J_register'), 'login');
+            });
+
+            $('#J_registerBtn').click(function () {
+                // 验证用户名和密码
+                var username = $.trim($('#registerName').val());
+                var password = $.trim($('#registerPassword').val());
+                var regName = /^[a-zA-Z\u4e00-\u9fa5]+$/;
+
+                if (!regName.test(username)) {
+                    window.message['warning'](window.message.errorCode['userError']);
+                    return false;
+                } else if (password.length < 6){
+                    window.message['warning'](window.message.errorCode['passwordError']);
+                    return false;
+                }
+
+                // 发送数据
+                var fd = new FormData();
+                fd.append('username', username);
+                fd.append('password', password);
+
+                self.sendData('/user/register', fd, $('#J_login'), 'register');
+            });
+        };
+
+        Valitor.prototype.sendData = function (url, data, elem, operType) {
+            $.ajax({
+                url: url,
+                type: 'POST',
+                data: data,
+                processData: false, // 告诉jQuery不要去处理发送的数据
+                contentType: false, // 告诉jQuery不要去设置Content-Type请求头
+                beforeSend: function (xhr) {
+                    elem.attr('disabled', 'disabled');
+                },
+                success: function (data) {
+                    window.message['success'](window.message.errorCode[operType + 'Success']);
+                },
+                error: function (data) {
+                    window.message['error'](window.message.errorCode[operType + 'Error']);
+                    elem.attr('disabled', '');
+                }
+            });
+        };
+        Valitor.prototype.addBlurEvent = function () {
+            var self = this;
+            $('#registerName').blur(self.valitName);
+            $('#loginName').blur(self.valitName);
+
+            $('#registerPassword').blur(self.valitPassword);
+            $('#loginPassword').blur(self.valitPassword);
+        };
+
+        Valitor.prototype.valitName = function (e) {
+            var regName = /^[a-zA-Z\u4e00-\u9fa5]+$/;
+            var value = $.trim($(e.target).val());
+            if (value == '') {
+                window.message['warning'](window.message.errorCode['userEmpty']);
+            } else if (!regName.test(value)) {
+                window.message['warning'](window.message.errorCode['userError']);
+            }
+        };
+        Valitor.prototype.valitPassword = function (e) {
+            var value = $.trim($(e.target).val());
+            if (value.length < 6) {
+                window.message['warning'](window.message.errorCode['passwordError']);
+            }
+        };
+        valitor.addClickEvent();
+        valitor.addBlurEvent();
+    </script>
+</body>
+
+</html>

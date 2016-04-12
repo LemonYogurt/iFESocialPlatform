@@ -10,11 +10,13 @@
   "license": "ISC",
   "dependencies": {
     "async": "^2.0.0-rc.2",
+    "bcryptjs": "^2.3.0",
     "body-parser": "^1.15.0",
     "bson": "^0.4.22",
     "cookie-parser": "^1.4.1",
     "express": "^4.13.4",
     "express-session": "^1.13.0",
+    "formidable": "^1.0.17",
     "jade": "^1.11.0",
     "moment": "^2.12.0",
     "mongoose": "^4.4.10",
