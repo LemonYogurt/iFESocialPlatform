@@ -17,7 +17,6 @@
     "express": "^4.13.4",
     "express-session": "^1.13.0",
     "formidable": "^1.0.17",
-    "jade": "^1.11.0",
     "moment": "^2.12.0",
     "mongoose": "^4.4.10",
     "murmurhash3": "^0.3.4",
