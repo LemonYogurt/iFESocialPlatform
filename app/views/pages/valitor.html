@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8">
+    <title>iFE - 记录生活，记录感动</title>
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="stylesheet" href="/css/CSSReset.css">
+    <link rel="stylesheet" href="/css/CSSAnimate.css">
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/toastr.min.css">
+    <link rel="stylesheet" href="/css/valitor.css">
+  </head>
+  <body>
+    <div class="ife_valitorBg animated swing"></div>
+    <div id="J_valitorBgCanvas" class="ife_valitorBgCanvas"></div>
+    <div class="ife_valitorWrap animated fadeInUp">
+      <div class="ife_logo"><img src="/images/ifeValitorLogo.png" alt="iFE社交平台" title="iFE社交平台" width="333" height="122"></div>
+      <div class="ife_valitorContent">
+        <div class="ife_control"><a id="J_login" href="javascript:void(0);" class="ife_controlBtn active">登录</a><a id="J_register" href="javascript:void(0);" class="ife_controlBtn">注册</a></div>
+      </div>
+      <div id="J_formLogin" class="ife_formContent">
+        <form class="form-horizontal">
+          <div class="form-group">
+            <label for="loginName" class="col-sm-2 control-label">昵称：</label>
+            <div class="col-sm-10">
+              <input id="loginName" type="email" name="loginName" placeholder="请输入昵称" class="form-control">
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="loginPassword" class="col-sm-2 control-label">密码：</label>
+            <div class="col-sm-10">
+              <input id="loginPassword" type="password" name="loginPassword" placeholder="请输入密码" class="form-control">
+            </div>
+          </div><a id="J_loginBtn" href="javascript:void(0);" class="btn btn-success btn-block">登录</a>
+        </form>
+      </div>
+      <div id="J_formRegister" class="ife_formContent">
+        <form class="form-horizontal">
+          <div class="form-group">
+            <label for="registerName" class="col-sm-2 control-label">昵称：</label>
+            <div class="col-sm-10">
+              <input id="registerName" type="email" name="registerName" placeholder="请输入昵称" class="form-control">
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="registerPassword" class="col-sm-2 control-label">密码：</label>
+            <div class="col-sm-10">
+              <input id="registerPassword" type="password" name="registerPassword" placeholder="请输入密码" class="form-control">
+            </div>
+          </div><a id="J_registerBtn" href="javascript:void(0);" class="btn btn-info btn-block">注册</a>
+        </form>
+      </div>
+    </div>
+    <script src="/js/jquery.min.js"></script>
+    <script src="/js/toastr.min.js"></script>
+    <script src="/js/toastr.config.js"></script>
+    <script src="/js/particles.min.js"></script>
+    <script src="/js/particles.config.js"></script>
+    <script src="/js/valitor.js"></script>
+  </body>
+</html>

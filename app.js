@@ -5,7 +5,7 @@ var cookieParser = require('cookie-parser');
 var session = require('express-session');
 var mongoose = require('mongoose');
 
-var mongodb = require('./app/config').mongodb;
+var mongodbClient = require('./app/config').mongodbClient;
 var index = require('./app/router');
 var user = require('./app/router/user');
 

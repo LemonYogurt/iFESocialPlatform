@@ -3,6 +3,9 @@ var formidable = require('formidable');
 var User = require('../models/user');
 var router = express.Router();
 
+router.get('/logout', function (req, res, next) {
+	delete req.session.user;
+});
 router.post('/login', function (req, res, next) {
 	new formidable.IncomingForm().parse(req, function (err, fields, files) {
 		var username = fields.username;
