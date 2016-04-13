@@ -47,7 +47,7 @@ body {
     user-select: none;
 }*/
 ::selection{
-    background:#c3bed4; /* 樱花紫 */
+    background:#fa7d3c;
     color:#fff;
 }
 

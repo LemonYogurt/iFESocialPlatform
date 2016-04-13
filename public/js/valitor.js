@@ -26,10 +26,10 @@ Valitor.prototype.addClickEvent = function () {
         var regName = /^[a-zA-Z\u4e00-\u9fa5]+$/;
 
         if (!regName.test(username)) {
-            window.message['warning'](window.message.errorCode['userError']);
+            window.message['warning'](window.message.infoCode['userError']);
             return false;
         } else if (password.length < 6){
-            window.message['warning'](window.message.errorCode['passwordError']);
+            window.message['warning'](window.message.infoCode['passwordError']);
             return false;
         }
 
@@ -48,10 +48,10 @@ Valitor.prototype.addClickEvent = function () {
         var regName = /^[a-zA-Z\u4e00-\u9fa5]+$/;
 
         if (!regName.test(username)) {
-            window.message['warning'](window.message.errorCode['userError']);
+            window.message['warning'](window.message.infoCode['userError']);
             return false;
         } else if (password.length < 6){
-            window.message['warning'](window.message.errorCode['passwordError']);
+            window.message['warning'](window.message.infoCode['passwordError']);
             return false;
         }
 
@@ -75,10 +75,11 @@ Valitor.prototype.sendData = function (url, data, elem, operType) {
             elem.attr('disabled', 'disabled');
         },
         success: function (data) {
-            window.message['success'](window.message.errorCode[operType + 'Success']);
+            window.message['success'](window.message.infoCode[operType + 'Success']);
+            window.location.href = 'http://' + window.location.host + '/';
         },
         error: function (data) {
-            window.message['error'](window.message.errorCode[operType + 'Error']);
+            window.message['error'](window.message.infoCode[operType + 'Error']);
             elem.attr('disabled', '');
         }
     });
@@ -96,15 +97,15 @@ Valitor.prototype.valitName = function (e) {
     var regName = /^[a-zA-Z\u4e00-\u9fa5]+$/;
     var value = $.trim($(e.target).val());
     if (value == '') {
-        window.message['warning'](window.message.errorCode['userEmpty']);
+        window.message['warning'](window.message.infoCode['userEmpty']);
     } else if (!regName.test(value)) {
-        window.message['warning'](window.message.errorCode['userError']);
+        window.message['warning'](window.message.infoCode['userError']);
     }
 };
 Valitor.prototype.valitPassword = function (e) {
     var value = $.trim($(e.target).val());
     if (value.length < 6) {
-        window.message['warning'](window.message.errorCode['passwordError']);
+        window.message['warning'](window.message.infoCode['passwordError']);
     }
 };
 valitor.addClickEvent();

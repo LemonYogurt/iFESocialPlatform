@@ -4,6 +4,7 @@ var bodyParser = require('body-parser');
 var cookieParser = require('cookie-parser');
 var session = require('express-session');
 var mongoose = require('mongoose');
+var moment = require('moment');
 
 var mongodbClient = require('./app/config').mongodbClient;
 var index = require('./app/router');
@@ -43,6 +44,9 @@ if ('development' === app.get('env')) {
 	app.locals.pretty = true;
 	mongoose.set('debug', true);
 }
+// 引入语言
+moment.locale('zh-cn');
+app.locals.moment = moment;
 app.listen(port, function () {
 	console.log('Listening ', port, ' success...');
 });
