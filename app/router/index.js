@@ -9,4 +9,10 @@ router.get('/', function (req, res, next) {
 	}
 });
 
+router.get('/weibo01', function (req, res, next) {
+	res.render('pages/weibo01', {
+		createTime: '三天前'
+	});
+});
+
 module.exports = router;
