@@ -1,0 +1,14 @@
+.ife_fileUploadTooltip
+	.panel.panel-default
+		.panel-heading.clearfix 
+			.panel-title.pull-left 本地上传
+			a.pull-right(href="javascript:void(0);")
+				span#J_closePublishPic &times;
+		.panel-body
+			.ife_fileUploadControl.clearfix
+				p.pull-left 未上传图片
+				a.pull-right(href="javascript:void(0);") 上传
+			#J_fileUploadPic.ife_fileUploadPic
+				img(src="",style="display:none;")
+			input#J_publishPic(type="file",name="publishPic",style="display:none;")
+

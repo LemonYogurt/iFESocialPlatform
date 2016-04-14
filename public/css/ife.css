@@ -12,6 +12,9 @@ body{
 	box-shadow: 0 0 1px 0px rgba(0,0,0,0.3),0 0 6px 2px rgba(0,0,0,0.15);
 	border-top:2px solid #fa7d3c;
 }
+.ife_weiboNav a.navbar-brand span{
+	font-style:italic;
+}
 .ife_weiboNav a:hover span,
 .ife_weiboNav .active span,
 .ife_weiboNav form a{
