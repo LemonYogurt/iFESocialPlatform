@@ -3,14 +3,12 @@ var formidable = require('formidable');
 var uuid = require('uuid');
 var fs = require('fs');
 var path = require('path');
-/**
- * 这个库是专门为密码存储设计的算法
- * 主要是用它生成一个随机的盐，然后将密码和这个盐混合进来加密，就拿到最终要存储的密码
- */
-var bcrypt = require('bcryptjs');
+var async = require('async');
+var ObjectId = require('bson').ObjectId;
+
+var encrypt = require('../util/encrypt');
 var User = require('../models/user');
-// 设置生成盐的复杂程度
-var SALT_WORK_FACTOR = 10;
+var redisClient = require('../config').redisClient;
 
 var router = express.Router();
 
@@ -81,54 +79,90 @@ router.post('/login', function (req, res, next) {
 router.post('/register', function (req, res, next) {
 	new formidable.IncomingForm().parse(req, function (err, fields, files) {
 		var username = fields.username;
+		console.log(username);
 		var password = fields.password;
+		async.series({
+			findUser: function (done) {
+				// 先在redis中查询
+				redisClient.get('users:username:' + username + ':_id', function (err, result) {
+					if (err) {
+						console.log('redis get', err);
+						done(err);
+					}
+					// 如果没有查到，则返回null
+					if (result) {
+						done('用户已存在');
+					} else {
+						// 此时redis中没有查到用户，所以要在mongodb中查询
+						User.findOne({username: username}, function (err, doc) {
+							if (err) {
+								console.log('findOne', err);
+								done(err);
+							}
+							// 如果没有查到，返回null
+							if (doc) {
+								// 如果查询到，则将没有缓存的内容缓存起来
+								redisClient.multi([
+									['set', 'users:_id:' + doc._id + ':username', doc.username],
+									['set', 'users:_id:' + doc._id + ':password', doc.password],
+									['set', 'users:_id:' + doc._id + ':avatar', doc.avatar],
+									['set', 'users:_id:' + doc._id + ':createTime', doc.createTime],
+									['set', 'users:_id:' + doc._id + ':avatarFlag', doc.avatarFlag],
+									['set', 'users:username:' + doc.username + ':_id', doc._id]
+								]).exec(function (err, result) {
+									console.log('multi1', err);
+									done('用户已存在');
+								});
+							} else {
+								// 如果没有查询到，则进行注册
+								// 1：对密码进行加密
+								encrypt(password, function (hash) {
+									var password = hash;
+									var _id = new ObjectId().toString();
+									var avatar = '/images/defaultAvatar.png';
+									var avatarFlag = false;
+									var createTime = new Date();
 
-		User.findOne({username: username}, function (err, doc) {
+									redisClient.multi([
+										['set', 'users:_id:' + _id + ':username', username],
+										['set', 'users:_id:' + _id + ':password', password],
+										['set', 'users:_id:' + _id + ':avatar', avatar],
+										['set', 'users:_id:' + _id + ':createTime', createTime],
+										['set', 'users:_id:' + _id + ':avatarFlag', avatarFlag],
+										['set', 'users:username:' + username + ':_id', _id]
+									]).exec(function (err, result) {
+										console.log('multi2', err);
+										var user = new User({
+											_id: _id,
+											username: username,
+											password: hash,
+											avatar: avatar,
+											avatarFlag: avatarFlag,
+											createTime: createTime
+										});
+										user.save(function (err, doc) {
+											if (err) {
+												console.log('save', err);
+												done('用户注册失败');
+											} else {
+												req.session.user = doc;
+												done(null, doc);
+											}
+										});
+									});
+								});
+							}
+						});
+					}
+				});
+			}
+		}, function (err, results) {
 			if (err) {
 				console.log(err);
-				return res.status(403).json('用户查询失败');
-			}
-			if (doc) {
-				return res.status(403).json('用户已存在');
+				return res.status(403).json('用户注册失败');
 			} else {
-				/**
-				 * 生成一个随机的盐
-				 * 两个参数：
-				 * ①：计算强度
-				 * ②：回调函数，在回调函数中能够拿到生成的盐
-				 */
-				bcrypt.genSalt(SALT_WORK_FACTOR, function (err, salt) {
-					if (err) {
-						console.log(err);
-						return res.status(403).json('用户注册失败');
-					}
-
-					// 使用hash方法将密码和盐进行混合加密
-					bcrypt.hash(password, salt, function (err, hash) {
-						if (err) {
-							console.log(err);
-							return res.status(403).json('用户注册失败');
-						} else {
-							password = hash;
-							var user = new User({
-								username: username,
-								password: password,
-								avatar: '/images/defaultAvatar.png',
-								avatarFlag: false,
-								createTime: new Date()
-							});
-							user.save(function (err, doc) {
-								if (err) {
-									console.log(err);
-									return res.status(403).json('用户注册失败');
-								} else {
-									req.session.user = doc;
-									return res.status(200).json('用户注册成功，正在跳转页面...');
-								}
-							});
-						}
-					});
-				});
+				console.log(results);
+				return res.status(200).json('用户注册成功');
 			}
 		});
 	});

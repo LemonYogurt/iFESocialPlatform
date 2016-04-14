@@ -22,7 +22,5 @@ var redisConfig = {
 }
 var redisClient = redis.createClient(redisConfig.port, redisConfig.host);
 
-redisClient;
-
 exports.redisClient = redisClient;
 exports.mongodbClient = mongodbClient;

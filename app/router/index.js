@@ -17,7 +17,7 @@ router.get('/', function (req, res, next) {
 });
 
 router.get('/weibo01', function (req, res, next) {
-	res.render('pages/ife_userHomePage', {
+	res.render('pages/ife_index', {
 		createTime: '三天前',
 		username: 'oCupJS'
 	});

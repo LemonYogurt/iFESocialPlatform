@@ -1,0 +1,54 @@
+extend ../layout
+
+block headerContent
+	link(rel="stylesheet",href="/css/ife.css")
+	link(rel="stylesheet",href="/css/ife_textarea.css")
+	style.
+		.ife_wrap{
+			width:1000px;
+			min-height:680px;
+			margin:50px auto 0;
+			padding:16px 0 0 0;
+			font-size:0;
+			background-color:rgba(96,50,49,0.25);
+		}
+		.ife_wrap .ife_leftNav{
+			width:150px;
+			min-height:680px;
+			display:inline-block;
+			background-color:rgba(199,255,236,0.25);
+		}
+		.ife_wrap .ife_rightBody{
+			width:850px;
+			min-height:680px;
+			display:inline-block;
+			background-color:rgba(195,190,212,0.25);
+		}
+		.ife_wrap .ife_rightBody .ife_rightMain{
+			width:600px;
+			min-height:680px;
+			margin-right:10px;
+			display:inline-block;
+			background-color:rgba(0,255,128,0.25);
+			vertical-align:top;
+		}
+		.ife_wrap .ife_rightBody .ife_sideMain{
+			width:230px;
+			min-height:680px;
+			margin-right:10px;
+			position:relative;
+			display:inline-block;
+			background-color:rgba(233,240,29,0.25);
+		}
+block content
+	// 导航部分
+	include ./ife_nav
+	.ife_wrap
+		.ife_leftNav
+		.ife_rightBody
+			.ife_rightMain
+				include ./ife_textarea
+			.ife_sideMain
+
+block footerContent
+	script(src="/js/ife_textarea.js")
