@@ -6,9 +6,9 @@ var session = require('express-session');
 var mongoose = require('mongoose');
 var moment = require('moment');
 
-var mongodbClient = require('./app/config').mongodbClient;
+// var mongodbClient = require('./app/config').mongodbClient;
 var index = require('./app/router');
-var user = require('./app/router/user');
+// var user = require('./app/router/user');
 
 var app = express();
 var port = process.env.PORT || 3000;
@@ -34,7 +34,7 @@ app.use(session({
 }));
 
 app.use('/', index);
-app.use('/user', user);
+//app.use('/user', user);
 
 if ('development' === app.get('env')) {
 	app.set('showStackError', true);

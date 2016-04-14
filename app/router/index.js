@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 
+/*
 router.get('/', function (req, res, next) {
 	var session = req.session;
 	if (!req.session.user) {
@@ -15,10 +16,23 @@ router.get('/', function (req, res, next) {
 		});
 	}
 });
+*/
 
-router.get('/weibo01', function (req, res, next) {
-	res.render('pages/ife_index', {
-		createTime: '三天前',
+router.get('/login', function (req, res, next) {
+	res.render('pages/ife_valitor');
+});
+
+router.get('/home', function (req, res, next) {
+	res.render('pages/ife_home/ife_home', {
+		username: 'Luvjs',
+		avatar: '/images/defaultAvatar.png',
+		createTime: '2015-09-10',
+		avatarFlag: true
+	});
+});
+
+router.get('/index', function (req, res, next) {
+	res.render('pages/ife_index/ife_index', {
 		username: 'oCupJS'
 	});
 });

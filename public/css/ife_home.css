@@ -1,0 +1,45 @@
+/* 中间的用户信息部分 */
+.ife_weiboUserInfo{margin-top:50px;width:100%;overflow:hidden;}
+.ife_weiboUserInfo .ife_weiboInfoContent{
+	width:900px;
+	margin:16px auto 0;
+	padding-top:48px;
+}
+.ife_weiboUserInfo .ife_weiboInfoContent .ife_weiboUserAvatar{
+	width:100px;
+	height:100px;
+	margin:0 auto;
+}
+#J_userAvatar{
+	border:0;
+	border-radius:50px;
+	box-shadow:0 0 10px 2px #e5e5e5;
+}
+#J_userAvatar:hover{
+	box-shadow:0 0 10px 2px #eb7350;
+}
+.ife_weiboUserInfo .ife_weiboInfoContent .ife_weiboUsername{
+	width:100px;
+	margin:0 auto;
+}
+.ife_weiboUserInfo .ife_weiboInfoContent .ife_weiboUsername h1{
+	font-size:22px;
+	color: #ffffff;
+	text-align:center;
+	text-shadow: 0 0 4px rgba(0,0,0,0.5);
+	margin-top:6px;
+	cursor:pointer;
+}
+.ife_weiboUserInfo .ife_weiboInfoContent .ife_weiboCreateTime{
+	width:200px;
+	margin:0 auto;
+	overflow:hidden;
+}
+.ife_weiboUserInfo .ife_weiboInfoContent .ife_weiboCreateTime h6{
+	font-size:14px;
+	color:#fff;
+	text-align:center;
+	text-shadow: 0 0 4px rgba(0,0,0,0.5);
+	margin-top:6px;
+	cursor:pointer;
+}

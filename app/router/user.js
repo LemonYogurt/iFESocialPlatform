@@ -53,6 +53,8 @@ router.post('/login', function (req, res, next) {
 		var username = fields.username;
 		var password = fields.password;
 
+		
+
 		User.findOne({username: username}, function (err, doc) {
 			if (err) {
 				return res.status(403).json('用户查询失败');
@@ -76,6 +78,8 @@ router.post('/login', function (req, res, next) {
 		});
 	});
 });
+
+// 注册
 router.post('/register', function (req, res, next) {
 	new formidable.IncomingForm().parse(req, function (err, fields, files) {
 		var username = fields.username;
