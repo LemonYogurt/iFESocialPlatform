@@ -62,7 +62,6 @@
 	border-radius:25px;
 	cursor:pointer;
 	overflow:hidden;
-	transition:all .6s linear;
 }
 /* 当鼠标移动到用户头像上时，Y轴旋转360度 */
 .ife_article_box .ife_article_avatar:hover{
@@ -120,6 +119,10 @@
 .ife_article_content .ife_article_main .ife_article_picCon{
 	text-align:center;
 	margin-bottom: 10px;
+	transition:all .6s linear;
+}
+.ife_article_content .ife_article_main .ife_article_picCon:hover{
+	transform:scale(0.9);
 }
 .ife_article_content .ife_article_main .ife_article_picCon .ife_article_pic {
 	max-width: 300px;
@@ -180,10 +183,11 @@
 	margin-right: 10px;
 	border-radius:20px;
 	margin-left:5px;
-	transition:all .6s linear;
+	cursor:pointer;
 }
 .ife_article_comment_box .ife_article_commentAvatar:hover{
 	transform:rotateY(360deg);
+	transition:all .6s linear;
 }
 /* 评论内容，包括用户名，评论文本，评论时间，赞按钮 */
 .ife_article_comment_content {
@@ -252,7 +256,11 @@
 	height: 40px;
 	margin-right: 10px;
 	border-radius:20px;
+	cursor:pointer;
+}
+.ife_article_scomment_box .ife_article_scommentAvatar:hover{
 	transition:all .6s linear;
+	transform:rotateY(360deg);
 }
 /* 子评论内容 */
 .ife_article_scomment_box .ife_article_scomment_content{

@@ -6,6 +6,7 @@ block headerContent
 	link(rel="stylesheet",href="/css/ife_textarea.css")
 	link(rel="stylesheet",href="/css/ife_article.css")
 	link(rel="stylesheet",href="/css/ife_sideBody.css")
+	link(rel="stylesheet",href="/css/ife_comment.css")
 	style.
 		.ife_wrap{
 			width:1000px;
@@ -62,3 +63,10 @@ block content
 
 block footerContent
 	script(src="/js/ife_textarea.js")
+	script.
+		$('.ife_comment_content_input_hidden').focus(function (e) {
+			$(e.target).removeClass('ife_comment_content_input_hidden');
+			$(e.target).blur(function () {
+				$(this).addClass('ife_comment_content_input_hidden');
+			});
+		});

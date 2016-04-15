@@ -48,39 +48,11 @@
 									em.ife_article_scomment_relatime 2014-02-19 14:36
 									a.ife_article_scomment_praise(href="javascript:void(0);",total="1",my="0",style="display:inline-block;") 1&nbsp;赞
 									a.ife_article_scomment_operate(href="javascript:void(0);") 删除
-				.ife_article_comment_box.clearfix(user="self")
-					img.ife_article_commentAvatar(src="/images/my.jpg",alt="我的头像",width="40",height="40")
-					.ife_article_comment_content
-						.ife_article_comment_text.clearfix
-							strong.ife_article_comment_username 我：
-							p.ife_article_comment_txt 上善若水，水善利万物而不争，处众人之所恶，故几于道，王法地地，法天天，法道道，法自然
-						p.ife_article_comment_time
-							em.ife_article_comment_relatime 2014-02-19 14:36
-							a.ife_article_comment_praise(href="javascript:void(0);",total="1",my="0",style="display:inline-block;") 1&nbsp;赞
-							a.ife_article_comment_operate(href="javascript:void(0);") 删除
-						.ife_article_scomment_box.clearfix(user="self")
-							img.ife_article_scommentAvatar(src="/images/my.jpg",alt="我的头像",width="40",height="40")
-							.ife_article_scomment_content
-								.ife_article_scomment_text.clearfix
-									strong.ife_article_scomment_username 我：&nbsp;回复&nbsp;他：
-									p.ife_article_scomment_txt 上善若水，水善利万物而不争，处众人之所恶，故几于道，王法地地，法天天，法道道，法自然
-								p.ife_article_scomment_time
-									em.ife_article_scomment_relatime 2014-02-19 14:36
-									a.ife_article_scomment_praise(href="javascript:void(0);",total="1",my="0",style="display:inline-block;") 1&nbsp;赞
-									a.ife_article_scomment_operate(href="javascript:void(0);") 删除
-						.ife_article_scomment_box.clearfix(user="self")
-							img.ife_article_scommentAvatar(src="/images/my.jpg",alt="我的头像",width="40",height="40")
-							.ife_article_scomment_content
-								.ife_article_scomment_text.clearfix
-									strong.ife_article_scomment_username 我：&nbsp;回复&nbsp;他：
-									p.ife_article_scomment_txt 上善若水，水善利万物而不争，处众人之所恶，故几于道，王法地地，法天天，法道道，法自然
-								p.ife_article_scomment_time
-									em.ife_article_scomment_relatime 2014-02-19 14:36
-									a.ife_article_scomment_praise(href="javascript:void(0);",total="1",my="0",style="display:inline-block;") 1&nbsp;赞
-									a.ife_article_scomment_operate(href="javascript:void(0);") 删除
 			.ife_article_text_box
-				.ife_article_comment(autocomplete="off") 评论...
-				button.ife_article_replyBtn 回&nbsp;复
-				span.ife_article_comment_word
-					span.ife_article_comment_word_length 0
-					| /140
+				include ./ife_comment
+				//-
+					.ife_article_comment(autocomplete="off") 评论...
+					button.ife_article_replyBtn 回&nbsp;复
+					span.ife_article_comment_word
+						span.ife_article_comment_word_length 0
+						| /140
