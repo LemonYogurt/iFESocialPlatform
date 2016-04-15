@@ -227,7 +227,6 @@
 	position: absolute;
 	top: 0;
 	right: 34px;
-	display: inline-block;
 }
 .ife_article_comment_box .ife_article_comment_content .ife_article_comment_operate {
 	display: none;
@@ -236,7 +235,6 @@
 	position: absolute;
 	top: 0;
 	right: 0;
-	display: inline-block;
 }
 .ife_article_comment_box .ife_article_comment_content:hover .ife_article_comment_praise {
 	display: inline-block;
@@ -298,7 +296,6 @@
 	position: absolute;
 	top: 0;
 	right: 34px;
-	display: inline-block;
 }
 .ife_article_scomment_box .ife_article_scomment_content .ife_article_scomment_operate {
 	display: none;
@@ -307,7 +304,6 @@
 	position: absolute;
 	top: 0;
 	right: 0;
-	display: inline-block;
 }
 .ife_article_scomment_box .ife_article_scomment_content:hover .ife_article_scomment_praise {
 	display: inline-block;
