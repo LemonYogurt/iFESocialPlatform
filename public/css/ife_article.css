@@ -1,0 +1,360 @@
+/* 文章总体的设置 */
+.ife_article {
+	width: 600px;
+	background:#fff;
+	/*text-align: center;*/
+	line-height: 120%;
+	color:#333;
+	font-size: 12px;
+	margin: 0 auto 10px;
+	padding: 20px;
+	box-shadow: 0 0 2px rgba(0,0,0,0.15);
+	border-radius: 2px;
+	margin-bottom:500px;
+}
+.ife_article a {
+	color: #333;
+	text-decoration: none;
+}
+.ife_article a:hover {
+	text-decoration: underline;
+}
+/* 文章容器 */
+.ife_article .ife_article_box {
+	position: relative;
+	border-top: 1px solid #eee;
+	padding: 20px 0
+}
+/* 文章关闭按钮，当鼠标移到文章容器上时，则进行显示 */
+.ife_article .ife_article_box:hover .ife_article_close {
+	display: block;
+}
+/* 文章的删除按钮 */
+.ife_article_box .ife_article_close {
+	cursor:pointer;
+	display: none;
+	font-size:21px;
+	font-weight:700;
+	color:#000;
+	text-shadow:0 1px 0 #fff;
+	opacity:0.2;
+	filter:alpha(opacity=20);
+	position: absolute;
+	top:0px;
+	right: 0px;
+	width: 28px;
+	height: 28px;
+	line-height: 27px;
+	text-align: center;
+}
+/* 鼠标移动到删除按钮上显示的效果 */
+.ife_article_box .ife_article_close:hover {
+	opacity:0.5;
+	filter:alpha(opacity=50);
+	text-decoration: none;
+}
+/* 用户头像 */
+.ife_article_box .ife_article_avatar{
+	float: left;
+	width: 50px;
+	height: 50px;
+	margin-right: 10px;
+	border-radius:25px;
+	cursor:pointer;
+	overflow:hidden;
+	transition:all .6s linear;
+}
+/* 当鼠标移动到用户头像上时，Y轴旋转360度 */
+.ife_article_box .ife_article_avatar:hover{
+	transition:all .6s linear;
+	transform:rotateY(360deg);
+}
+/* 文章部分 */
+.ife_article_box .ife_article_content {
+	float: left;
+	width: 500px;
+}
+/* 文章的主体内容 */
+.ife_article_box .ife_article_content .ife_article_main {
+	margin-bottom: 10px;
+}
+/* 发表文章的用户名 */
+.ife_article_box .ife_article_content .ife_article_username{
+	margin:8px 0 0 0;
+	padding:0;
+	cursor:pointer;
+	display:inline-block;
+	font-size:14px;
+	font-weight:700;
+}
+.ife_article_box .ife_article_content .ife_article_username:hover{
+	color:#fa7d3c;
+}
+/* 文章发表的相对时间 */
+.ife_article_box .ife_article_content .ife_article_publishTime{
+	padding:0;
+	margin:0;
+	margin-bottom:10px;
+}
+.ife_article_box .ife_article_content .ife_article_publishTime a{
+	color:#808080;
+	cursor:pointer;
+	font-size:12px;
+	display:inline-block;
+	text-decoration:none;
+}
+.ife_article_box .ife_article_content .ife_article_publishTime a:hover{
+	color:#eb7350;
+}
+/* 文章文字内容 */
+.ife_article_content .ife_article_main .ife_article_txt {
+	word-wrap:break-word;
+	font-size:14px;
+	/*如果没有图片的话，则设置为20px;*/
+	margin-bottom: 10px;
+	color:#333;
+	cursor:auto;
+	line-height:23px;
+}
+/* 文章图片内容 */
+.ife_article_content .ife_article_main .ife_article_picCon{
+	text-align:center;
+	margin-bottom: 10px;
+}
+.ife_article_content .ife_article_main .ife_article_picCon .ife_article_pic {
+	max-width: 300px;
+	border: 1px solid #eee;
+}
+/* 发表文章的信息，包含文章的赞按钮和具体的发布时间 */
+.ife_article_content .ife_article_info {
+	height: 20px;
+	line-height: 19px;
+	font-size: 12px;
+	margin: 0 0 10px 0;
+}
+.ife_article_content .ife_article_info .ife_article_time {
+	color: #333;
+	float: left;
+	height: 20px;
+	padding-left: 25px;
+	background: url("/images/publish_icon.jpg") no-repeat left top;
+}
+.ife_article_content .ife_article_info .ife_article_praise {
+	color: #369;
+	float: right;
+	height: 20px;
+	padding-left: 18px;
+	background: url("/images/goodicon.jpg") no-repeat left top;
+}
+.ife_article_content .ife_article_info .ife_article_praise:hover {
+	text-decoration: underline;
+	background: url("/images/goodhovericon.jpg") no-repeat left top;
+}
+/* 这里显示有多少人赞了 */
+.ife_article_content .ife_article_praises_total {
+	margin: 0 0 10px 0;
+	height: 30px;
+	background: #f2f2f5 url("/images/goodicon.png") no-repeat 5px 6px;
+	padding: 5px 0 5px 25px;
+	line-height: 20px;
+	display:block;
+	cursor:auto;
+}
+/* 评论区 */
+.ife_article_content .ife_article_comment_list{
+	padding: 10px 0;
+	border-top: 1px solid #eee;
+}
+/* 每一条评论 */
+.ife_article_comment_list .ife_article_comment_box {
+	padding-top:10px;
+}
+.ife_article_comment_list .ife_article_comment_box:hover {
+	background:#f2f2f5;
+}
+/* 评论头像 */
+.ife_article_comment_box .ife_article_commentAvatar{
+	float: left;
+	width: 40px;
+	height: 40px;
+	margin-right: 10px;
+	border-radius:20px;
+	margin-left:5px;
+	transition:all .6s linear;
+}
+.ife_article_comment_box .ife_article_commentAvatar:hover{
+	transform:rotateY(360deg);
+}
+/* 评论内容，包括用户名，评论文本，评论时间，赞按钮 */
+.ife_article_comment_content {
+	float: left;
+	width: 400px;
+}
+/* 用户名和评论文本 */
+.ife_article_comment_content .ife_article_comment_text{
+	padding-top:10px;
+	cursor:auto;
+}
+/* 用户名 */
+.ife_article_comment_content .ife_article_comment_text .ife_article_comment_username{
+	float:left;
+	padding-top:2px;
+	font-size:12px;
+	cursor:pointer;
+	margin-bottom:4px;
+}
+/* 评论文本 */
+.ife_article_comment_content .ife_article_comment_text .ife_article_comment_txt{
+	float:left;
+	line-height:18px;
+	font-size:12px;
+	word-break:break-all;
+}
+/* 评论时间 */
+.ife_article_comment_box .ife_article_comment_content .ife_article_comment_time {
+	color: #aaa;
+	margin-top: 3px;
+	line-height: 16px;
+	position: relative;
+}
+/* 以下两个操作按钮直接使用绝对定位进行排列 */
+.ife_article_comment_box .ife_article_comment_content .ife_article_comment_praise {
+	display: none;
+	color: #369;
+	padding-left: 17px;
+	height: 20px;
+	background: url("/images/goodicon.png") no-repeat;
+	position: absolute;
+	top: 0;
+	right: 34px;
+	display: inline-block;
+}
+.ife_article_comment_box .ife_article_comment_content .ife_article_comment_operate {
+	display: none;
+	color: #369;
+	height: 20px;
+	position: absolute;
+	top: 0;
+	right: 0;
+	display: inline-block;
+}
+.ife_article_comment_box .ife_article_comment_content:hover .ife_article_comment_praise {
+	display: inline-block;
+}
+.ife_article_comment_box .ife_article_comment_content:hover .ife_article_comment_operate {
+	display: inline-block;
+}
+/* 子评论 */
+.ife_article_scomment_box{
+}
+/* 子评论 头像 */
+.ife_article_scomment_box .ife_article_scommentAvatar{
+	float: left;
+	width: 40px;
+	height: 40px;
+	margin-right: 10px;
+	border-radius:20px;
+	transition:all .6s linear;
+}
+/* 子评论内容 */
+.ife_article_scomment_box .ife_article_scomment_content{
+	float: left;
+	width: 350px;
+}
+/* 用户名和评论文本 */
+.ife_article_scomment_content .ife_article_scomment_text{
+	padding-top:10px;
+	cursor:auto;
+}
+/* 用户名 */
+.ife_article_scomment_content .ife_article_scomment_text .ife_article_scomment_username{
+	float:left;
+	padding-top:2px;
+	font-size:12px;
+	cursor:pointer;
+	margin-bottom:4px;
+}
+/* 评论文本 */
+.ife_article_scomment_content .ife_article_scomment_text .ife_article_scomment_txt{
+	float:left;
+	line-height:18px;
+	font-size:12px;
+	word-break:break-all;
+}
+/* 评论时间 */
+.ife_article_scomment_box .ife_article_scomment_content .ife_article_scomment_time {
+	color: #aaa;
+	margin-top: 3px;
+	line-height: 16px;
+	position: relative;
+}
+/* 以下两个操作按钮直接使用绝对定位进行排列 */
+.ife_article_scomment_box .ife_article_scomment_content .ife_article_scomment_praise {
+	display: none;
+	color: #369;
+	padding-left: 17px;
+	height: 20px;
+	background: url("/images/goodicon.png") no-repeat;
+	position: absolute;
+	top: 0;
+	right: 34px;
+	display: inline-block;
+}
+.ife_article_scomment_box .ife_article_scomment_content .ife_article_scomment_operate {
+	display: none;
+	color: #369;
+	height: 20px;
+	position: absolute;
+	top: 0;
+	right: 0;
+	display: inline-block;
+}
+.ife_article_scomment_box .ife_article_scomment_content:hover .ife_article_scomment_praise {
+	display: inline-block;
+}
+.ife_article_scomment_box .ife_article_scomment_content:hover .ife_article_scomment_operate {
+	display: inline-block;
+}
+
+
+.ife_article_text_box .ife_article_comment {
+	border: 1px solid #eee;
+	display: block;
+	height: 15px;
+	width: 428px;
+	padding: 5px;
+	resize: none;
+	color: #ccc
+}
+.ife_article_text_box .ife_article_replyBtn {
+	font-size: 12px;
+	font-weight: bold;
+	display: none;
+	float: right;
+	width: 65px;
+	height: 25px;
+	border: 1px solid #0C528D;
+	color: #fff;
+	background: #4679AC;
+}
+.ife_article_text_box .btn-off {
+	border: 1px solid #ccc;
+	color: #ccc;
+	background: #F7F7F7;
+}
+.ife_article_text_box .ife_article_comment_word {
+	display: none;
+	float: right;
+	margin: 7px 10px 0 0;
+	color: #666;
+}
+.text-box-on .comment {
+	height: 50px;
+	color: #333;
+}
+.text-box-on .btn {
+	display: inline;
+}
+.text-box-on .word {
+	display: inline;
+}

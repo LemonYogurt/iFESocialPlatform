@@ -2,7 +2,9 @@ extend ../../layout
 
 block headerContent
 	link(rel="stylesheet",href="/css/ife_nav.css")
+	link(rel="stylesheet",href="/css/ife_leftBody.css")
 	link(rel="stylesheet",href="/css/ife_textarea.css")
+	link(rel="stylesheet",href="/css/ife_article.css")
 	link(rel="stylesheet",href="/css/ife_sideBody.css")
 	style.
 		.ife_wrap{
@@ -11,27 +13,18 @@ block headerContent
 			margin:50px auto 0;
 			padding:16px 0 0 0;
 			font-size:0;
-			background-color:rgba(96,50,49,0.25);
-		}
-		.ife_wrap .ife_leftNav{
-			width:150px;
-			min-height:680px;
-			display:inline-block;
-			background-color:rgba(199,255,236,0.25);
-			vertical-align:top;
+			background-color:rgba(0,255,128,0.25);
 		}
 		.ife_wrap .ife_rightBody{
 			width:850px;
 			min-height:680px;
 			display:inline-block;
-			background-color:rgba(195,190,212,0.25);
 		}
 		.ife_wrap .ife_rightBody .ife_rightMain{
 			width:600px;
 			min-height:680px;
 			margin-right:10px;
 			display:inline-block;
-			background-color:rgba(0,255,128,0.25);
 			vertical-align:top;
 		}
 		.ife_wrap .ife_rightBody .ife_sideMain{
@@ -40,7 +33,6 @@ block headerContent
 			margin-right:10px;
 			position:relative;
 			display:inline-block;
-			background-color:rgba(233,240,29,0.25);
 		}
 
 block content
@@ -48,57 +40,25 @@ block content
 	include ../ife_nav
 	.ife_wrap
 		.ife_leftNav
-			.ife_leftBody
+			.ife_leftBody#J_leftBody.ife_leftBodyActive
+				ul
+					li
+						a.pull-left(href="javascript:void(0);") 首页
+						i.pull-right.ife_leftarrow
+					li.active
+						a.pull-left(href="javascript:void(0);") 消息
+						i.pull-right.ife_leftarrow
+					li
+						a.pull-left(href="javascript:void(0);") 收藏
+						i.pull-right.ife_leftarrow
+					li
+						a.pull-left(href="javascript:void(0);") 赞
+						i.pull-right.ife_leftarrow
 		.ife_rightBody
 			.ife_rightMain
 				include ./ife_textarea
-			.ife_sideMain
-				.ife_sideUserInfo
-					.ife_sideUserInfoBg
-						.ife_sideUserAvatar
-							a(href="javascript:void(0);")
-								img(src="/images/ife_userDefaultAvatar_little.gif",width="60",height="60")
-						h2 #{username}
-						ul.clearfix
-							li.pull-left
-								a(href="javascript:void(0);")
-									strong 20
-									span 关注
-							li.pull-left
-								a(href="javascript:void(0);") 
-									strong 1
-									span 粉丝
-							li.pull-left
-								a(href="javascript:void(0);")
-									strong 1
-									span 文章
-				.ife_sideNewestUser
-					h2 最新注册用户
-					ul
-						li.empty
-						li.userInfo
-							p.pull-left.p_img
-								img(src="/images/ife_userDefaultAvatar_little.gif",width="30",height="30")
-							p.pull-left.p_userinfo
-								strong	前端攻城狮
-								span 注册时间：7年前
-							p.pull-left.p_followBtn
-								a(href="javascript:void(0);")
-									span +
-									span &nbsp;关注
-						li.empty
-						li.userInfo
-							p.pull-left.p_img
-								img(src="/images/ife_userDefaultAvatar_little.gif",width="30",height="30")
-							p.pull-left.p_userinfo
-								strong	前端攻城狮
-								span 注册时间：7年前
-							p.pull-left.p_followBtn
-								a(href="javascript:void(0);")
-									span +
-									span &nbsp;关注
-					.findMoreUser
-						a(href="javascript:void(0);") 查看更多&nbsp;>
+				include ./ife_article
+			include ./ife_sideBody
 
 block footerContent
 	script(src="/js/ife_textarea.js")
