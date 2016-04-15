@@ -1,0 +1,223 @@
+/* 侧边栏的用户信息 */
+.ife_sideMain .ife_sideUserInfo{
+	width:100%;
+	height:155px;
+	overflow:hidden;
+	vertical-align:top;
+	background-color:#fff;
+	margin:0 0 10px 0;
+	box-shadow: 0 0 2px rgba(0,0,0,0.15);
+	border-radius: 2px;
+}
+.ife_sideMain .ife_sideUserInfo .ife_sideUserInfoBg{
+	background:url("/images/ife_sideUserInfoBg.jpg") top center no-repeat;
+	width:100%;
+	height:155px;
+	overflow:hidden;
+}
+
+.ife_sideUserAvatar{
+	width:64px;
+	margin:20px auto 0;
+	text-align:center;
+}
+
+.ife_sideUserAvatar a{
+	display:inline-block;
+	overflow:hidden;
+	padding:2px;
+	background:#fff;
+	border-radius:32px;
+}	
+
+.ife_sideUserAvatar a img{
+	border:none;
+	border-radius:30px;
+}
+
+.ife_sideUserInfoBg h2{
+	font-weight:bold;
+	color:#000;
+	text-align:center;
+	font-size:14px;
+	margin:0;
+	margin-top:10px;
+	padding:0;
+}
+
+.ife_sideUserInfoBg ul{
+	margin-left:18px;
+	height:34px;
+	background:#fff;
+}
+
+.ife_sideUserInfoBg ul li{
+	width:65px;
+	height:40px;
+	text-align:center;
+	border-right:1px solid #d9d9d9;
+}
+
+.ife_sideUserInfoBg ul li:last-of-type{
+	border-right:none;
+}
+
+.ife_sideUserInfoBg ul li a{
+	text-decoration:none;
+	display:block;
+	color:#333;
+	text-align:center;
+	font-size:18px;
+}
+.ife_sideUserInfoBg ul li a:hover strong{
+	color:#eb7350;
+}
+
+.ife_sideUserInfoBg ul li a strong{
+	display:block;
+	color:#333;
+	text-align:center;
+	font-size:18px;
+	cursor:pointer;
+}
+
+.ife_sideUserInfoBg ul li a span{
+	display:block;
+	color:#808080;
+	text-align:center;
+	font-size:12px;
+	cursor:pointer;
+}
+/* 侧边栏的最新注册用户 */
+
+.ife_sideMain .ife_sideNewestUser{
+	width:100%;
+	overflow:hidden;
+	background-color:#fff;
+	margin:0 0 50px 0;
+	box-shadow: 0 0 2px rgba(0,0,0,0.15);
+	border-radius: 2px;
+	font-size:18px;
+}
+.ife_sideNewestUser h2{
+	border-bottom:1px solid #f2f2f5;
+	font-size:14px;
+	height:39px;
+	line-height:39px;
+	padding:0;
+	padding-left:16px;
+	margin:0;
+	cursor:pointer;
+}
+.ife_sideNewestUser h2:hover{
+	color:#eb7350;
+}
+.ife_sideNewestUser ul{
+	margin:0;
+}
+.ife_sideNewestUser ul li{
+	margin:0;
+	padding:0;
+	height:62px;
+	overflow:hidden;
+}
+
+.ife_sideNewestUser ul li.empty{
+	height:12px;
+	background:rgba(199,255,236,0.25);
+}
+.ife_sideNewestUser ul li.userInfo{
+	background-color:#f2f2f5;
+}
+.ife_sideNewestUser ul li.userInfo p.pull-left{
+	margin-top:16px;
+	height:30px;
+}
+.ife_sideNewestUser ul li.userInfo .p_img{
+	width:30px;
+	background:#fff;
+	border-radius:15px;
+	cursor:pointer;
+	margin-left:18px;
+}
+.ife_sideNewestUser ul li.userInfo .p_img img{
+	border:none;
+	border-radius:15px;
+}
+.ife_sideNewestUser ul li.userInfo .p_userinfo{
+	margin-left:10px;
+}
+.ife_sideNewestUser ul li.userInfo .p_userinfo strong{
+	display:block;
+	line-height:14px;
+	font-style:normal;
+	font-weight:normal;
+	font-size:12px;
+	width:96px;
+	color:#eb7350;
+	cursor:pointer;
+	overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    word-wrap: normal;
+}
+.ife_sideNewestUser ul li.userInfo .p_userinfo span{
+	margin-top:2px;
+	display:block;
+	width:96px;
+	line-height:14px;
+	font-size:12px;
+	color:#808080;
+	cursor:auto;
+	overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    word-wrap: normal;
+}
+.ife_sideNewestUser ul li.userInfo .p_followBtn{
+	margin-left:10px;
+}
+.ife_sideNewestUser ul li.userInfo .p_followBtn a{
+	background: #fff;
+	padding: 0 10px;
+	white-space: nowrap;
+	display: inline-block;
+	border-radius: 2px;
+	height: 24px;
+	line-height: 24px;
+	font-size: 12px;
+	min-width: 40px;
+	text-align: center;
+	outline: none;
+	text-decoration:none;
+	color:#333;
+	border: 1px solid #ccc;
+	box-shadow: 0px 1px 2px rgba(0,0,0,0.1);
+}
+
+.ife_sideNewestUser ul li.userInfo .p_followBtn a span:first-of-type{
+	font-weight:700;
+	color:#fa7d3c!important;
+}
+
+.ife_sideNewestUser ul li.userInfo .p_followBtn a:hover{
+	box-shadow:0px 1px 1px rgba(0,0,0,0.15);
+}
+.ife_sideNewestUser .findMoreUser{
+	height:35px;
+	width:100%;
+	padding:0;
+	margin:0;
+	background:#fff;
+	text-align:center;
+	line-height:35px;
+	font-size:12px;
+	overflow:hidden;
+}
+.ife_sideNewestUser .findMoreUser a{
+	text-decoration:none;
+	color:#333;
+}
+.ife_sideNewestUser .findMoreUser a:hover{
+	color:#eb7350;
+}

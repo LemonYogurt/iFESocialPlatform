@@ -203,9 +203,10 @@
 .ife_fileUploadPic{
 	width:80px;
 	height:80px;
-	background:#e5e5e5;
+	background:#fff url("/images/ife_picUploadBg.png");
 	overflow:hidden;
 	position: relative;
+	cursor:pointer;
 }
 .ife_fileUploadPic img{
 	max-width:80px;

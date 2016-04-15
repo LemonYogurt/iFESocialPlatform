@@ -3,6 +3,7 @@ extend ../../layout
 block headerContent
 	link(rel="stylesheet",href="/css/ife_nav.css")
 	link(rel="stylesheet",href="/css/ife_textarea.css")
+	link(rel="stylesheet",href="/css/ife_sideBody.css")
 	style.
 		.ife_wrap{
 			width:1000px;
@@ -17,6 +18,7 @@ block headerContent
 			min-height:680px;
 			display:inline-block;
 			background-color:rgba(199,255,236,0.25);
+			vertical-align:top;
 		}
 		.ife_wrap .ife_rightBody{
 			width:850px;
@@ -46,10 +48,57 @@ block content
 	include ../ife_nav
 	.ife_wrap
 		.ife_leftNav
+			.ife_leftBody
 		.ife_rightBody
 			.ife_rightMain
 				include ./ife_textarea
 			.ife_sideMain
+				.ife_sideUserInfo
+					.ife_sideUserInfoBg
+						.ife_sideUserAvatar
+							a(href="javascript:void(0);")
+								img(src="/images/ife_userDefaultAvatar_little.gif",width="60",height="60")
+						h2 #{username}
+						ul.clearfix
+							li.pull-left
+								a(href="javascript:void(0);")
+									strong 20
+									span 关注
+							li.pull-left
+								a(href="javascript:void(0);") 
+									strong 1
+									span 粉丝
+							li.pull-left
+								a(href="javascript:void(0);")
+									strong 1
+									span 文章
+				.ife_sideNewestUser
+					h2 最新注册用户
+					ul
+						li.empty
+						li.userInfo
+							p.pull-left.p_img
+								img(src="/images/ife_userDefaultAvatar_little.gif",width="30",height="30")
+							p.pull-left.p_userinfo
+								strong	前端攻城狮
+								span 注册时间：7年前
+							p.pull-left.p_followBtn
+								a(href="javascript:void(0);")
+									span +
+									span &nbsp;关注
+						li.empty
+						li.userInfo
+							p.pull-left.p_img
+								img(src="/images/ife_userDefaultAvatar_little.gif",width="30",height="30")
+							p.pull-left.p_userinfo
+								strong	前端攻城狮
+								span 注册时间：7年前
+							p.pull-left.p_followBtn
+								a(href="javascript:void(0);")
+									span +
+									span &nbsp;关注
+					.findMoreUser
+						a(href="javascript:void(0);") 查看更多&nbsp;>
 
 block footerContent
 	script(src="/js/ife_textarea.js")
