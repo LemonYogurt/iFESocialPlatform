@@ -374,6 +374,7 @@
 	box-shadow: 0 0 2px rgba(0,0,0,0.15);
 	border-radius: 2px;
 	line-height:36px;
+	cursor:pointer;
 }
 
 .ife_article_loading .ife_article_loading_btn{

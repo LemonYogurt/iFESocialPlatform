@@ -37,4 +37,10 @@ router.get('/index', function (req, res, next) {
 	});
 });
 
+router.get('/find', function (req, res, next) {
+	res.render('pages/ife_find/ife_index', {
+		username: 'Luvjs'
+	});
+})
+
 module.exports = router;
