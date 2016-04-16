@@ -10,7 +10,6 @@
 	padding: 20px;
 	box-shadow: 0 0 2px rgba(0,0,0,0.15);
 	border-radius: 2px;
-	margin-bottom:500px;
 }
 .ife_article a {
 	color: #333;
@@ -361,4 +360,41 @@
 }
 .text-box-on .word {
 	display: inline;
+}
+
+/* loading */
+.ife_article_loading {
+	width: 600px;
+	height:36px;
+	background:#fff;
+	text-align: center;
+	color:#333;
+	font-size: 16px;
+	margin: 0 auto 10px;
+	box-shadow: 0 0 2px rgba(0,0,0,0.15);
+	border-radius: 2px;
+	line-height:36px;
+}
+
+.ife_article_loading .ife_article_loading_btn{
+	margin:0;
+	padding:0;
+	display:inline-block;
+	height:36px;
+}
+@-webkit-keyframes loading{
+	0%{-webkit-transform:rotate(0deg);}
+	25%{-webkit-transform:rotate(180deg);}
+	50%{-webkit-transform:rotate(360deg);}
+	75%{-webkit-transform:rotate(540deg);}
+	100%{-webkit-transform:rotate(720deg);}
+}
+.ife_article_loading .ife_article_loading_btn span{
+	-webkit-animation:loading 1s linear infinite;
+	background:url("/images/loading.png");
+	display:inline-block;
+	width:16px;
+	height:16px;
+	margin-right:10px;
+	margin-bottom:-2px;
 }

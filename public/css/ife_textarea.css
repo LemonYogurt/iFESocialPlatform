@@ -149,6 +149,7 @@
 	width:284px;
 	height:173px;
 	position:absolute;
+	z-index:1;
 	left:92px;
 	top:142px;
 	box-shadow: 1px 2px 6px 0px #000;

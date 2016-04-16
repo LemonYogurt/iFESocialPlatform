@@ -59,14 +59,26 @@ block content
 			.ife_rightMain
 				include ./ife_textarea
 				include ./ife_article
+				include ./ife_article
+				include ./ife_loading
 			include ./ife_sideBody
 
 block footerContent
 	script(src="/js/ife_textarea.js")
 	script.
-		$('.ife_comment_content_input_hidden').focus(function (e) {
-			$(e.target).removeClass('ife_comment_content_input_hidden');
-			$(e.target).blur(function () {
-				$(this).addClass('ife_comment_content_input_hidden');
+		$('.ife_comment_content_hiddenInput .ife_comment_content_ta').focus(function () {
+			var flag = false;
+			$('.ife_comment_content_hiddenInput').hide(200);
+			$('.ife_comment_content_inputbox').show(200, function () {
+				flag = true;
+			});
+			$('.ife_comment_content_inputbox .ife_comment_content_ta').focus();
+			$(document).click(function (e) {
+				if ($(e.target).closest('.ife_comment_content_inputbox').length != 1 && flag) {
+					$('.ife_comment_content_inputbox').hide(200);
+					$('.ife_comment_content_hiddenInput').show(200, function () {
+						flag = false;
+					});
+				}
 			});
 		});
