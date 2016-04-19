@@ -4,6 +4,7 @@ block headerContent
 	link(rel="stylesheet",href="/css/ife_nav.css")
 	link(rel="stylesheet",href="/css/ife_article.css")
 	link(rel="stylesheet",href="/css/ife_home.css")
+	link(rel="stylesheet",href="/css/ife_find.css")
 	style.
 		/* 微博内容部分 */
 		.ife_weiboContent{
@@ -11,7 +12,6 @@ block headerContent
 			margin:20px auto 0;
 			padding:0 1px;
 		}
-
 block content
 	// 导航部分
 	include ../ife_nav
@@ -94,7 +94,7 @@ block content
 					.ife_weiboweirelativemore
 						a(href="javascript:void(0);") 查看更多&nbsp;>
 			.ife_weiboRightContentBody
-				include ./ife_article		
+				include ./ife_userlist
 				include ./ife_loading
 block footerContent
 	script(src="/js/ife_home.js")
