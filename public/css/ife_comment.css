@@ -65,6 +65,7 @@
 	padding-top:10px;
 	height:35px;
 	line-height:25px;
+	position:relative;
 }
 .ife_comment_content_publish_footer a{
 	color:#333;
@@ -110,4 +111,28 @@
 	color:#fff;
 	background:#f7671d;
 	text-decoration:none;
+}
+
+.ife_comment_content_publish_footer .ife_comment_face_con{
+	width:378px;
+	height:180px;
+	border:1px solid #ccc;
+	background:#fff;
+	box-shadow: 1px 2px 6px 0px #000;
+	padding:5px;
+	position:absolute;
+	z-index:99;
+	left:18px;
+	top:30px;
+	display:none;
+}
+.ife_comment_content_publish_footer .ife_comment_face_con ul, .ife_comment_content_publish_footer .ife_comment_face_con ul li{
+	margin:0;
+	padding:0;
+}
+.ife_comment_content_publish_footer .ife_comment_face_con ul li{
+	list-style:none;
+	float:left;
+	margin:2px;
+	cursor: pointer;
 }

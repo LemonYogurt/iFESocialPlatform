@@ -66,20 +66,4 @@ block content
 block footerContent
 	script(src="/js/ife_textarea.js")
 	script(src="/js/ife_sideBody.js")
-	script.
-		$('.ife_comment_content_hiddenInput .ife_comment_content_ta').focus(function () {
-			var flag = false;
-			$('.ife_comment_content_hiddenInput').hide(200);
-			$('.ife_comment_content_inputbox').show(200, function () {
-				flag = true;
-			});
-			$('.ife_comment_content_inputbox .ife_comment_content_ta').focus();
-			$(document).click(function (e) {
-				if ($(e.target).closest('.ife_comment_content_inputbox').length != 1 && flag) {
-					$('.ife_comment_content_inputbox').hide(200);
-					$('.ife_comment_content_hiddenInput').show(200, function () {
-						flag = false;
-					});
-				}
-			});
-		});
+	script(src="/js/ife_comment.js")

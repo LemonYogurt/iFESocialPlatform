@@ -110,6 +110,7 @@
 	font-size:14px;
 	/*如果没有图片的话，则设置为20px;*/
 	margin-bottom: 10px;
+	padding-left:20px;
 	color:#333;
 	cursor:auto;
 	line-height:23px;

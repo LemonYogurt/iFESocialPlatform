@@ -105,3 +105,9 @@ value：评论的id
 而每一条评论用一个hash集合维护起来，
 hmset comment:commentid:234
 from 123 to 234 content '' reply 将评论的内容用字符串分割开
+
+评论的回复：
+当前用户就是from
+点击的那个用户就是to
+获取from to之后，再获取是哪条评论，commentid
+
