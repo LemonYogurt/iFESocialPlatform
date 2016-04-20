@@ -11,8 +11,8 @@ nav.ife_weiboNav.nav.navbar-default
 				| &nbsp;社交平台
 		#iFENavBar.collapse.navbar-collapse
 			ul.nav.navbar-nav
-				li.active
-					a(href="#") 
+				li.active_c
+					a(href="javascript:void(0);") 
 						span.glyphicon.glyphicon-home
 						| &nbsp;首页
 			form.navbar-form.navbar-left
@@ -22,7 +22,7 @@ nav.ife_weiboNav.nav.navbar-default
 					span.glyphicon.glyphicon-search
 			ul.nav.navbar-nav.navbar-right
 				li
-					a(href="#") 
+					a(href="/user/#{userid}/detail") 
 						span.glyphicon.glyphicon-user
 						| &nbsp;#{username}
 				li

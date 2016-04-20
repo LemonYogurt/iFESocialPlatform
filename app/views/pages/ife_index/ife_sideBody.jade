@@ -3,16 +3,16 @@
 		.ife_sideUserInfoBg
 			.ife_sideUserAvatar
 				a(href="javascript:void(0);")
-					img(src="/images/ife_userDefaultAvatar_little.gif",width="60",height="60")
+					img(src="#{avatar}",width="60",height="60")
 			h2 #{username}
 			ul.clearfix
 				li.pull-left
-					a(href="javascript:void(0);")
-						strong 20
+					a(href="")
+						strong#J_starsCount #{stars}
 						span 关注
 				li.pull-left
 					a(href="javascript:void(0);") 
-						strong 1
+						strong #{fans}
 						span 粉丝
 				li.pull-left
 					a(href="javascript:void(0);")
@@ -21,71 +21,35 @@
 	.ife_sideNewestUser
 		h2 最新注册用户
 		ul
+			//- 这里要作一个限制，用户只能看到前6条，其他的当用户关注之后，才可以显示出来
+			- var count = 0;
+			each reguser in latestreguserlink
+				if count < 6
+					- count++;
+					li.empty
+					li.userInfo.J_sideLiUserCount
+						p.pull-left.p_img
+							img(src=reguser['avatar'],width="30",height="30")
+						p.pull-left.p_userinfo
+							strong	#{reguser['username']}
+							span #{moment(reguser['createTime']).fromNow()}注册
+						p.pull-left.p_followBtn.J_sideBodyFollowBtn(data-userid="#{reguser['_id']}")
+							a(href="javascript:void(0);")
+								span +
+								span &nbsp;关注
+				else
+					li.empty.J_sideLiEmptyhidden
+					li.userInfo.J_sideLiUserInfoHidden
+						p.pull-left.p_img
+							img(src=reguser['avatar'],width="30",height="30")
+						p.pull-left.p_userinfo
+							strong	#{reguser['username']}
+							span #{moment(reguser['createTime']).fromNow()}注册
+						p.pull-left.p_followBtn.J_sideBodyFollowBtn(data-userid="#{reguser['_id']}")
+							a(href="javascript:void(0);")
+								span +
+								span &nbsp;关注
 			li.empty
-			li.userInfo
-				p.pull-left.p_img
-					img(src="/images/ife_userDefaultAvatar_little.gif",width="30",height="30")
-				p.pull-left.p_userinfo
-					strong	前端攻城狮
-					span 注册时间：7年前
-				p.pull-left.p_followBtn
-					a(href="javascript:void(0);")
-						span +
-						span &nbsp;关注
-			li.empty
-			li.userInfo
-				p.pull-left.p_img
-					img(src="/images/ife_userDefaultAvatar_little.gif",width="30",height="30")
-				p.pull-left.p_userinfo
-					strong	前端攻城狮
-					span 注册时间：7年前
-				p.pull-left.p_followBtn
-					a(href="javascript:void(0);")
-						span +
-						span &nbsp;关注
-			li.empty
-			li.userInfo
-				p.pull-left.p_img
-					img(src="/images/ife_userDefaultAvatar_little.gif",width="30",height="30")
-				p.pull-left.p_userinfo
-					strong	前端攻城狮
-					span 注册时间：7年前
-				p.pull-left.p_followBtn
-					a(href="javascript:void(0);")
-						span +
-						span &nbsp;关注
-			li.empty
-			li.userInfo
-				p.pull-left.p_img
-					img(src="/images/ife_userDefaultAvatar_little.gif",width="30",height="30")
-				p.pull-left.p_userinfo
-					strong	前端攻城狮
-					span 注册时间：7年前
-				p.pull-left.p_followBtn
-					a(href="javascript:void(0);")
-						span +
-						span &nbsp;关注
-			li.empty
-			li.userInfo
-				p.pull-left.p_img
-					img(src="/images/ife_userDefaultAvatar_little.gif",width="30",height="30")
-				p.pull-left.p_userinfo
-					strong	前端攻城狮
-					span 注册时间：7年前
-				p.pull-left.p_followBtn
-					a(href="javascript:void(0);")
-						span +
-						span &nbsp;关注
-			li.empty
-			li.userInfo
-				p.pull-left.p_img
-					img(src="/images/ife_userDefaultAvatar_little.gif",width="30",height="30")
-				p.pull-left.p_userinfo
-					strong	前端攻城狮
-					span 注册时间：7年前
-				p.pull-left.p_followBtn
-					a(href="javascript:void(0);")
-						span +
-						span &nbsp;关注
-		.findMoreUser
-			a(href="javascript:void(0);") 查看更多&nbsp;>
+		if latestreguserlink.length > 6
+			.findMoreUser
+				a(href="javascript:void(0);") 查看更多&nbsp;>

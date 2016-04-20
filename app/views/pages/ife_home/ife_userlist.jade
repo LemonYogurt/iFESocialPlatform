@@ -1,0 +1,25 @@
+.ife_lastestuser
+	- var arr = [1, 2, 3, 4, 5, 6, 7, 8];
+	ul.ife_lsuserbox
+		- for (var a in arr)
+			li.clearfix
+				p.ife_lsuseravatar 
+					img(src="/images/ife_userDefaultAvatar_little.gif",width="50",height="50")
+				div.ife_lsuserinfo
+					strong 黄轩的微博
+					.ife_lsusercontent.clearfix
+						p 
+							| 关注&nbsp;&nbsp;
+							span 197
+						p
+							| 粉丝&nbsp;&nbsp;
+							span 12345
+						p
+							| 文章&nbsp;&nbsp;
+							span 1406
+					p.ife_lsuserregtime
+						| 注册时间&nbsp;&nbsp;
+						span 2014-09-09
+					a.ife_lsuserbtn(href="javascript:void(0);")
+						span +
+						span &nbsp;关注

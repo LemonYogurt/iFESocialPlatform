@@ -221,3 +221,6 @@
 .ife_sideNewestUser .findMoreUser a:hover{
 	color:#eb7350;
 }
+.J_sideLiEmptyhidden, .J_sideLiUserInfoHidden{
+	display:none;
+}

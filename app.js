@@ -3,6 +3,7 @@ var path = require('path');
 var bodyParser = require('body-parser');
 var cookieParser = require('cookie-parser');
 var session = require('express-session');
+var RedisStore = require('connect-redis')(session);
 var mongoose = require('mongoose');
 var moment = require('moment');
 
@@ -30,7 +31,12 @@ app.use(session({
 	cookie: {maxAge: null},  //{maxAge: 80000}：80s后session和相应的cookie失效过期
 	secret: 'iFE',
 	resave: false,
-	saveUninitialized: true
+	saveUninitialized: true,
+	store: new RedisStore({
+		host:'127.0.0.1',
+		port: 6379,
+		db: 1
+	})
 }));
 
 app.use('/', index);

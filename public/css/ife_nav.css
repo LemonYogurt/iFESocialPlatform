@@ -22,7 +22,7 @@ body{
     font-style:italic;
 }
 .ife_weiboNav a:hover span,
-.ife_weiboNav .active span,
+.ife_weiboNav .active_c span,
 .ife_weiboNav form a{
     color:#fa7d3c;
 }

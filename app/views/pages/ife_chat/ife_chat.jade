@@ -3,39 +3,38 @@ extend ../../layout
 block headerContent
 	link(rel="stylesheet",href="/css/ife_nav.css")
 	link(rel="stylesheet",href="/css/ife_leftBody.css")
-	link(rel="stylesheet",href="/css/ife_textarea.css")
-	link(rel="stylesheet",href="/css/ife_article.css")
 	link(rel="stylesheet",href="/css/ife_sideBody.css")
-	link(rel="stylesheet",href="/css/ife_comment.css")
+	link(rel="stylesheet",href="/css/ife_chatbox.css")
+	link(rel="stylesheet",href="/css/ife_textarea.css")
+	link(rel="stylesheet",href="/css/ife_contacts.css")
 	style.
 		.ife_wrap{
 			width:1000px;
-			min-height:680px;
 			margin:50px auto 0;
 			padding:16px 0 0 0;
 			font-size:0;
 			background-color:rgba(231,116,3,0.15);
+			position:relative;
+		}
+		.ife_wrap .ife_leftNav{
+			min-height:592px;
 		}
 		.ife_wrap .ife_rightBody{
 			width:850px;
-			min-height:680px;
 			display:inline-block;
 		}
 		.ife_wrap .ife_rightBody .ife_rightMain{
 			width:600px;
-			min-height:680px;
 			margin-right:10px;
 			display:inline-block;
 			vertical-align:top;
 		}
 		.ife_wrap .ife_rightBody .ife_sideMain{
 			width:230px;
-			min-height:680px;
 			margin-right:10px;
 			position:relative;
 			display:inline-block;
 		}
-
 block content
 	// 导航部分
 	include ../ife_nav
@@ -57,29 +56,6 @@ block content
 						i.pull-right.ife_leftarrow
 		.ife_rightBody
 			.ife_rightMain
-				include ./ife_textarea
-				include ./ife_article
-				include ./ife_article
-				include ./ife_loading
-			include ./ife_sideBody
-
+				include ./ife_chatbox
+			include ./ife_contacts
 block footerContent
-	script(src="/js/ife_textarea.js")
-	script(src="/js/ife_sideBody.js")
-	script.
-		$('.ife_comment_content_hiddenInput .ife_comment_content_ta').focus(function () {
-			var flag = false;
-			$('.ife_comment_content_hiddenInput').hide(200);
-			$('.ife_comment_content_inputbox').show(200, function () {
-				flag = true;
-			});
-			$('.ife_comment_content_inputbox .ife_comment_content_ta').focus();
-			$(document).click(function (e) {
-				if ($(e.target).closest('.ife_comment_content_inputbox').length != 1 && flag) {
-					$('.ife_comment_content_inputbox').hide(200);
-					$('.ife_comment_content_hiddenInput').show(200, function () {
-						flag = false;
-					});
-				}
-			});
-		});

@@ -1,0 +1,15 @@
+.ife_weiboUserInfo
+	.ife_weiboInfoContent
+		p.ife_weiboUserAvatar
+			a.ife_userAvatar(href="javascript:void(0);")
+				img#J_userAvatar(src=avatar,width="100",height="100")
+				if !avatarFlag
+					input#J_uploadAvatar(type="file",name="avatar",style="display:none;")
+		.ife_weiboUsername
+			h1 #{username}
+		.ife_weiboCreateTime
+			h6 注册时间：#{moment(createTime).fromNow()}
+		.ife_weibouserfocus
+			a.ife_weibouserfocusbtn(href="javascript:void(0);")
+				span +
+				span &nbsp;关注
