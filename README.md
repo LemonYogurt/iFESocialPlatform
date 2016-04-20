@@ -33,7 +33,7 @@ sismember following:_id:123 1
 发布文章：
 hmset article:_id:321 userid 123 createAt Date.now() content '' picURL ''
 维护一个有序集合，用于粉丝拉取文章用的
-zadd followerpost:userid:123 Date.now() createAt
+zadd followerpost:userid:123 Date.now() articleid
 获得元素的个数，如果超过了20个，则删除最后一个
 zcard followerpost:userid:123
 按照名次删除最后一个
@@ -94,3 +94,14 @@ scard fans:userid:123
 最新注册用户部分：
 点击关注后，在stars和fans无序集合中添加对应的用户id
 之后，移除当前元素，并且将后面隐藏的元素显示出来，之后再进行判断显示的元素长度，如果小于6个的话，最后的查看更多按钮就隐藏起来
+
+文章：
+hmset article:articleid:123 content "" picURL "" createAt (new Date()).toString() userid 123 praise [].toString()
+
+评论用一个链表维护起来
+key：comment:articleid:123
+value：评论的id
+
+而每一条评论用一个hash集合维护起来，
+hmset comment:commentid:234
+from 123 to 234 content '' reply 将评论的内容用字符串分割开

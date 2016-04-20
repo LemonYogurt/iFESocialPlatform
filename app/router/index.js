@@ -6,13 +6,13 @@ var router = express.Router();
 router.get('/', function(req, res, next) {
     var session = req.session;
     var user = session.user;
-    if (user.avatar == '/images/defaultAvatar.png') {
-        user.avatar = '/images/ife_userDefaultAvatar_little.gif';
-    }
     var starsArr = [];
     if (!session.user) {
         res.render('pages/ife_valitor');
     } else {
+        if (user.avatar == '/images/defaultAvatar.png') {
+            user.avatar = '/images/ife_userDefaultAvatar_little.gif';
+        }
         async.series({
             /*
              * 得到侧边栏的数据

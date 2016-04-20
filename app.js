@@ -10,6 +10,7 @@ var moment = require('moment');
 var mongodbClient = require('./app/config').mongodbClient;
 var index = require('./app/router');
 var user = require('./app/router/user');
+var article = require('./app/router/article');
 
 var app = express();
 var port = process.env.PORT || 3000;
@@ -41,6 +42,7 @@ app.use(session({
 
 app.use('/', index);
 app.use('/user', user);
+app.use('/article', article);
 
 if ('development' === app.get('env')) {
 	app.set('showStackError', true);

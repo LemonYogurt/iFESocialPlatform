@@ -21,7 +21,6 @@ router.post('/avatarUpload', function(req, res, next) {
 
         // 更新数据库
         var update = { $set: { avatar: '/upload/' + avatarName } };
-        console.log(req.session.user.username);
         User.findOne({ username: req.session.user.username }, function(err, doc) {
             if (err) {
                 console.log(err);
