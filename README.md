@@ -155,3 +155,37 @@ praise: [userid]
 缓存的位置：
 要在每一条主评论的div上缓存下评论的id
 并且要在回复按钮上缓存主评论的id，可以说是操作按钮上都要缓存，无论是删除还是回复
+
+Redis存储：
+(hash) 
+key-article:articleid:5718b9c342e2c86c4c57d21f
+value-content     文章内容
+value-picURL      文章图片
+value-createAt    文章发布时间
+value-userid      发布文章的用户
+value-praise      文章点赞
+value-commentsid  文章的主评论
+
+(hash)
+key-comment:commentid:5718b4a242e2c86c4c57d217
+value-articleid   文章id
+value-from        评论id
+value-to          被评论id
+value-content     评论的内容
+value-createAt    评论的时间
+value-praise      评论点赞
+value-reply       评论回复
+
+(hash)
+key-replycomment:replycommentid:5718b4b442e2c86c4c57d218
+value-from        回复id
+value-to          被回复id
+value-createAt    回复时间
+value-commentid   评论id
+value-content     回复内容
+value-praise      回复赞
+
+commentsid -> commentid
+reply -> replycommentid
+
+
