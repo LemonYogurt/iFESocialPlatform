@@ -48,6 +48,17 @@ router.post('/addPraise', function(req, res, next) {
     var praiseArr = [];
     praiseArr.push(req.body.from);
     async.series({
+        findPraise: function (done) {
+            redisClient.hget('article:articleid:' + req.body.articleid, 'praise', function(err, result) {
+                if (err) {
+                    done({ msg: '查询赞失败' });
+                }
+                if (result) {
+                    praiseArr = praiseArr.concat(result.split(','));
+                }
+                done(null, result);
+            });
+        },
         updatePraise: function(done) {
             redisClient.hset('article:articleid:' + req.body.articleid, 'praise', praiseArr.toString(), function(err, result) {
                 if (err) {
@@ -69,11 +80,13 @@ router.post('/addPraise', function(req, res, next) {
 router.post('/post', function(req, res, next) {
     new formidable.IncomingForm().parse(req, function(err, fields, files) {
         var picURL = '';
+        var rs = null;
+        var pic = null;
+        var picName = '';
         if (files.pic) {
-            var pic = files.pic;
-            var picName = uuid.v4() + path.extname(pic.name);
+            pic = files.pic;
+            picName = uuid.v4() + path.extname(pic.name);
             picURL = '/upload/' + picName;
-            fs.createReadStream(pic.path).pipe(fs.createWriteStream('./public/upload/' + picName));
         }
 
         var articleid = new ObjectId().toString();
@@ -81,10 +94,11 @@ router.post('/post', function(req, res, next) {
         var createAt = new Date().toString();
         var userid = req.session.user._id;
         var praise = [].toString();
+        var commentsid = [].toString();
 
         async.series({
             insertArticle: function(done) {
-                redisClient.hmset('article:articleid:' + articleid, ['content', content, 'picURL', picURL, 'createAt', createAt, 'userid', userid, 'praise', praise], function(err, result) {
+                redisClient.hmset('article:articleid:' + articleid, ['content', content, 'picURL', picURL, 'createAt', createAt, 'userid', userid, 'praise', praise, 'commentsid', commentsid], function(err, result) {
                     if (err) {
                         done({ msg: 'redis写入article失败' });
                     }
@@ -99,6 +113,17 @@ router.post('/post', function(req, res, next) {
                     }
                     done(null, result);
                 });
+            },
+            writePic: function (done) {
+                if (pic) {
+                    rs = fs.createReadStream(pic.path);
+                    rs.pipe(fs.createWriteStream('./public/upload/' + picName));
+                    rs.on('end', function() {
+                        done(null, {msg: '上传图片成功'});
+                    });
+                } else {
+                    done(null);
+                }
             }
         }, function(err, results) {
             if (err) {
@@ -107,8 +132,7 @@ router.post('/post', function(req, res, next) {
             results.findArticle.username = req.session.user.username;
             results.findArticle.avatar = req.session.user.avatar;
             results.findArticle.articleid = articleid;
-            results.findArticle.msg = '上传成功';
-            console.log(results.findArticle);
+            results.findArticle.msg = '文章发布成功';
             return res.status(200).json(results.findArticle);
         });
     });

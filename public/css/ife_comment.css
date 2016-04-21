@@ -12,7 +12,7 @@
 	margin: 0; 
 	padding: 0;
 	font-size: 14px;
-	word-wrap: break-word; 
+	word-wrap: break-word;
 	line-height: 18px; 
 	overflow: hidden;
 	overflow-y: auto;
@@ -34,6 +34,15 @@
 /* 点开的评论框 */
 .ife_comment_content_publish .ife_comment_content_input {
 	width:100%;
+	position:relative;
+}
+.ife_comment_content_publish .ife_comment_content_input .J_reply_comment_tip{
+	position:absolute;
+	top:13px;
+	left:12px;
+	font-size:14px;
+	color:#808080;
+	z-index:99999;
 }
 .ife_comment_content_publish .ife_comment_content_input .ife_comment_content_ta{
 	height: 68px; 
@@ -82,7 +91,7 @@
 	color:#fa7d3c;
 	text-decoration:none;
 }
-.ife_comment_content_publish_footer .ife_comment_publicBtn{
+.ife_comment_content_publish_footer .ife_comment_publishBtn{
 	background:#ffc09f;
 	border-radius: 2px;
 	text-align: center;
@@ -98,16 +107,16 @@
 	margin-right:0;
 	text-decoration:none;
 }
-.ife_comment_content_publish_footer .ife_comment_publicBtn:hover{
+.ife_comment_content_publish_footer .ife_comment_publishBtn:hover{
 	color:#fff;
 	text-decoration:none;
 }
-.ife_comment_content_publish_footer .ife_comment_publicBtnValue{
+.ife_comment_content_publish_footer .ife_comment_publishBtnValue{
 	background: #ff8140;
 	box-shadow: 0px 1px 2px rgba(0,0,0,0.25);
 	border: 1px solid #f06923;
 }
-.ife_comment_content_publish_footer .ife_comment_publicBtnValue:hover{
+.ife_comment_content_publish_footer .ife_comment_publishBtnValue:hover{
 	color:#fff;
 	background:#f7671d;
 	text-decoration:none;

@@ -231,6 +231,7 @@
 	position: absolute;
 	top: 0;
 	right: 34px;
+	display:none;
 }
 .ife_article_comment_box .ife_article_comment_content .ife_article_comment_operate {
 	display: none;

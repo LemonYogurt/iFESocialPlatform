@@ -111,3 +111,47 @@ from 123 to 234 content '' reply 将评论的内容用字符串分割开
 点击的那个用户就是to
 获取from to之后，再获取是哪条评论，commentid
 
+评论：
+首先给文章增加一个commentsid字段，是一个数组，用于存放该文章评论的id
+
+key：comment:commentid:123
+value：
+articleid：12345
+from：userid
+to：userid
+content：''
+createAt: ''
+praise: [userid]
+reply: [replycommentid]
+
+replycomment:replycommentid:123456
+from：userid
+to：userid
+content：''
+createAt: ''
+praise: [userid]
+
+前端要进行评论，需要获得文章的userid，articleid，content
+
+回复功能：
+hash集合存储
+replycomment:replycommentid:123456
+from：userid
+to：userid
+content：''
+createAt: ''
+praise: [userid]
+
+点击回复按钮，判断按钮的文字是否是回复，如果是的话，进行回复功能
+
+然后打开输入框，获取焦点，可以给发表按钮增加一个class，点击回复的时候
+增加一个class，失去焦点的时候，该class删除
+
+并且在文本框中增加回复的字样
+
+点击回复后，在回复框上插入一个span，并且将要回复的评论的id缓存在当前的span上
+当点击发布的时候，就根据缓存的id，查询出当前文章对应的评论id，然后将回复的内容插入到对应的主评论下面
+
+缓存的位置：
+要在每一条主评论的div上缓存下评论的id
+并且要在回复按钮上缓存主评论的id，可以说是操作按钮上都要缓存，无论是删除还是回复
