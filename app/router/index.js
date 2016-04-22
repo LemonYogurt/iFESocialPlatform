@@ -29,8 +29,6 @@ router.get('/', function(req, res, next) {
      */ 
     // 需要拉取的用户id
     var needPullUseid = [];
-    // 将自己的_id加进去
-    needPullUseid.push(user._id);
     // 上次的拉取点
     // 其实拉取点只要设置成时间戳
     var lastPullPoint = 0;
@@ -49,6 +47,8 @@ router.get('/', function(req, res, next) {
         if (user.avatar == '/images/defaultAvatar.png') {
             user.avatar = '/images/ife_userDefaultAvatar_little.gif';
         }
+        // 将自己的_id加进去
+        needPullUseid.push(user._id);
         async.series({
             /*
              * 得到侧边栏的数据

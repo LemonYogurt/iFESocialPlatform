@@ -127,9 +127,9 @@ router.post('/replyComment', function (req, res, next) {
 			console.log(err);
 			return res.status(403).json(err);
 		}
-		console.log(results.findReplyComment);
 		results.findReplyComment.msg = '回复评论保存成功';
 		results.findReplyComment.replycommentid = replycommentid;
+		results.findReplyComment.avatar = req.session.user.avatar;
 		return res.status(200).json(results.findReplyComment)
 	});
 });

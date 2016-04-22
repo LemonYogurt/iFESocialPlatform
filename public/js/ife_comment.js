@@ -107,33 +107,50 @@ CommentComponent.prototype.initPublishBtn = function () {
 					success: function (data) {
 						window.printMsg('success', data.msg, true);
 						delete data.msg;
-						var commentStr = '<div class="ife_article_comment_list" data-commentid="'+data.commentid+5+'">\
-							                  <div user="self" class="ife_article_comment_box clearfix"><img src="'+data.avatar+'" alt="我的头像" width="40" height="40" class="ife_article_commentAvatar">\
+						/*
+							articleid
+							:
+							"571a13835ce7c4cd4dd84833"
+							avatar
+							:
+							"/images/ife_userDefaultAvatar_little.gif"
+							commentid
+							:
+							"571a13885ce7c4cd4dd84834"
+							content
+							:
+							"呵呵打"
+							createAt
+							:
+							"Fri Apr 22 2016 20:05:28 GMT+0800 (CST)"
+							from
+							:
+							"57161e84c9f38d924576f66e"
+							praise
+							:
+							""
+							reply
+							:
+							""
+							to
+							:
+							"57161e84c9f38d924576f66e"
+						*/
+						var commentStr = '<div class="ife_article_comment_list" data-commentid="'+data.commentid+'">\
+							                  <div user="self" class="ife_article_comment_box clearfix"><img src="'+data.avatar+'" alt="头像" width="40" height="40" class="ife_article_commentAvatar">\
 							                    <div class="ife_article_comment_content">\
 							                      <div class="ife_article_comment_text clearfix"><strong class="ife_article_comment_username">我：</strong>\
 							                        <p class="ife_article_comment_txt">'+data.content+'</p>\
 							                      </div>\
-							                      <p class="ife_article_comment_time"><em class="ife_article_comment_relatime">'+moment(new Date(data.createAt)).calendar()+'</em><a href="javascript:void(0);" total="0" my="0" class="ife_article_comment_praise" data-commentid="'+data.commentid+'">赞</a><a href="javascript:void(0);" class="ife_article_comment_operate" data-userid="'+data.from+'" data-commentid="'+data.commentid+'">删除</a></p>\
+							                      <p class="ife_article_comment_time"><em class="ife_article_comment_relatime">'+moment(new Date(data.createAt)).fromNow()+'</em><a href="javascript:void(0);" total="0" my="0" class="ife_article_comment_praise" data-commentid="'+data.commentid+'">赞</a><a href="javascript:void(0);" class="ife_article_comment_operate" data-userid="'+data.from+'" data-commentid="'+data.commentid+'" data-articleid="'+data.articleid+'">删除</a></p>\
 							                    </div>\
 							                  </div>\
 							                </div>';
-		                var otherCommentStr = '<div class="ife_article_comment_list" data-commentid="'+data.commentid+'">\
-							                  <div user="other" class="ife_article_comment_box clearfix"><img src="'+data.avatar+'" alt="我的头像" width="40" height="40" class="ife_article_commentAvatar">\
-							                    <div class="ife_article_comment_content">\
-							                      <div class="ife_article_comment_text clearfix"><strong class="ife_article_comment_username">其他：</strong>\
-							                        <p class="ife_article_comment_txt">'+data.content+'</p>\
-							                      </div>\
-							                      <p class="ife_article_comment_time"><em class="ife_article_comment_relatime">'+moment(new Date(data.createAt)).calendar()+'</em><a href="javascript:void(0);" total="0" my="0" class="ife_article_comment_praise" data-commentid="'+data.commentid+'">赞</a><a href="javascript:void(0);" class="ife_article_comment_operate" data-userid="'+data.from+'" data-commentid="'+data.commentid+'">回复</a></p>\
-							                    </div>\
-							                  </div>\
-							                </div>';
-		                _$articleTextBox.before(otherCommentStr);
 		                _$articleTextBox.before(commentStr);
 		                _$textarea.html('');
 		                _$textarea.parent().parent().hide(500,function () {
 		                	_$textarea.parent().parent().prev().show();
 		                });
-
 					},
 					error: function (obj) {
 						window.printMsg('error', JSON.parse(obj.responseText).msg, true);
@@ -147,6 +164,8 @@ CommentComponent.prototype.initPublishBtn = function () {
 			var commentid = _$replySpan.data('commentid');
 			// 要回复的用户id
 			var userid = _$replySpan.data('userid');
+			// 要回复的用户名
+			var username = _$replySpan.data('username');
 			// 得要回复的内容
 			var content = _$textarea.html();
 			var _$targetComment = null;
@@ -157,20 +176,12 @@ CommentComponent.prototype.initPublishBtn = function () {
 				data: {commentid: commentid, to: userid, content: content},
 				success: function (data) {
 					window.printMsg('success', data.msg, true);
-					var strReplyCommentTest = '<div data-scommentid="'+data.replycommentid+'" data-userid="'+data.from+'" user="self" class="ife_article_scomment_box clearfix"><img src="/images/my.jpg" alt="我的头像" width="40" height="40" class="ife_article_scommentAvatar">\
+					var strReplyComment = '<div data-scommentid="'+data.replycommentid+'" data-userid="'+data.from+'" user="self" class="ife_article_scomment_box clearfix"><img src="'+data.avatar+'" alt="头像" width="40" height="40" class="ife_article_scommentAvatar">\
 			                        <div class="ife_article_scomment_content">\
-			                          <div class="ife_article_scomment_text clearfix"><strong class="ife_article_scomment_username">我：&nbsp;回复&nbsp;他：</strong>\
+			                          <div class="ife_article_scomment_text clearfix"><strong class="ife_article_scomment_username">我：&nbsp;回复&nbsp;'+username+'：</strong>\
 			                            <p class="ife_article_scomment_txt">'+data.content+'</p>\
 			                          </div>\
-			                          <p class="ife_article_scomment_time"><em class="ife_article_scomment_relatime">'+moment(new Date(data.createAt)).calendar()+'</em><a href="javascript:void(0);" total="0" my="0" class="ife_article_scomment_praise" data-scommentid="'+data.replycommentid+'" data-userid="'+data.from+'">赞</a><a href="javascript:void(0);" class="ife_article_scomment_operate" data-scommentid="'+data.replycommentid+'" data-userid="'+data.from+'">回复</a></p>\
-			                        </div>\
-			                      </div>';
-					var strReplyComment = '<div data-scommentid="'+data.replycommentid+5+'" data-userid="'+data.from+'" user="self" class="ife_article_scomment_box clearfix"><img src="/images/my.jpg" alt="我的头像" width="40" height="40" class="ife_article_scommentAvatar">\
-			                        <div class="ife_article_scomment_content">\
-			                          <div class="ife_article_scomment_text clearfix"><strong class="ife_article_scomment_username">我：&nbsp;回复&nbsp;他：</strong>\
-			                            <p class="ife_article_scomment_txt">'+data.content+'</p>\
-			                          </div>\
-			                          <p class="ife_article_scomment_time"><em class="ife_article_scomment_relatime">'+moment(new Date(data.createAt)).calendar()+'</em><a href="javascript:void(0);" total="0" my="0" class="ife_article_scomment_praise" data-scommentid="'+data.replycommentid+'" data-userid="'+data.from+'">赞</a><a href="javascript:void(0);" class="ife_article_scomment_operate" data-scommentid="'+data.replycommentid+'" data-userid="'+data.from+'">删除</a></p>\
+			                          <p class="ife_article_scomment_time"><em class="ife_article_scomment_relatime">'+moment(new Date(data.createAt)).fromNow()+'</em><a href="javascript:void(0);" total="0" my="0" class="ife_article_scomment_praise" data-scommentid="'+data.replycommentid+'" data-userid="'+data.from+'">赞</a><a href="javascript:void(0);" class="ife_article_scomment_operate" data-scommentid="'+data.replycommentid+'" data-userid="'+data.from+'" data-commentid="'+data.commentid+'">删除</a></p>\
 			                        </div>\
 			                      </div>';
 			         _$articleContent.find('.ife_article_comment_list').each(function (i, v) {
@@ -180,7 +191,6 @@ CommentComponent.prototype.initPublishBtn = function () {
 		            	}
 		            });
 		            if (_$targetComment) {
-		            	_$targetComment.find('.ife_article_comment_content').append(strReplyCommentTest);
 		            	_$targetComment.find('.ife_article_comment_content').append(strReplyComment);
 		            	// 删除回复提示元素
 		            	_$replySpan.remove();
@@ -297,7 +307,7 @@ CommentComponent.prototype.addReplyPraise = function () {
 	});
 };
 
-// 注意：子评论赞缓存的是当前子评论的id和子评论的from用户id
+// 注意：子评论赞缓存的是当前子评论的id和当前用户的id
 // 
 // 回复和删除子评论的功能：
 CommentComponent.prototype.replySComment = function () {
@@ -305,6 +315,7 @@ CommentComponent.prototype.replySComment = function () {
 		// 获取文本框
 		// str回复提示框：
 		var scommentid = $(this).data('scommentid');
+		var username = $(this).data('username');
 		var userid = $(this).data('userid');
 		var _$mainComment = $(this).parent().parent().parent().parent().parent().parent();
 		var commentid = _$mainComment.data('commentid');
@@ -315,15 +326,15 @@ CommentComponent.prototype.replySComment = function () {
 		if (_$articleContent.find('.J_reply_comment_tip').length > 0) {
 			_$articleContent.find('.J_reply_comment_tip').remove();
 		}
-		var replyUsername = '燕婈姣';
-		var str = '<span class="J_reply_comment_tip" data-commentid="'+commentid+'" data-userid="'+userid+'">回复&nbsp;<span>'+replyUsername+'：</span></span>'
+		// 这里缓存commentid是因为子评论最终要挂载的位置就是主评论下面
+		var str = '<span class="J_reply_comment_tip" data-username="'+username+'" data-commentid="'+commentid+'" data-userid="'+userid+'">回复&nbsp;<span>'+username+'：</span></span>'
 		if ($(this).html() == '删除') {
 		} else if ($(this).html() == '回复') {
 			_$textareaHiddenElem.hide();
 			_$textBox.show(500, function() {
 				_$textareaElem.focus();
 				_$textareaElem.after(str);
-				_$textareaElem.css('textIndent', '7em');
+				_$textareaElem.css('textIndent', '6.5em');
 			});
 		}
 	});
@@ -336,6 +347,9 @@ CommentComponent.prototype.replyComment = function () {
 		// 获取文本框
 		// str回复提示框：
 		var commentid = $(this).data('commentid');
+		// 这里的username指的是需要回复的用户名
+		var username = $(this).data('username');
+		// 要回复的用户id
 		var userid = $(this).data('userid');
 		var _$articleContent = $(this).parent().parent().parent().parent().parent();
 		var _$textareaHiddenElem = _$articleContent.find('.ife_comment_content_hiddenInput');
@@ -344,15 +358,14 @@ CommentComponent.prototype.replyComment = function () {
 		if (_$articleContent.find('.J_reply_comment_tip').length > 0) {
 			_$articleContent.find('.J_reply_comment_tip').remove();
 		}
-		var replyUsername = '燕婈姣';
-		var str = '<span class="J_reply_comment_tip" data-userid="'+userid+'" data-commentid="'+commentid+'">回复&nbsp;<span>'+replyUsername+'：</span></span>'
+		var str = '<span class="J_reply_comment_tip" data-username="'+username+'" data-userid="'+userid+'" data-commentid="'+commentid+'">回复&nbsp;<span>'+username+'：</span></span>'
 		if ($(this).html() == '删除') {
 		} else if ($(this).html() == '回复') {
 			_$textareaHiddenElem.hide();
 			_$textBox.show(500, function() {
 				_$textareaElem.focus();
 				_$textareaElem.after(str);
-				_$textareaElem.css('textIndent', '7em');
+				_$textareaElem.css('textIndent', '6.5em');
 			});
 		}
 	});

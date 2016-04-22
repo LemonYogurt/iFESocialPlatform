@@ -20,7 +20,7 @@
 				if article.praise == ''
 					.ife_article_info.clearfix
 						span.ife_article_time 发表于&nbsp;#{moment(article.createAt).calendar()}
-						a.ife_article_praise(href="javascript:void(0);",data-articleid="#{article.articleid}",data-userid="#{article.userid}") 赞
+						a.ife_article_praise(href="javascript:void(0);",data-articleid="#{article.articleid}",data-userid="#{userid}") 赞
 					.ife_article_praises_total(total="0",my="0",style="display:none;")
 				else
 					- var a_praiseArr = article.praise.split(',');
@@ -29,21 +29,21 @@
 					if hasSelf && a_praiseLength > 1
 						.ife_article_info.clearfix
 							span.ife_article_time 发表于&nbsp;&nbsp;#{moment(article.createAt).calendar()}
-							a.ife_article_praise(href="javascript:void(0);",data-articleid="#{article.articleid}",data-userid="#{article.userid}") 取消赞
+							a.ife_article_praise(href="javascript:void(0);",data-articleid="#{article.articleid}",data-userid="#{userid}") 取消赞
 						.ife_article_praises_total(my="1",total=a_praiseLength,style="display:block;") 我和#{a_praiseLength - 1}个人觉得很赞
 					else if hasSelf && a_praiseLength == 1
 						.ife_article_info.clearfix
 							span.ife_article_time 发表于&nbsp;&nbsp;#{moment(article.createAt).calendar()}
-							a.ife_article_praise(href="javascript:void(0);",data-articleid="#{article.articleid}",data-userid="#{article.userid}") 取消赞
+							a.ife_article_praise(href="javascript:void(0);",data-articleid="#{article.articleid}",data-userid="#{userid}") 取消赞
 						.ife_article_praises_total(total=a_praiseLength,my="1",style="display:block;") 我觉得很赞
 					else if !hasSelf
 						.ife_article_info.clearfix
 							span.ife_article_time 发表于&nbsp;&nbsp;#{moment(article.createAt).calendar()}
-							a.ife_article_praise(href="javascript:void(0);",data-articleid="#{article.articleid}",data-userid="#{article.userid}") 赞
+							a.ife_article_praise(href="javascript:void(0);",data-articleid="#{article.articleid}",data-userid="#{userid}") 赞
 						.ife_article_praises_total(total=a_praiseLength,my="0",style="display:block;") #{a_praiseLength}个人觉得很赞
 				//- 以上就是文章的显示部分
 				each comment in article.comments
-					.ife_article_comment_list
+					.ife_article_comment_list(data-commentid="#{comment.commentid}")
 						.ife_article_comment_box.clearfix(user="#{comment.from == userid ? 'self': 'other'}")
 							if comment.fromAvatar == '/images/defaultAvatar.png'
 								- comment.fromAvatar = '/images/ife_userDefaultAvatar_little.gif'
@@ -57,15 +57,15 @@
 									- var c_praiseArr = comment.praise.split(',');
 									- var c_praiseLength = c_praiseArr.length;
 									- var hascSelf = c_praiseArr.indexOf(userid) == -1 ? false : true;
-									if c_praiseLength == 0
-										a.ife_article_comment_praise(href="javascript:void(0);",total="0",my="0") &nbsp;赞
+									if comment.praise == ''
+										a.ife_article_comment_praise(href="javascript:void(0);",total="0",my="0",data-commentid="#{comment.commentid}") &nbsp;赞
 									else if hascSelf
-										a.ife_article_comment_praise(href="javascript:void(0);",total=c_praiseLength,my="1",style="display:inline-block;") #{c_praiseLength}&nbsp;取消赞
+										a.ife_article_comment_praise(href="javascript:void(0);",total=c_praiseLength,my="1",style="display:inline-block;",data-commentid="#{comment.commentid}") #{c_praiseLength}&nbsp;取消赞
 									else if !hascSelf
-										a.ife_article_comment_praise(href="javascript:void(0);",total=c_praiseLength,my="0") #{c_praiseLength}&nbsp;赞
-									a.ife_article_comment_operate(href="javascript:void(0);") #{comment.from == userid ? '删除' : '回复'}
+										a.ife_article_comment_praise(href="javascript:void(0);",total=c_praiseLength,my="0",data-commentid="#{comment.commentid}") #{c_praiseLength}&nbsp;赞
+									a.ife_article_comment_operate(href="javascript:void(0);",data-userid="#{comment.from}",data-commentid="#{comment.commentid}",data-articleid="#{article.articleid}",data-username="#{comment.fromUsername}") #{comment.from == userid ? '删除' : '回复'}
 								each scomment in comment.scomments
-									.ife_article_scomment_box.clearfix(user="#{scomment.from == userid ? 'self': 'other'}")
+									.ife_article_scomment_box.clearfix(user="#{scomment.from == userid ? 'self': 'other'}",data-scommentid="#{scomment.scommentid}",data-userid="#{scomment.from}")
 										if scomment.fromAvatar == '/images/defaultAvatar.png'
 											- scomment.fromAvatar = '/images/ife_userDefaultAvatar_little.gif'
 										img.ife_article_scommentAvatar(src=scomment.fromAvatar,alt=scomment.fromUsername,width="40",height="40")
@@ -78,12 +78,12 @@
 												- var s_praiseArr = scomment.praise.split(',');
 												- var s_praiseLength = s_praiseArr.length;
 												- var hassSelf = s_praiseArr.indexOf(userid) == -1 ? false : true;
-												if s_praiseLength == 0
-													a.ife_article_scomment_praise(href="javascript:void(0);",total="0",my="0") &nbsp;赞
+												if scomment.praise == ''
+													a.ife_article_scomment_praise(href="javascript:void(0);",total="0",my="0",data-userid="#{userid}",data-scommentid="#{scomment.scommentid}") &nbsp;赞
 												else if hassSelf
-													a.ife_article_scomment_praise(href="javascript:void(0);",total=c_praiseLength,my="1",style="display:inline-block;") #{c_praiseLength}&nbsp;取消赞
+													a.ife_article_scomment_praise(href="javascript:void(0);",total=c_praiseLength,my="1",style="display:inline-block;",data-userid="#{userid}",data-scommentid="#{scomment.scommentid}") #{c_praiseLength}&nbsp;取消赞
 												else if !hassSelf
-													a.ife_article_scomment_praise(href="javascript:void(0);",total=c_praiseLength,my="0") #{c_praiseLength}&nbsp;赞
-												a.ife_article_scomment_operate(href="javascript:void(0);") #{scomment.from == userid ? '删除' : '回复'}		
+													a.ife_article_scomment_praise(href="javascript:void(0);",total=c_praiseLength,my="0",data-userid="#{userid}",data-scommentid="#{scomment.scommentid}") #{c_praiseLength}&nbsp;赞
+												a.ife_article_scomment_operate(href="javascript:void(0);",data-userid="#{scomment.from}",data-username="#{scomment.fromUsername}",data-scommentid="#{scomment.scommentid}",data-commentid="#{comment.commentid}") #{scomment.from == userid ? '删除' : '回复'}
 				.ife_article_text_box
 					include ./ife_comment
