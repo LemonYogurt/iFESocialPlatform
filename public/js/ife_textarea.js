@@ -141,7 +141,7 @@ publishContent.prototype.publicBtn = function() {
                                       <p class="ife_article_txt">' + articleData.content + '</p>\
                                       ' + imgStr + '\
                                     </div>\
-                                    <div class="ife_article_info clearfix"><span class="ife_article_time">' + moment(articleData.createAt).calendar() + '</span><a href="javascript:void(0);" class="ife_article_praise" data-articleid="' + articleData.articleid + '" data-userid="' + articleData.userid + '">赞</a></div>\
+                                    <div class="ife_article_info clearfix"><span class="ife_article_time">发表于&nbsp;' + moment(articleData.createAt).calendar() + '</span><a href="javascript:void(0);" class="ife_article_praise" data-articleid="' + articleData.articleid + '" data-userid="' + articleData.userid + '">赞</a></div>\
                                     <div total="0" class="ife_article_praises_total" style="display:none;"></div>\
                                     <div class="ife_article_text_box">\
                                       <div class="ife_comment_content_publish">\

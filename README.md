@@ -187,3 +187,37 @@ set lastPullTimeStamp:userid:123 Date.now()
 
 然后将所有的内容放到自己首页需要显示的文章列表中
 lpush homepost:userid:123 ....
+
+
+article
+{
+	articleid:
+	avatar:
+	userid:
+	username:
+	content:
+	createAt:
+	picURL:
+	praise:[]
+	comments: [
+		{
+			commentid:
+			from:
+			to:
+			content:
+			articleid:
+			createAt:
+			praise:[]
+			reply:[
+				{
+					scommentid:
+					from:
+					to:
+					content:
+					createAt:
+					praise:[]
+				}
+			]
+		}
+	]
+}

@@ -1,5 +1,6 @@
 var express = require('express');
 var async = require('async');
+var getArticleInfo = require('../util/getArticleInfo');
 var redisClient = require('../config').redisClient;
 var router = express.Router();
 
@@ -10,6 +11,7 @@ var router = express.Router();
 // ③：根据上次的拉取点，获取文章id
 // 保存新的拉取点
 // ④：将获取到的文章id排序存储到当前用户展示的链表中
+// √
 // ⑤：根据链表中的文章的id，查询出文章
 // ⑥：根据文章id查询出文章中的commentsid数组
 // ⑦：根据commentsid数组查询出主评论
@@ -34,7 +36,12 @@ router.get('/', function(req, res, next) {
     var lastPullPoint = 0;
     // 用于保存拉取的文章列表
     var pullArticleListId = [];
-
+    // 排序拉取文章的id
+    var sortPullArticleList = [];
+    // 存储完整的文章
+    var completeArticle = [];
+    // 首页需要显示的文章id
+    var indexArticleListId = [];
 
     if (!session.user) {
         res.render('pages/ife_valitor');
@@ -178,24 +185,115 @@ router.get('/', function(req, res, next) {
                     done(null, result);
                 });
             },
+            // 排序文章的id
+            sortPullArticleList: function (done) {
+                async.forEachSeries(pullArticleListId, function (item, done) {
+                    redisClient.hget('article:articleid:' + item, 'createAt', function (err, result) {
+                        if (err) {
+                            done({msg: '查询文章发布时间失败'});
+                        }
+                        if (result) {
+                            sortPullArticleList.push({articleid: item, createAt: new Date(result)});
+                            done(null, result);
+                        } else {
+                            done(null);
+                        }
+                    });
+                }, function (err, results) {
+                    if (err) {
+                        done(err);
+                    }
+                    if (results) {
+                        sortPullArticleList.sort(function (a, b) {
+                            // 升序
+                            return a.createAt - b.createAt;
+                        });
+                        done(null, results);
+                    } else {
+                        done(null);
+                    }
+                    
+                });
+            },
+            // 保存到index的post中
+            saveHomePost: function (done) {
+                var sortedArticleId = [];
+                for (var i = 0; i < sortPullArticleList.length; i++) {
+                    sortedArticleId.push(sortPullArticleList[i].articleid);
+                }
+                console.log(pullArticleListId);
+                console.log(sortedArticleId);
+                pullArticleListId = sortedArticleId;
+                
+                if (sortedArticleId.length != 0) {
+                    redisClient.lpush('index:userid:' + user._id, sortedArticleId, function (err, result) {
+                        if (err) {
+                            done({msg: '保存首页文章失败'});
+                        } else {
+                            done(null, result);
+                        }
+                    });
+                } else {
+                    done(null);
+                }
+            },
+            getIndexArticleListId: function (done) {
+                // indexArticleListId
+                redisClient.lrange('index:userid:' + user._id, 0, -1, function (err, result) {
+                    if (err) {
+                        done({msg: '查询当前首页文章失败'});
+                    } else {
+                        if (result.length > 0) {
+                            indexArticleListId = result;
+                            done(null, result);
+                        } else {
+                            done(null, result);
+                        }
+                    }
+                });
+            },
+            // 得到完整的文章
+            getCompleteArticle: function (done) {
+                async.forEachSeries(indexArticleListId, function (item, done) {
+                    getArticleInfo(item, function(err, article) {
+                        if (err) {
+                            done(err);
+                        } else {
+                            completeArticle.push(article);
+                            done(null);
+                        }
+                    });
+                }, function (err) {
+                    if (err) {
+                        done(err);
+                    } else {
+                        done(null);
+                    }
+                });
+            }
         }, function(err, results) {
-            res.render('pages/ife_index/ife_index', {
-                username: user.username,
-                avatar: user.avatar,
-                avatarFlag: user.avatarFlag,
-                userid: user._id,
-                /*
-                 * 得到文章的数据
-                 */
-
-                /*
-                 * 得到侧边栏的数据
-                 */
-                // 返回最新注册的用户（数组，保存的是用户对象）
-                latestreguserlink: results.latestreguserlink,
-                stars: results.stars,
-                fans: results.fans
-            });
+            if (err) {
+                return res.status(403).json(err);
+            } else {
+                console.log(completeArticle);
+                res.render('pages/ife_index/ife_index', {
+                    username: user.username,
+                    avatar: user.avatar,
+                    avatarFlag: user.avatarFlag,
+                    userid: user._id,
+                    /*
+                     * 得到文章的数据
+                     */
+                    completeArticle: completeArticle,
+                    /*
+                     * 得到侧边栏的数据
+                     */
+                    // 返回最新注册的用户（数组，保存的是用户对象）
+                    latestreguserlink: results.latestreguserlink,
+                    stars: results.stars,
+                    fans: results.fans
+                });
+            }
         });
     }
 });

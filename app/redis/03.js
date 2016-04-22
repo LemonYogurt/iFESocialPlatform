@@ -35,6 +35,17 @@ async.series({
 			console.log(result);
 			done(null, result);
 		});
+	},
+	lpush: function (done) {
+		redisClient.lpush('qwer', 1 ,2, 3, 4, 5, 6, function (err, result) {
+			done(null);
+		});
+	},
+	lrange: function (done) {
+		redisClient.lrange('qwer', 0, -1, function (err, result) {
+			console.log(result);
+			done(result);
+		});
 	}
 }, function (err, results) {
 	if (err) {
