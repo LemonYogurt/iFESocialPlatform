@@ -124,6 +124,61 @@ router.post('/post', function(req, res, next) {
                 } else {
                     done(null);
                 }
+            },
+            // 维护一个有序集合，存放20篇文章，
+            fanspost: function (done) {
+                redisClient.zadd('fanspost:userid:' + userid, Date.now(), articleid, function (err, result) {
+                    if (err) {
+                        done({msg: '保存粉丝拉取用的有序集合失败'});
+                    }
+                    done(null, result);
+                });
+            },
+            // 判断文章数量是否超过了20，如果超出了，则进行删除
+            judgeFansPostNum: function (done) {
+                redisClient.zcard('fanspost:userid:' + userid, function (err, result) {
+                    if (err) {
+                        done({msg: '获取有序集合元素数失败'});
+                    }
+                    if (result > 20) {
+                        redisClient.zremrangebyrank('fanspost:userid:' + userid, 0, 0, function (err, result) {
+                            if (err) {
+                                done({msg: '有序集合删除失败'});
+                            }
+                            done(null, result);
+                        });
+                    } else {
+                        done(null, result);
+                    }
+                });
+            },
+            // 最后，将文章的id放到自己当前的文章列表中，用于自己查看
+            saveCurrentPost: function (done) {
+                redisClient.lpush('currentpost:userid:' + userid, articleid, function (err, result) {
+                    if (err) {
+                        done({msg: '保存文章到当前用户文章链表中失败'});
+                    }
+                    done(null, result);
+                });
+            },
+            // 判断当前的文章链表是否超过了40条，如果超出，则导入到全局的文章链表中
+            judgeCurrentPostNum: function (done) {
+                redisClient.llen('currentpost:userid:' + userid, function (err, result) {
+                    if (err) {
+                        done({msg: '查询当前用户文章链表数量失败'});;
+                    }
+                    if (result > 40) {
+                        redisClient.rpoplpush('currentpost:userid:' + userid, 'global:article', function (err, result) {
+                            if (err) {
+                                done({msg: '导出文章失败'});
+                            } else {
+                                done(null, {msg: '导出文章成功'});
+                            }
+                        });
+                    } else {        
+                        done(null, result);
+                    }
+                });
             }
         }, function(err, results) {
             if (err) {

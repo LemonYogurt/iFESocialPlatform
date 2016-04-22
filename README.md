@@ -30,22 +30,6 @@ lrange latestreguserlink 0 -1
 sadd following:_id:123 1 2 3 4
 sismember following:_id:123 1
 
-发布文章：
-hmset article:_id:321 userid 123 createAt Date.now() content '' picURL ''
-维护一个有序集合，用于粉丝拉取文章用的
-zadd followerpost:userid:123 Date.now() articleid
-获得元素的个数，如果超过了20个，则删除最后一个
-zcard followerpost:userid:123
-按照名次删除最后一个
-zremrangebyrank followerpost:userid:123 0 0
-
-每次发表文章的时候，就添加到当前用户的总的文章链表中，并且要判断当前的微博是否达到了20条，如果超出了20条，则将超出的内容存到数据库中
-lpush currentpost:userid:123 articleId
-判断，插入新的文章之后，如果超出了40条，则导入到mongo中
-llen currentpost:userid:123 > 20
-
-rpoplpush currentpost:userid:123 global:article
-
 点击关注后：
 sadd stars:userid:123 uid
 sadd fans:userid:uid 123
@@ -58,25 +42,6 @@ srem fans:userid:uid 123
 首先获取的是文章：
 查出所有关注的用户id以及自己的id，存放到一个数组中
 
-接下来就要拉取文章了：
-还需要维护一个普通的key，用户存放上次拉取微博的位置
-get lastpull:userid:123 Date.now()
-如果第一次拉取文章，先设置为0
-
-然后将每个用户的文章进行拉取：
-上次的拉取点（上次拉取的时间戳）
-lastPullTimeStamp
-从用户维护的20个文章中拉取
-
-zrangebyscore followerpost:userid:123 lastPullTimeStamp Date.now()
-
-如果获取的集合中，没有内容的话，就不设置上次拉取点lastPullTimeStamp
-
-如果有内容的话，则设置lastPullTimeStamp拉取点为当前的时间戳
-set lastPullTimeStamp:userid:123 Date.now()
-
-然后将所有的内容放到自己首页需要显示的文章列表中
-lpush homeArticle:userid:123 ....
 
 计算粉丝的个数：
 scard following:userid:123
@@ -156,7 +121,7 @@ praise: [userid]
 要在每一条主评论的div上缓存下评论的id
 并且要在回复按钮上缓存主评论的id，可以说是操作按钮上都要缓存，无论是删除还是回复
 
-Redis存储：
+Redis存储文章：
 (hash) 
 key-article:articleid:5718b9c342e2c86c4c57d21f
 value-content     文章内容
@@ -188,4 +153,37 @@ value-praise      回复赞
 commentsid -> commentid
 reply -> replycommentid
 
+Redis保存文章
+维护一个有序集合，只需要维护20个即可，粉丝拉取文章的时候用
+zadd fanspost:userid:57161e84c9f38d924576f66e Date.now() articleid
+获得元素的个数
+zcard fanspost:userid:57161e84c9f38d924576f66e
+如果超过了20个，则删除最后一个，按照名次删除最后一个
+zremrangebyrank fanspost:userid:57161e84c9f38d924576f66e 0 0
 
+每次发表文章的时候，就添加到当前用户的总的文章链表中，并且要判断当前的微博是否达到了40条，如果超出了40条，则将超出的内容存到数据库中
+lpush currentpost:userid:57161e84c9f38d924576f66e articleId
+判断，插入新的文章之后，如果超出了40条，则导入到mongo中
+llen currentpost:userid:57161e84c9f38d924576f66e > 40
+rpoplpush currentpost:userid:57161e84c9f38d924576f66e global:article
+
+接下来就要拉取文章了：
+还需要维护一个普通的key，用户存放上次拉取微博的位置
+get lastpull:userid:57161e84c9f38d924576f66e
+
+如果第一次拉取文章，先设置为0
+
+然后将每个用户的文章进行拉取：
+上次的拉取点（上次拉取的时间戳）
+lastPullTimeStamp
+从用户维护的20个文章中拉取
+
+zrangebyscore followerpost:userid:123 lastPullTimeStamp Date.now()
+
+如果获取的集合中，没有内容的话，就不设置上次拉取点lastPullTimeStamp
+
+如果有内容的话，则设置lastPullTimeStamp拉取点为当前的时间戳
+set lastPullTimeStamp:userid:123 Date.now()
+
+然后将所有的内容放到自己首页需要显示的文章列表中
+lpush homepost:userid:123 ....
