@@ -10,7 +10,7 @@
 					h2.ife_article_username(data-userid="#{article.userid}") #{article.username}
 					h3.ife_article_publishTime 
 						a(href="javascript:void(0);")
-							span #{moment(article.createAt).fromNow()}
+							span #{moment(new Date(article.createAt)).fromNow()}
 							| 发布
 					p.ife_article_txt.
 						!{article.content}
@@ -19,7 +19,7 @@
 							img.ife_article_pic(src=article.picURL,alt="文章图片")
 				if article.praise == ''
 					.ife_article_info.clearfix
-						span.ife_article_time 发表于&nbsp;#{moment(article.createAt).calendar()}
+						span.ife_article_time 发表于&nbsp;#{moment(new Date(article.createAt)).calendar()}
 						a.ife_article_praise(href="javascript:void(0);",data-articleid="#{article.articleid}",data-userid="#{userid}") 赞
 					.ife_article_praises_total(total="0",my="0",style="display:none;")
 				else
@@ -28,17 +28,17 @@
 					- var hasSelf = a_praiseArr.indexOf(userid) == -1 ? false : true;
 					if hasSelf && a_praiseLength > 1
 						.ife_article_info.clearfix
-							span.ife_article_time 发表于&nbsp;&nbsp;#{moment(article.createAt).calendar()}
+							span.ife_article_time 发表于&nbsp;&nbsp;#{moment(new Date(article.createAt)).calendar()}
 							a.ife_article_praise(href="javascript:void(0);",data-articleid="#{article.articleid}",data-userid="#{userid}") 取消赞
 						.ife_article_praises_total(my="1",total=a_praiseLength,style="display:block;") 我和#{a_praiseLength - 1}个人觉得很赞
 					else if hasSelf && a_praiseLength == 1
 						.ife_article_info.clearfix
-							span.ife_article_time 发表于&nbsp;&nbsp;#{moment(article.createAt).calendar()}
+							span.ife_article_time 发表于&nbsp;&nbsp;#{moment(new Date(article.createAt)).calendar()}
 							a.ife_article_praise(href="javascript:void(0);",data-articleid="#{article.articleid}",data-userid="#{userid}") 取消赞
 						.ife_article_praises_total(total=a_praiseLength,my="1",style="display:block;") 我觉得很赞
 					else if !hasSelf
 						.ife_article_info.clearfix
-							span.ife_article_time 发表于&nbsp;&nbsp;#{moment(article.createAt).calendar()}
+							span.ife_article_time 发表于&nbsp;&nbsp;#{moment(new Date(article.createAt)).calendar()}
 							a.ife_article_praise(href="javascript:void(0);",data-articleid="#{article.articleid}",data-userid="#{userid}") 赞
 						.ife_article_praises_total(total=a_praiseLength,my="0",style="display:block;") #{a_praiseLength}个人觉得很赞
 				//- 以上就是文章的显示部分
@@ -53,7 +53,7 @@
 									strong.ife_article_comment_username #{comment.from == userid ? '我': comment.fromUsername}：
 									p.ife_article_comment_txt !{comment.content}
 								p.ife_article_comment_time
-									em.ife_article_comment_relatime #{moment(comment.createAt).fromNow()}
+									em.ife_article_comment_relatime #{moment(new Date(comment.createAt)).fromNow()}
 									- var c_praiseArr = comment.praise.split(',');
 									- var c_praiseLength = c_praiseArr.length;
 									- var hascSelf = c_praiseArr.indexOf(userid) == -1 ? false : true;
@@ -74,7 +74,7 @@
 												strong.ife_article_scomment_username #{scomment.from == userid ? '我': scomment.fromUsername}：&nbsp;回复&nbsp;#{scomment.to == userid ? '我': scomment.toUsername}：
 												p.ife_article_scomment_txt !{scomment.content}
 											p.ife_article_scomment_time
-												em.ife_article_scomment_relatime #{moment(createAt).fromNow()}
+												em.ife_article_scomment_relatime #{moment(new Date(scomment.createAt)).fromNow()}
 												- var s_praiseArr = scomment.praise.split(',');
 												- var s_praiseLength = s_praiseArr.length;
 												- var hassSelf = s_praiseArr.indexOf(userid) == -1 ? false : true;

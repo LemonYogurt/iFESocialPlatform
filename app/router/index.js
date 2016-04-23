@@ -16,6 +16,7 @@ var router = express.Router();
 // ⑥：根据文章id查询出文章中的commentsid数组
 // ⑦：根据commentsid数组查询出主评论
 // ⑧：根据每一条主评论中的reply数组，查询出下面的replycomment内容
+// ⑨：查询出当前自己发表的文章数
 router.get('/', function(req, res, next) {
     var session = req.session;
     var user = session.user;
@@ -34,12 +35,12 @@ router.get('/', function(req, res, next) {
     var lastPullPoint = 0;
     // 用于保存拉取的文章列表
     var pullArticleListId = [];
-    // 排序拉取文章的id
-    var sortPullArticleList = [];
     // 存储完整的文章
     var completeArticle = [];
     // 首页需要显示的文章id
     var indexArticleListId = [];
+    // 保存当前用户的文章数
+    var currentUserArticleNum = 0;
 
     if (!session.user) {
         res.render('pages/ife_valitor');
@@ -157,22 +158,29 @@ router.get('/', function(req, res, next) {
             // 根据拉取点获取用户文章的id
             getNeedPullArticleId: function (done) {
                 var newPullPoint = Date.now();
+                console.log('needPullUseid');
+                for (var i = 0; i < needPullUseid.length; i++) {
+                    console.log(needPullUseid[i]);
+                }
                 async.forEachSeries(needPullUseid, function (item, done) {
-                    redisClient.zrangebyscore('fanspost:userid:' + item, lastPullPoint, newPullPoint, function (err, result) {
+                    console.log(parseInt(lastPullPoint));
+                    console.log('fanspost:userid:' + item + ' ' + parseInt(lastPullPoint) + 1 + ' ' + newPullPoint);
+                    redisClient.zrangebyscore('fanspost:userid:' + item, parseInt(lastPullPoint) + 1, newPullPoint, function (err, result) {
                         if (err) {
                             done({msg: '文章id拉取失败'});
                         }
                         if (result && result.length > 0) {
                             pullArticleListId = pullArticleListId.concat(result);
                         }
-                        done(null, result);
+                        done(null);
                     });
-                }, function (err, results) {
+                }, function (err) {
                     if (err) {
                         done(err);
                     } else {
                         lastPullPoint = newPullPoint;
-                        done(null, results);
+                        console.log('pullArticleListId: ', pullArticleListId);
+                        done(null);
                     }
                 });
             },
@@ -185,48 +193,10 @@ router.get('/', function(req, res, next) {
                     done(null, result);
                 });
             },
-            // 排序文章的id
-            sortPullArticleList: function (done) {
-                async.forEachSeries(pullArticleListId, function (item, done) {
-                    redisClient.hget('article:articleid:' + item, 'createAt', function (err, result) {
-                        if (err) {
-                            done({msg: '查询文章发布时间失败'});
-                        }
-                        if (result) {
-                            sortPullArticleList.push({articleid: item, createAt: new Date(result)});
-                            done(null, result);
-                        } else {
-                            done(null);
-                        }
-                    });
-                }, function (err, results) {
-                    if (err) {
-                        done(err);
-                    }
-                    if (results) {
-                        sortPullArticleList.sort(function (a, b) {
-                            // 升序
-                            return a.createAt - b.createAt;
-                        });
-                        done(null, results);
-                    } else {
-                        done(null);
-                    }
-                    
-                });
-            },
             // 保存到index的post中
             saveHomePost: function (done) {
-                var sortedArticleId = [];
-                for (var i = 0; i < sortPullArticleList.length; i++) {
-                    sortedArticleId.push(sortPullArticleList[i].articleid);
-                }
-                console.log(pullArticleListId);
-                console.log(sortedArticleId);
-                pullArticleListId = sortedArticleId;
-                
-                if (sortedArticleId.length != 0) {
-                    redisClient.lpush('index:userid:' + user._id, sortedArticleId, function (err, result) {
+                if (pullArticleListId.length != 0) {
+                    redisClient.lpush('index:userid:' + user._id, pullArticleListId, function (err, result) {
                         if (err) {
                             done({msg: '保存首页文章失败'});
                         } else {
@@ -270,12 +240,36 @@ router.get('/', function(req, res, next) {
                         done(null);
                     }
                 });
+            },
+            // 最后，将文章的id放到自己当前的文章列表中，用于自己查看
+            getCurrentPostNum: function (done) {
+                redisClient.get('currentpostnum:userid:' + user._id, function (err, result) {
+                    if (err) {
+                        done({msg: '得到当前用户发布文章数量失败'});
+                    } else {
+                        currentUserArticleNum = result;
+                        done(null, result);
+                    }
+                });
             }
         }, function(err, results) {
             if (err) {
                 return res.status(403).json(err);
             } else {
-                console.log(completeArticle);
+                completeArticle.sort(function (a, b) {
+                    return new Date(b.createAt) - new Date(a.createAt);
+                });
+
+                for (var i = 0; i < completeArticle.length; i++) {
+                    completeArticle[i].comments.sort(function (a, b) {
+                        return new Date(a.createAt) - new Date(b.createAt);
+                    });
+                    for (var j = 0; j < completeArticle[i].comments.length; j++) {
+                        completeArticle[i].comments[j].scomments.sort(function (a, b) {
+                            return new Date(a.createAt) - new Date(b.createAt);
+                        });
+                    }
+                }
                 res.render('pages/ife_index/ife_index', {
                     username: user.username,
                     avatar: user.avatar,
@@ -291,7 +285,8 @@ router.get('/', function(req, res, next) {
                     // 返回最新注册的用户（数组，保存的是用户对象）
                     latestreguserlink: results.latestreguserlink,
                     stars: results.stars,
-                    fans: results.fans
+                    fans: results.fans,
+                    currentUserArticleNum: currentUserArticleNum
                 });
             }
         });
@@ -301,6 +296,5 @@ router.get('/', function(req, res, next) {
 router.get('/login', function(req, res, next) {
     res.render('pages/ife_valitor');
 });
-
 
 module.exports = router;

@@ -161,6 +161,16 @@ router.post('/post', function(req, res, next) {
                     done(null, result);
                 });
             },
+            // 最后，将文章的id放到自己当前的文章列表中，用于自己查看
+            // 之所以再维护一个集合，因为文章数量不仅仅是redis中的，而且还有mongodb中的
+            saveCurrentPostNum: function (done) {
+                redisClient.incr('currentpostnum:userid:' + userid, function (err, result) {
+                    if (err) {
+                        done({msg: '增加当前用户发布文章数量失败'});
+                    }
+                    done(null, result);
+                });
+            },
             // 判断当前的文章链表是否超过了40条，如果超出，则导入到全局的文章链表中
             judgeCurrentPostNum: function (done) {
                 redisClient.llen('currentpost:userid:' + userid, function (err, result) {

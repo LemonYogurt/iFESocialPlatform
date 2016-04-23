@@ -229,7 +229,7 @@ CommentComponent.prototype.addPraise = function () {
 					newTotal = oldTotal + 1;
 					$(self).attr('total', newTotal);
 					$(self).attr('my', 1);
-					$(self).html(newTotal + '取消赞');
+					$(self).html(newTotal + '&nbsp;取消赞');
 					$(self).css('display', newTotal === 0 ? '' : 'inline-block');
 				},
 				error: function (obj) {
@@ -334,7 +334,7 @@ CommentComponent.prototype.replySComment = function () {
 			_$textBox.show(500, function() {
 				_$textareaElem.focus();
 				_$textareaElem.after(str);
-				_$textareaElem.css('textIndent', '6.5em');
+				_$textareaElem.css('textIndent', _$textareaElem.next().width() + 'px');
 			});
 		}
 	});
@@ -365,7 +365,7 @@ CommentComponent.prototype.replyComment = function () {
 			_$textBox.show(500, function() {
 				_$textareaElem.focus();
 				_$textareaElem.after(str);
-				_$textareaElem.css('textIndent', '6.5em');
+				_$textareaElem.css('textIndent', _$textareaElem.next().width() + 'px');
 			});
 		}
 	});

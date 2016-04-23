@@ -121,34 +121,7 @@ praise: [userid]
 要在每一条主评论的div上缓存下评论的id
 并且要在回复按钮上缓存主评论的id，可以说是操作按钮上都要缓存，无论是删除还是回复
 
-Redis存储文章：
-(hash) 
-key-article:articleid:5718b9c342e2c86c4c57d21f
-value-content     文章内容
-value-picURL      文章图片
-value-createAt    文章发布时间
-value-userid      发布文章的用户
-value-praise      文章点赞
-value-commentsid  文章的主评论
 
-(hash)
-key-comment:commentid:5718b4a242e2c86c4c57d217
-value-articleid   文章id
-value-from        评论id
-value-to          被评论id
-value-content     评论的内容
-value-createAt    评论的时间
-value-praise      评论点赞
-value-reply       评论回复
-
-(hash)
-key-replycomment:replycommentid:5718b4b442e2c86c4c57d218
-value-from        回复id
-value-to          被回复id
-value-createAt    回复时间
-value-commentid   评论id
-value-content     回复内容
-value-praise      回复赞
 
 commentsid -> commentid
 reply -> replycommentid
@@ -221,3 +194,56 @@ article
 		}
 	]
 }
+
+关注与被关注的Redis存储：
+
+Set（无序集合）
+stars:userid:571ae94d5b5bf3ce1a80cf7c
+fans:userid:571aeace5b5bf3ce1a80cf7f
+stars:userid:571aeace5b5bf3ce1a80cf7f
+fans:userid:571ae94d5b5bf3ce1a80cf7c
+
+点击关注后：
+在当前用户的stars集合中插入关注用户的id
+在关注用户的fans集合中插入当前用户的id
+
+发表文章的Redis存储：
+Redis存储文章：
+(hash) 
+key-article:articleid:5718b9c342e2c86c4c57d21f
+value-content     文章内容
+value-picURL      文章图片
+value-createAt    文章发布时间
+value-userid      发布文章的用户
+value-praise      文章点赞
+value-commentsid  文章的主评论
+
+(hash)
+key-comment:commentid:5718b4a242e2c86c4c57d217
+value-articleid   文章id
+value-from        评论id
+value-to          被评论id
+value-content     评论的内容
+value-createAt    评论的时间
+value-praise      评论点赞
+value-reply       评论回复
+
+(hash)
+key-replycomment:replycommentid:5718b4b442e2c86c4c57d218
+value-from        回复id
+value-to          被回复id
+value-createAt    回复时间
+value-commentid   评论id
+value-content     回复内容
+value-praise      回复赞
+
+ZSet（有序集合）
+fanspost:userid:571afd8969bd64f21a14fa96
+value-score:Date.now() value:articleid
+
+List（链表）
+currentpost:userid:571afd8969bd64f21a14fa96
+value-articleid
+
+
+

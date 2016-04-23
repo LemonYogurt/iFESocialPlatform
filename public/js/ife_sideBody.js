@@ -26,6 +26,9 @@ $('.J_sideBodyFollowBtn').click(function (e) {
 			// 判断如果此时最新注册的用户数量小于6个的话，就把最后的查看最多按钮隐藏起来
 			if ($('.J_sideLiUserCount').length <= 6) {
 				$('.findMoreUser').hide();
+			} else if ($('.J_sideLiUserCount').length == 0) {
+				$('.findMoreUser a').removeClass('J_lookMoreLatestRegUser');
+				$('.findMoreUser').show();
 			}
 		},
 		error: function (obj) {

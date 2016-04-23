@@ -24,10 +24,11 @@ function getArticle(articleid, cb) {
                 		avatar: ''
                 	}
                 */
-                article = result;
-                article.articleid = articleid;
-                userid = result.userid;
+               
                 if (result) {
+                    article = result;
+                    article.articleid = articleid;
+                    userid = result.userid;
                     done(null, result);
                 } else {
                     done(null);
@@ -361,14 +362,14 @@ function getCompleteArticle(articleid, cb) {
         cb(err, article);
     });
 }
-getCompleteArticle('5719f41a8807bc681fdd4473', function(err, article) {
-    console.log(article);
-    console.log(article.comments[0]);
-    console.log(article.comments[0].scomments.length);
-    for (var i = 0; i < article.comments[0].scomments.length; i++) {
-       console.log(article.comments[0].scomments[i]);
-    }
-});
+// getCompleteArticle('5719f41a8807bc681fdd4473', function(err, article) {
+//     console.log(article);
+//     console.log(article.comments[0]);
+//     console.log(article.comments[0].scomments.length);
+//     for (var i = 0; i < article.comments[0].scomments.length; i++) {
+//        console.log(article.comments[0].scomments[i]);
+//     }
+// });
 
 /*getComment('5719f4428807bc681fdd4477', function (err, comment) {
     console.log(comment);

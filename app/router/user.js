@@ -46,12 +46,15 @@ router.post('/avatarUpload', function(req, res, next) {
 
 // 关注功能完成
 // 添加关注的时候，给stars:userid无序集合添加，也给fans:userid添加
+// 添加成功后，之后就拉取关注者的文章，放到当前用户的index链表中，以0 - 当前的时间戳为基准
 router.post('/stars', function(req, res, next) {
     new formidable.IncomingForm().parse(req, function(err, fields, files) {
         var starsid = fields.userid;
-        console.log(starsid);
         var user = req.session.user;
+        // 用于保存关注者的文章id列表
+        var starsArticleIdList = [];
         async.series({
+            // 添加关注集合
             saddStars: function(done) {
                 redisClient.sadd('stars:userid:' + user._id, starsid, function(err, result) {
                     if (err) {
@@ -60,13 +63,41 @@ router.post('/stars', function(req, res, next) {
                     done(null);
                 });
             },
+            // 添加粉丝集合
             saddFans: function(done) {
                 redisClient.sadd('fans:userid:' + starsid, user._id, function (err, result) {
                     if (err) {
                         done({msg: '关注失败'});
+                    } else {
+                        done(null);
                     }
-                    done(null);
                 });
+            },
+            // 准备拉取关注者的文章id
+            getStarsArticleId: function (done) {
+                var newPullPoint = Date.now();
+                redisClient.zrangebyscore('fanspost:userid:' + starsid, 0, Date.now(), function (err, result) {
+                    if (err) {
+                        done({msg: '关注者文章id拉取失败'});
+                    }
+                    if (result && result.length > 0) {
+                        starsArticleIdList = result;
+                    }
+                    done(null, result);
+                });
+            },
+            saveHomePost: function (done) {
+                if (starsArticleIdList.length != 0) {
+                    redisClient.lpush('index:userid:' + user._id, starsArticleIdList, function (err, result) {
+                        if (err) {
+                            done({msg: '保存首页文章失败'});
+                        } else {
+                            done(null, result);
+                        }
+                    });
+                } else {
+                    done(null);
+                }
             }
         }, function(err, results) {
             if (err) {
