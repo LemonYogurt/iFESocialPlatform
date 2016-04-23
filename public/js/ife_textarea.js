@@ -164,6 +164,7 @@ publishContent.prototype.publicBtn = function() {
                     setTimeout(function () {
                         $('.ife_article').eq(0).removeClass('animated bounceIn');
                     }, 1000);
+                    $('#J_currentUserArticleNum').html(parseInt($('#J_currentUserArticleNum').html()) + 1);
                     // 发表完成后，删除编辑框的内容，并且回复原来的文件上传
                     $('#J_publicTextarea').html('');
                     var fileStr = '<div class="ife_fileUploadControl clearfix">\

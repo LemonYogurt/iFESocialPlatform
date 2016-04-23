@@ -81,9 +81,9 @@
 												if scomment.praise == ''
 													a.ife_article_scomment_praise(href="javascript:void(0);",total="0",my="0",data-userid="#{userid}",data-scommentid="#{scomment.scommentid}") &nbsp;赞
 												else if hassSelf
-													a.ife_article_scomment_praise(href="javascript:void(0);",total=c_praiseLength,my="1",style="display:inline-block;",data-userid="#{userid}",data-scommentid="#{scomment.scommentid}") #{c_praiseLength}&nbsp;取消赞
+													a.ife_article_scomment_praise(href="javascript:void(0);",total=s_praiseLength,my="1",style="display:inline-block;",data-userid="#{userid}",data-scommentid="#{scomment.scommentid}") #{s_praiseLength}&nbsp;取消赞
 												else if !hassSelf
-													a.ife_article_scomment_praise(href="javascript:void(0);",total=c_praiseLength,my="0",data-userid="#{userid}",data-scommentid="#{scomment.scommentid}") #{c_praiseLength}&nbsp;赞
+													a.ife_article_scomment_praise(href="javascript:void(0);",total=s_praiseLength,my="0",data-userid="#{userid}",data-scommentid="#{scomment.scommentid}") #{s_praiseLength}&nbsp;赞
 												a.ife_article_scomment_operate(href="javascript:void(0);",data-userid="#{scomment.from}",data-username="#{scomment.fromUsername}",data-scommentid="#{scomment.scommentid}",data-commentid="#{comment.commentid}") #{scomment.from == userid ? '删除' : '回复'}
 				.ife_article_text_box
 					include ./ife_comment
