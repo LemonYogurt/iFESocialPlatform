@@ -1,12 +1,13 @@
 extend ../../layout
 
 block headerContent
-	link(rel="stylesheet",href="/css/ife_nav.css")
-	link(rel="stylesheet",href="/css/ife_leftBody.css")
-	link(rel="stylesheet",href="/css/ife_textarea.css")
-	link(rel="stylesheet",href="/css/ife_article.css")
-	link(rel="stylesheet",href="/css/ife_sideBody.css")
-	link(rel="stylesheet",href="/css/ife_comment.css")
+	link(rel="stylesheet",href="/css/ife_index/lightbox.css")
+	link(rel="stylesheet",href="/css/ife_index/ife_nav.css")
+	link(rel="stylesheet",href="/css/ife_index/ife_leftBody.css")
+	link(rel="stylesheet",href="/css/ife_index/ife_textarea.css")
+	link(rel="stylesheet",href="/css/ife_index/ife_article.css")
+	link(rel="stylesheet",href="/css/ife_index/ife_sideBody.css")
+	link(rel="stylesheet",href="/css/ife_index/ife_comment.css")
 	style.
 		.ife_wrap{
 			width:1000px;
@@ -43,17 +44,17 @@ block content
 		.ife_leftNav
 			.ife_leftBody#J_leftBody.ife_leftBodyActive
 				ul
-					li
-						a.pull-left(href="javascript:void(0);") 首页
-						i.pull-right.ife_leftarrow
 					li.active
-						a.pull-left(href="javascript:void(0);") 消息
+						a.pull-left(href="/") 首页
 						i.pull-right.ife_leftarrow
 					li
-						a.pull-left(href="javascript:void(0);") 收藏
+						a.pull-left(href="javascript:void(0);") 关注
 						i.pull-right.ife_leftarrow
 					li
-						a.pull-left(href="javascript:void(0);") 赞
+						a.pull-left(href="javascript:void(0);") 粉丝
+						i.pull-right.ife_leftarrow
+					li
+						a.pull-left(href="javascript:void(0);") 个人主页
 						i.pull-right.ife_leftarrow
 		.ife_rightBody
 			.ife_rightMain
@@ -63,6 +64,7 @@ block content
 			include ./ife_sideBody
 
 block footerContent
-	script(src="/js/ife_textarea.js")
-	script(src="/js/ife_sideBody.js")
-	script(src="/js/ife_comment.js")
+	script(src="/js/ife_index/lightbox-2.6.min.js")
+	script(src="/js/ife_index/ife_textarea.js")
+	script(src="/js/ife_index/ife_sideBody.js")
+	script(src="/js/ife_index/ife_comment.js")

@@ -16,7 +16,8 @@
 						!{article.content}
 					if article.picURL != ''
 						.ife_article_picCon
-							img.ife_article_pic(src=article.picURL,alt="文章图片")
+							a(href=article.picURL,data-lightbox="roadtrip")
+								img.ife_article_pic(src=article.picURL,alt="文章图片")
 				if article.praise == ''
 					.ife_article_info.clearfix
 						span.ife_article_time 发表于&nbsp;#{moment(new Date(article.createAt)).calendar()}

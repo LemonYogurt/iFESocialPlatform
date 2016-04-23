@@ -1,0 +1,218 @@
+/* 发布框 */
+.ife_wrap .ife_rightBody .ife_rightMain .ife_content_publish{
+	background-color:#fff;
+	margin:0 0 10px 0;
+	box-shadow: 0 0 2px rgba(0,0,0,0.15);
+	border-radius: 2px;
+	padding: 15px 10px 10px;
+	font-size:12px;
+	position:relative;
+}
+.ife_content_publish .ife_content_title{
+	margin:0;
+	padding:0;
+	height:22px;
+	white-space:nowrap;
+	overflow:hidden;
+	color:#7f5333;
+	font-size: 18px;
+	display: inline-block;
+	-webkit-font-smoothing: antialiased;
+	-webkit-text-stroke-width: 0.2px;
+}
+.ife_content_titletxt{
+	position:absolute;
+	top:22px;
+	right:10px;
+	max-width: 380px;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	word-wrap: normal;
+	color:#eb7350;
+}
+.ife_content_titletxt span{
+	font-size:12px;
+	font-weight: 700;
+    font-size: 22px;
+    font-style: italic;
+    color:#808080;
+    font-family: Constantia, Georgia;
+}
+.ife_content_titletxt:hover{
+	cursor:pointer;
+}
+.ife_content_publish .ife_content_input {
+	width:100%;
+}
+.ife_content_publish .ife_content_input .ife_content_ta{
+	height: 68px; 
+	margin: 0px; 
+	padding: 10px; 
+	font-size: 14px; 
+	word-wrap: break-word; 
+	line-height: 18px; 
+	overflow: hidden;
+	overflow-y: auto;
+	outline: none;
+	resize:none;
+	background: transparent;
+	width: 100%;
+	border: 1px solid #ccc;
+	box-shadow: 0px 0px 3px 0px rgba(0,0,0,0.15) inset;
+	vertical-align: middle;
+	color: #808080;
+	cursor:auto;
+}
+.ife_content_publish .ife_content_input .ife_content_ta:focus{
+	outline-color:#eb7350;
+	border-color:#fa7d3c !important;
+	color:#333;
+	vertical-align: middle;
+}
+.ife_content_publish_footer{
+	padding-top:10px;
+	height:35px;
+	line-height:25px;
+}
+.ife_content_publish_footer a{
+	color:#333;
+	margin-right:16px;
+	float:left;
+	text-decoration:none;
+}
+.ife_content_publish_footer a img{
+	border:none;
+	position:relative;
+	top:-1px;
+}
+.ife_content_publish_footer a:hover{
+	color:#fa7d3c;
+	text-decoration:none;
+}
+.ife_content_publish_footer .ife_publicBtn{
+	background:#ffc09f;
+	border-radius: 2px;
+	text-align: center;
+	padding: 0 10px;
+	display: inline-block;
+	height: 30px;
+	line-height: 28px;
+	width: 82px;
+	font-size: 14px;
+	color: #fff;
+	float:right;
+	margin-top:-2px;
+	margin-right:0;
+	text-decoration:none;
+}
+.ife_content_publish_footer .ife_publicBtn:hover{
+	color:#fff;
+	text-decoration:none;
+}
+.ife_content_publish_footer .ife_publicBtnValue{
+	background: #ff8140;
+	box-shadow: 0px 1px 2px rgba(0,0,0,0.25);
+	border: 1px solid #f06923;
+}
+.ife_content_publish_footer .ife_publicBtnValue:hover{
+	color:#fff;
+	background:#f7671d;
+	text-decoration:none;
+}
+.ife_content_publish_footer .ife_content_publish_footer_title{
+	margin-left:10px;
+	color:#fa7d3c;
+}
+/* 表情 */
+.ife_content_publish .ife_face_con{
+	width:378px;
+	height:174px;
+	border:1px solid #ccc;
+	background:#fff;
+	box-shadow: 1px 2px 6px 0px #000;
+	padding:5px;
+	position:absolute;
+	z-index:1;
+	left:26px;
+	top:142px;
+	display:none;
+}
+.ife_content_publish .ife_face_con ul li{
+	list-style:none;
+	float:left;
+	margin:2px;
+	cursor: pointer;
+}
+/* 添加文件 */
+.ife_fileUploadTooltip{
+	width:284px;
+	height:173px;
+	position:absolute;
+	z-index:1;
+	left:92px;
+	top:142px;
+	box-shadow: 1px 2px 6px 0px #000;
+	display:none;
+}
+.ife_fileUploadTooltip .panel{
+	width:284px;
+	height:173px;
+	border-radius:0;
+}
+.ife_fileUploadTooltip .panel-heading{
+	background:#fff !important;
+	border-color:#fff;
+}
+.ife_fileUploadTooltip .panel-heading .panel-title{
+	font-size:14px;
+	font-weight:700;
+}
+.ife_fileUploadTooltip .panel-heading a{
+	color:#696e78;
+	font-size:18px;
+	display: inline-block;
+	text-decoration:none;
+}
+.ife_fileUploadControl{
+	margin-top:-20px;
+}
+.ife_fileUploadControl p{
+	padding-left:10px;
+}
+.ife_fileUploadControl a{
+	color:#fff;
+	background: #ff8140;
+	border: 1px solid #f77c3d;
+	padding: 0 10px;
+	white-space: nowrap;
+	display: inline-block;
+	border-radius: 2px;
+	height: 24px;
+	line-height: 23px;
+	font-size: 12px;
+	min-width: 40px;
+	text-align: center;
+	outline: none;
+	text-decoration:none;
+}
+.ife_fileUploadControl a:hover{
+	background:#f7671d;
+	border:1px solid #f06923;
+	box-shadow: 0px 1px 2px rgba(0,0,0,0.25);
+}
+.ife_fileUploadPic{
+	width:80px;
+	height:80px;
+	background:#fff url("/images/ife_picUploadBg.png");
+	overflow:hidden;
+	position: relative;
+	cursor:pointer;
+}
+.ife_fileUploadPic img{
+	max-width:80px;
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+}
