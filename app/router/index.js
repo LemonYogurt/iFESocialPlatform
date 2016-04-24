@@ -11,7 +11,7 @@ var router = express.Router();
 // ③：根据上次的拉取点，获取文章id
 // 保存新的拉取点
 // ④：将获取到的文章id排序存储到当前用户展示的链表中
-// √
+// 
 // ⑤：根据链表中的文章的id，查询出文章
 // ⑥：根据文章id查询出文章中的commentsid数组
 // ⑦：根据commentsid数组查询出主评论
@@ -163,8 +163,6 @@ router.get('/', function(req, res, next) {
                     console.log(needPullUseid[i]);
                 }
                 async.forEachSeries(needPullUseid, function (item, done) {
-                    console.log(parseInt(lastPullPoint));
-                    console.log('fanspost:userid:' + item + ' ' + parseInt(lastPullPoint) + 1 + ' ' + newPullPoint);
                     redisClient.zrangebyscore('fanspost:userid:' + item, parseInt(lastPullPoint) + 1, newPullPoint, function (err, result) {
                         if (err) {
                             done({msg: '文章id拉取失败'});
@@ -193,6 +191,44 @@ router.get('/', function(req, res, next) {
                     done(null, result);
                 });
             },
+            delHomePost: function (done) {
+                redisClient.lrange('index:userid:' + user._id, 0, -1, function (err, result) {
+                    if (err) {
+                        done({msg: '查询当前首页文章失败'});
+                    } else {
+                        if (result.length > 0) {
+                            async.forEachSeries(result, function (item, done) {
+                                redisClient.hgetall('article:articleid:' + item, function(err, result) {
+                                    if (err) {
+                                        done({ msg: 'index链表查询文章失败' });
+                                    } else {
+                                        // 如果文章不存在，则进行删除
+                                        if (!result) {
+                                            redisClient.lrem('index:userid:' + user._id, 1, item, function (err, result) {
+                                                if (err) {
+                                                    done({msg: '删除失败'});
+                                                } else {
+                                                    done(null);
+                                                }
+                                            });
+                                        } else {
+                                            done(null);
+                                        }
+                                    }
+                                });
+                            }, function (err) {
+                                if (err) {
+                                    done(err);
+                                } else {
+                                    done(null);
+                                }
+                            });
+                        } else {
+                            done(null, result);
+                        }
+                    }
+                });
+            },
             // 保存到index的post中
             saveHomePost: function (done) {
                 if (pullArticleListId.length != 0) {
@@ -207,6 +243,17 @@ router.get('/', function(req, res, next) {
                     done(null);
                 }
             },
+            // 在截取59条
+            ltrimIndexArticleId: function (done) {
+                redisClient.ltrim('index:userid:' + user._id, 0, 59, function (err, result) {
+                    if (err) {
+                        done({msg: '查询当前首页文章失败'});
+                    } else {
+                        done(null);
+                    }
+                });
+            },
+            // 
             getIndexArticleListId: function (done) {
                 // indexArticleListId
                 redisClient.lrange('index:userid:' + user._id, 0, -1, function (err, result) {
@@ -241,7 +288,6 @@ router.get('/', function(req, res, next) {
                     }
                 });
             },
-            // 最后，将文章的id放到自己当前的文章列表中，用于自己查看
             getCurrentPostNum: function (done) {
                 redisClient.get('currentpostnum:userid:' + user._id, function (err, result) {
                     if (err) {

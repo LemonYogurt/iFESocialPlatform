@@ -1,7 +1,8 @@
 - each article in completeArticle
 	.ife_article
 		.ife_article_box.clearfix
-			a.ife_article_close(href="javascript:void(0);") &times;
+			if article.userid == userid
+				a.ife_article_close(href="javascript:void(0);",data-articleid="#{article.articleid}",data-userid="#{article.userid}") &times;
 			if article.avatar == '/images/defaultAvatar.png'
 				- article.avatar = '/images/ife_userDefaultAvatar_little.gif'
 			img.ife_article_avatar(src=article.avatar,alt=article.username,width="50",height="50")

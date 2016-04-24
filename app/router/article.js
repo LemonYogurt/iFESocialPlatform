@@ -6,9 +6,114 @@ var path = require('path');
 var async = require('async');
 var ObjectId = require('bson').ObjectId;
 var redisClient = require('../config').redisClient;
+var delCompleteArticle = require('../util/delCompleteArticle');
+
 var router = express.Router();
 
-
+router.delete('/del', function (req, res, next) {
+    var userid = req.body.userid;
+    var articleid = req.body.articleid;
+    if (userid == req.session.user._id) {
+        // 在redis中查是否有这篇文章，也就是在当前用户维护的那个链表中查
+        // 如果没有查到，则到全局的那个链表中查
+        // 如果还没有查到，则去mongodb中查，然后删除
+        async.series({
+            delArticle: function (done) {
+                delCompleteArticle(articleid, function (err) {
+                    if (err) {
+                        done(err);
+                    } else {
+                        done(null);
+                    }
+                });
+            },
+            // 判断一下文章是否被删除了
+            delFansPost: function (done) {
+                redisClient.zrangebyscore('fanspost:userid:' + userid, 0, Date.now(), function (err, result) {
+                    if (err) {
+                        done({msg: '获取有序集合元素失败'});
+                    }
+                    if (result) {
+                        async.forEachSeries(result, function (item, done) {
+                            redisClient.hgetall('article:articleid:' + item, function(err, result) {
+                                if (err) {
+                                    done({ msg: '查询文章失败' });
+                                } else {
+                                    // 如果文章不存在，则进行删除
+                                    if (!result) {
+                                        redisClient.zrem('fanspost:userid:' + userid, item, function (err, result) {
+                                            if (err) {
+                                                done({msg: '删除失败'});
+                                            } else {
+                                                done(null);
+                                            }
+                                        });
+                                    } else {
+                                        done(null);
+                                    }
+                                }
+                            });
+                        }, function (err) {
+                            if (err) {
+                                done(err);
+                            } else {
+                                done(null);
+                            }
+                        });
+                    } else {
+                        done(null, result);
+                    }
+                });
+            },
+            delCurrentPost: function (done) {
+                redisClient.lrange('currentpost:userid:' + userid, 0, -1, function (err, result) {
+                    if (err) {
+                        done({msg: '查询当前用户文章链表失败'});;
+                    } else {
+                        if (result) {
+                            async.forEachSeries(result, function (item, done) {
+                                redisClient.hgetall('article:articleid:' + item, function(err, result) {
+                                    if (err) {
+                                        done({ msg: '链表查询文章失败' });
+                                    } else {
+                                        // 如果文章不存在，则进行删除
+                                        if (!result) {
+                                            redisClient.lrem('currentpost:userid:' + userid, 1, item, function (err, result) {
+                                                if (err) {
+                                                    done({msg: '删除失败'});
+                                                } else {
+                                                    done(null);
+                                                }
+                                            });
+                                        } else {
+                                            done(null);
+                                        }
+                                    }
+                                });
+                            }, function (err) {
+                                if (err) {
+                                    done(err);
+                                } else {
+                                    done(null);
+                                }
+                            });
+                        } else {
+                            done(null, result);
+                        }
+                    }
+                });
+            }
+        }, function (err, results) {
+            if (err) {
+                return res.status(403).json(err);
+            } else {
+                return res.status(200).json({msg: '文章删除成功'});
+            }
+        });
+    } else {
+        return res.status(401).json({msg: '您不可以删除其他用户的文章'});
+    }
+});
 // 取消文章点赞
 router.post('/cancelPraise', function(req, res, next) {
     var praiseArr = [];
@@ -125,7 +230,7 @@ router.post('/post', function(req, res, next) {
                     done(null);
                 }
             },
-            // 维护一个有序集合，存放20篇文章，
+            // 维护一个有序集合，存放20篇文章
             fanspost: function (done) {
                 redisClient.zadd('fanspost:userid:' + userid, Date.now(), articleid, function (err, result) {
                     if (err) {
@@ -134,6 +239,46 @@ router.post('/post', function(req, res, next) {
                     done(null, result);
                 });
             },
+            // 判断一下文章是否被删除了
+            /*
+            delFansPost: function (done) {
+                redisClient.zrangebyscore('fanspost:userid:' + userid, 0, Date.now(), function (err, result) {
+                    if (err) {
+                        done({msg: '获取有序集合元素失败'});
+                    }
+                    if (result) {
+                        async.forEachSeries(result, function (item, done) {
+                            redisClient.hgetall('article:articleid:' + item, function(err, result) {
+                                if (err) {
+                                    done({ msg: '查询文章失败' });
+                                } else {
+                                    // 如果文章不存在，则进行删除
+                                    if (!result) {
+                                        redisClient.zrem('fanspost:userid:' + userid, item, function (err, result) {
+                                            if (err) {
+                                                done({msg: '删除失败'});
+                                            } else {
+                                                done(null);
+                                            }
+                                        });
+                                    } else {
+                                        done(null);
+                                    }
+                                }
+                            });
+                        }, function (err) {
+                            if (err) {
+                                done(err);
+                            } else {
+                                done(null);
+                            }
+                        });
+                    } else {
+                        done(null, result);
+                    }
+                });
+            },
+            */
             // 判断文章数量是否超过了20，如果超出了，则进行删除
             judgeFansPostNum: function (done) {
                 redisClient.zcard('fanspost:userid:' + userid, function (err, result) {
@@ -152,6 +297,46 @@ router.post('/post', function(req, res, next) {
                     }
                 });
             },
+            /*
+            delCurrentPost: function (done) {
+                redisClient.lrange('currentpost:userid:' + userid, 0, -1, function (err, result) {
+                    if (err) {
+                        done({msg: '查询当前用户文章链表失败'});;
+                    } else {
+                        if (result) {
+                            async.forEachSeries(result, function (item, done) {
+                                redisClient.hgetall('article:articleid:' + item, function(err, result) {
+                                    if (err) {
+                                        done({ msg: '链表查询文章失败' });
+                                    } else {
+                                        // 如果文章不存在，则进行删除
+                                        if (!result) {
+                                            redisClient.lrem('currentpost:userid:' + userid, 1, item, function (err, result) {
+                                                if (err) {
+                                                    done({msg: '删除失败'});
+                                                } else {
+                                                    done(null);
+                                                }
+                                            });
+                                        } else {
+                                            done(null);
+                                        }
+                                    }
+                                });
+                            }, function (err) {
+                                if (err) {
+                                    done(err);
+                                } else {
+                                    done(null);
+                                }
+                            });
+                        } else {
+                            done(null, result);
+                        }
+                    }
+                });
+            },
+            */
             // 最后，将文章的id放到自己当前的文章列表中，用于自己查看
             saveCurrentPost: function (done) {
                 redisClient.lpush('currentpost:userid:' + userid, articleid, function (err, result) {
