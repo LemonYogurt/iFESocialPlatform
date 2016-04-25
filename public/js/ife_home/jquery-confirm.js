@@ -243,7 +243,7 @@ var jconfirm, Jconfirm;
         setDialogCenter: function () {
             var h = $(window).height(),
                     h2 = this.$b.height(),
-                    mar = (h - h2) / 4;
+                    mar = (h - h2) / 2;
             this.$b.find('.content').css({
                 'max-height': h - 200 + 'px'
             });

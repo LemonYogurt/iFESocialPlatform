@@ -17,30 +17,120 @@ router.post('/avatarUpload', function(req, res, next) {
     new formidable.IncomingForm().parse(req, function(err, fields, files) {
         var avatar = files.avatar;
         var avatarName = uuid.v4() + path.extname(avatar.name);
-        fs.createReadStream(avatar.path).pipe(fs.createWriteStream('./public/upload/' + avatarName));
-
-        // 更新数据库
-        var update = { $set: { avatar: '/upload/' + avatarName } };
-        User.findOne({ username: req.session.user.username }, function(err, doc) {
-            if (err) {
-                console.log(err);
-                return res.status(403).json('服务器保存失败');
-            } else {
-                doc.avatar = '/upload/' + avatarName;
-                console.log(doc.avatarFlag);
-                doc.avatarFlag = true;
-                doc.save(function(err, doc) {
+        var rs = fs.createReadStream(avatar.path);
+        var user = req.session.user;
+        async.series({
+            uploadPic: function (done) {
+                rs.pipe(fs.createWriteStream('./public/upload/' + avatarName));
+                rs.on('end', function() {
+                    done(null, {msg: '上传头像成功'});
+                });
+            },
+            updateRedis: function (done) {
+                redisClient.set('users:userid:' + user._id + ':avatarFlag', true, function (err, result) {
                     if (err) {
-                        console.log(err);
-                        return res.status(403).json('服务器保存失败');
+                        done({msg: 'redis设置头像flag失败'});
                     } else {
-                        req.session.user = doc;
-                        return res.status(200).json('服务器保存成功');
+                        done(null, result);
+                    }
+                });
+            },
+            updateMongo: function (done) {
+                var update = { $set: { avatar: '/upload/' + avatarName } };
+                User.findOne({ username: req.session.user.username }, function(err, doc) {
+                    if (err) {
+                        done({msg: '服务器查询失败'});
+                    } else {
+                        doc.avatar = '/upload/' + avatarName;
+                        doc.avatarFlag = true;
+                        doc.save(function(err, doc) {
+                            if (err) {
+                                done({msg: '服务器保存失败'});
+                            } else {
+                                req.session.user = doc;
+                                done(null);
+                            }
+                        });
                     }
                 });
             }
+        }, function (err, results) {
+            if (err) {
+                return res.status(403).json(err);
+            } else {
+                return res.status(200).json({msg: '上传头像成功'});
+            }
         });
+    });
+});
 
+// 取消关注
+router.delete('/cancelStars', function (req, res, next) {
+    var userid = req.body.userid;
+    var articleArr = [];
+    async.series({
+        delStars: function (done) {
+            redisClient.srem('stars:userid:' + req.session.user._id, userid, function(err, result) {
+                if (err) {
+                    done({ msg: '取消关注失败' });
+                }
+                done(null);
+            });
+        },
+        delFans: function (done) {
+            redisClient.srem('fans:userid:' + userid, req.session.user._id, function (err, result) {
+                if (err) {
+                    done({msg: '取消关注失败'});
+                } else {
+                    done(null);
+                }
+            });
+        },
+        //点击取消关注之后，要把当前首页中保存的文章给删除掉
+        delIndexArticle: function (done) {
+            redisClient.lrange('index:userid:' + req.session.user._id, 0, -1, function (err, results) {
+                if (err) {
+                    done({msg: '查询文章id失败'});
+                } else {
+                    articleArr = results;
+                    if (articleArr && articleArr.length > 0) {
+                        async.forEachSeries(articleArr, function (item, done) {
+                            getArticle(item, function (err, article) {
+                                if (err) {
+                                    done(err);
+                                } else {
+                                    if (article && article.userid == userid) {
+                                        redisClient.lrem('index:userid:' + req.session.user._id, 1, item, function (err, result) {
+                                            if (err) {
+                                                done({msg: '删除文章id失败'});
+                                            } else {
+                                                done(null);
+                                            }
+                                        });
+                                    } else {
+                                        done(null);
+                                    }
+                                }
+                            });
+                        }, function (err) {
+                            if (err) {
+                                done(err);
+                            } else {
+                                done(null);
+                            }
+                        });
+                    } else {
+                        done(null);
+                    }
+                }
+            });
+        }
+    }, function (err, results) {
+        if (err) {
+            return res.status(403).json(err);
+        } else {
+            return res.status(200).json({msg: '取消关注成功'});
+        }
     });
 });
 
@@ -333,5 +423,26 @@ router.post('/register', function(req, res, next) {
         });
     });
 });
+
+function getArticle(articleid, cb) {
+    redisClient.hgetall('article:articleid:' + articleid, function(err, result) {
+        /*
+            {   content: '第三方',
+                picURL: '',
+                createAt: 'Thu Apr 21 2016 19:43:54 GMT+0800 (CST)',
+                userid: '57161fbac9f38d924576f671',
+                praise: '',
+                commentsid: '5718bd1d42e2c86c4c57d231,5718bcfc42e2c86c4c57d22d' 
+                articleid: '',
+                username: '',
+                avatar: ''
+            }
+        */
+        if (err) {
+            console.log(err);
+        }
+        cb(err, result);
+    });
+}
 
 module.exports = router;

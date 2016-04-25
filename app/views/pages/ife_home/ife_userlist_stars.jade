@@ -1,0 +1,27 @@
+.ife_lastestuser
+	ul.ife_lsuserbox
+		each item in starArr
+			li.clearfix
+				p.ife_lsuseravatar 
+					img(src=item.avatar,width="50",height="50")
+				div.ife_lsuserinfo
+					strong #{item.username}
+					.ife_lsusercontent.clearfix
+						p 
+							| 关注&nbsp;&nbsp;
+							span #{item.stars}
+						p
+							| 粉丝&nbsp;&nbsp;
+							span #{item.fans}
+						p
+							| 文章&nbsp;&nbsp;
+							span #{item.articles}
+					p.ife_lsuserregtime
+						| 注册时间&nbsp;&nbsp;
+						span #{moment(new Date(item.createTime)).fromNow()}
+					if starids.indexOf(item.userid) == -1
+						a.ife_lsuserbtn.ife_lsuserbtnstars(href="javascript:void(0);",data-userid="#{item.userid}")
+							span +
+							span &nbsp;关注
+					else 
+						a.ife_lsuserbtn.ife_lsuserbtncancelstars(href="javascript:void(0);",data-userid="#{item.userid}") 取消关注

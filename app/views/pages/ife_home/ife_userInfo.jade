@@ -8,7 +8,7 @@
 		.ife_weiboUsername
 			h1 #{username}
 		.ife_weiboCreateTime
-			h6 注册时间：#{moment(createTime).fromNow()}
+			h6 注册时间：#{moment(new Date(createTime)).fromNow()}
 		.ife_weibouserfocus
 			a.ife_weibouserfocusbtn(href="javascript:void(0);")
 				span +

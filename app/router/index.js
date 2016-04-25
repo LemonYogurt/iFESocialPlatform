@@ -11,7 +11,6 @@ var router = express.Router();
 // ③：根据上次的拉取点，获取文章id
 // 保存新的拉取点
 // ④：将获取到的文章id排序存储到当前用户展示的链表中
-// 
 // ⑤：根据链表中的文章的id，查询出文章
 // ⑥：根据文章id查询出文章中的commentsid数组
 // ⑦：根据commentsid数组查询出主评论
@@ -57,7 +56,7 @@ router.get('/', function(req, res, next) {
             stars: function(done) {
                 redisClient.scard('stars:userid:' + user._id, function(err, count) {
                     if (err) {
-                        done('查询关注人数错误');
+                        done({msg: '查询关注人数错误'});
                     } else {
                         done(null, count);
                     }
@@ -66,7 +65,7 @@ router.get('/', function(req, res, next) {
             fans: function(done) {
                 redisClient.scard('fans:userid:' + user._id, function(err, count) {
                     if (err) {
-                        done('查询粉丝人数错误');
+                        done({msg: '查询粉丝人数错误'});
                     } else {
                         done(null, count);
                     }
@@ -341,6 +340,16 @@ router.get('/', function(req, res, next) {
 
 router.get('/login', function(req, res, next) {
     res.render('pages/ife_valitor');
+});
+
+router.get('/chat', function(req, res, next) {
+    res.render('pages/ife_chat/ife_chat');
+});
+router.get('/find', function(req, res, next) {
+    res.render('pages/ife_find/ife_index');
+});
+router.get('/home', function(req, res, next) {
+    res.render('pages/ife_home/ife_home');
 });
 
 module.exports = router;

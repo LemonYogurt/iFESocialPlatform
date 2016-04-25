@@ -1,58 +1,91 @@
-.ife_article
-	.ife_article_box.clearfix
-		a.ife_article_close(href="javascript:void(0);") &times;
-		img.ife_article_avatar(src="/images/1.jpg",alt="用户头像",width="50",height="50")
-		.ife_article_content
-			.ife_article_main
-				h2.ife_article_username Andy
-				h3.ife_article_publishTime 
-					a(href="javascript:void(0);")
-						span 57分钟前
-						| 发布
-				p.ife_article_txt.
-					轻轻的我走了，正如我轻轻的来；我轻轻的招手，作别西天的云彩。轻轻的我走了，正如我轻轻的来；我轻轻的招手，作别西天的云彩。轻轻的我走了，正如我轻轻的来；我轻轻的招手，作别西天的云彩。轻轻的我走了，正如我轻轻的来；我轻轻的招手，作别西天的云彩。轻轻的我走了，正如我轻轻的来；我轻轻的招手，作别西天的云彩。轻轻的我走了，正如我轻轻的来；我轻轻的招手，作别西天的云彩。
-				.ife_article_picCon
-					img.ife_article_pic(src="/images/img1.jpg",alt="文章图片")
-			.ife_article_info.clearfix
-				span.ife_article_time 02-14 23:01
-				a.ife_article_praise(href="javascript:void(0);") 赞
-			.ife_article_praises_total(total="4") 4个人觉得很赞
-			.ife_article_comment_list
-				.ife_article_comment_box.clearfix(user="self")
-					img.ife_article_commentAvatar(src="/images/my.jpg",alt="我的头像",width="40",height="40")
-					.ife_article_comment_content
-						.ife_article_comment_text.clearfix
-							strong.ife_article_comment_username 我：
-							p.ife_article_comment_txt 上善若水，水善利万物而不争，处众人之所恶，故几于道，王法地地，法天天，法道道，法自然
-						p.ife_article_comment_time
-							em.ife_article_comment_relatime 2014-02-19 14:36
-							a.ife_article_comment_praise(href="javascript:void(0);",total="1",my="0",style="display:inline-block;") 1&nbsp;赞
-							a.ife_article_comment_operate(href="javascript:void(0);") 删除
-						.ife_article_scomment_box.clearfix(user="self")
-							img.ife_article_scommentAvatar(src="/images/my.jpg",alt="我的头像",width="40",height="40")
-							.ife_article_scomment_content
-								.ife_article_scomment_text.clearfix
-									strong.ife_article_scomment_username 我：&nbsp;回复&nbsp;他：
-									p.ife_article_scomment_txt 上善若水，水善利万物而不争，处众人之所恶，故几于道，王法地地，法天天，法道道，法自然
-								p.ife_article_scomment_time
-									em.ife_article_scomment_relatime 2014-02-19 14:36
-									a.ife_article_scomment_praise(href="javascript:void(0);",total="1",my="0",style="display:inline-block;") 1&nbsp;赞
-									a.ife_article_scomment_operate(href="javascript:void(0);") 删除
-						.ife_article_scomment_box.clearfix(user="self")
-							img.ife_article_scommentAvatar(src="/images/my.jpg",alt="我的头像",width="40",height="40")
-							.ife_article_scomment_content
-								.ife_article_scomment_text.clearfix
-									strong.ife_article_scomment_username 我：&nbsp;回复&nbsp;他：
-									p.ife_article_scomment_txt 上善若水，水善利万物而不争，处众人之所恶，故几于道，王法地地，法天天，法道道，法自然
-								p.ife_article_scomment_time
-									em.ife_article_scomment_relatime 2014-02-19 14:36
-									a.ife_article_scomment_praise(href="javascript:void(0);",total="1",my="0",style="display:inline-block;") 1&nbsp;赞
-									a.ife_article_scomment_operate(href="javascript:void(0);") 删除
-			.ife_article_text_box
-				include ./ife_comment
-				//-
-					.ife_article_comment(autocomplete="off") 评论...
-					button.ife_article_replyBtn 回&nbsp;复
-					span.ife_article_comment_word
-						span.ife_article_comment_word_length 0
-						| /140
+each article in completeArticle
+	.ife_article
+		.ife_article_box.clearfix
+			if article.userid == userid
+				a.ife_article_close(href="javascript:void(0);",data-articleid="#{article.articleid}",data-userid="#{article.userid}") &times;
+			if article.avatar == '/images/defaultAvatar.png'
+				- article.avatar = '/images/ife_userDefaultAvatar_little.gif'
+			img.ife_article_avatar(src=article.avatar,alt=article.username,width="50",height="50")
+			.ife_article_content
+				.ife_article_main(style="margin-bottom:#{article.picURL == ''? '20px;' : '10px;'}")
+					h2.ife_article_username(data-userid="#{article.userid}") #{article.username}
+					h3.ife_article_publishTime 
+						a(href="javascript:void(0);")
+							span #{moment(new Date(article.createAt)).fromNow()}
+							| 发布
+					p.ife_article_txt.
+						!{article.content}
+					if article.picURL != ''
+						.ife_article_picCon
+							a(href=article.picURL,data-lightbox="roadtrip")
+								img.ife_article_pic(src=article.picURL,alt="文章图片")
+				if article.praise == ''
+					.ife_article_info.clearfix
+						span.ife_article_time 发表于&nbsp;#{moment(new Date(article.createAt)).calendar()}
+						a.ife_article_praise(href="javascript:void(0);",data-articleid="#{article.articleid}",data-userid="#{userid}") 赞
+					.ife_article_praises_total(total="0",my="0",style="display:none;")
+				else
+					- var a_praiseArr = article.praise.split(',');
+					- var a_praiseLength = a_praiseArr.length;
+					- var hasSelf = a_praiseArr.indexOf(userid) == -1 ? false : true;
+					if hasSelf && a_praiseLength > 1
+						.ife_article_info.clearfix
+							span.ife_article_time 发表于&nbsp;&nbsp;#{moment(new Date(article.createAt)).calendar()}
+							a.ife_article_praise(href="javascript:void(0);",data-articleid="#{article.articleid}",data-userid="#{userid}") 取消赞
+						.ife_article_praises_total(my="1",total=a_praiseLength,style="display:block;") 我和#{a_praiseLength - 1}个人觉得很赞
+					else if hasSelf && a_praiseLength == 1
+						.ife_article_info.clearfix
+							span.ife_article_time 发表于&nbsp;&nbsp;#{moment(new Date(article.createAt)).calendar()}
+							a.ife_article_praise(href="javascript:void(0);",data-articleid="#{article.articleid}",data-userid="#{userid}") 取消赞
+						.ife_article_praises_total(total=a_praiseLength,my="1",style="display:block;") 我觉得很赞
+					else if !hasSelf
+						.ife_article_info.clearfix
+							span.ife_article_time 发表于&nbsp;&nbsp;#{moment(new Date(article.createAt)).calendar()}
+							a.ife_article_praise(href="javascript:void(0);",data-articleid="#{article.articleid}",data-userid="#{userid}") 赞
+						.ife_article_praises_total(total=a_praiseLength,my="0",style="display:block;") #{a_praiseLength}个人觉得很赞
+				//- 以上就是文章的显示部分
+				each comment in article.comments
+					.ife_article_comment_list(data-commentid="#{comment.commentid}")
+						.ife_article_comment_box.clearfix(user="#{comment.from == userid ? 'self': 'other'}")
+							if comment.fromAvatar == '/images/defaultAvatar.png'
+								- comment.fromAvatar = '/images/ife_userDefaultAvatar_little.gif'
+							img.ife_article_commentAvatar(src=comment.fromAvatar,alt=comment.fromUsername,width="40",height="40")
+							.ife_article_comment_content
+								.ife_article_comment_text.clearfix
+									strong.ife_article_comment_username #{comment.from == userid ? '我': comment.fromUsername}：
+									p.ife_article_comment_txt !{comment.content}
+								p.ife_article_comment_time
+									em.ife_article_comment_relatime #{moment(new Date(comment.createAt)).fromNow()}
+									- var c_praiseArr = comment.praise.split(',');
+									- var c_praiseLength = c_praiseArr.length;
+									- var hascSelf = c_praiseArr.indexOf(userid) == -1 ? false : true;
+									if comment.praise == ''
+										a.ife_article_comment_praise(href="javascript:void(0);",total="0",my="0",data-commentid="#{comment.commentid}") &nbsp;赞
+									else if hascSelf
+										a.ife_article_comment_praise(href="javascript:void(0);",total=c_praiseLength,my="1",style="display:inline-block;",data-commentid="#{comment.commentid}") #{c_praiseLength}&nbsp;取消赞
+									else if !hascSelf
+										a.ife_article_comment_praise(href="javascript:void(0);",total=c_praiseLength,my="0",data-commentid="#{comment.commentid}") #{c_praiseLength}&nbsp;赞
+									a.ife_article_comment_operate(href="javascript:void(0);",data-userid="#{comment.from}",data-commentid="#{comment.commentid}",data-articleid="#{article.articleid}",data-username="#{comment.fromUsername}") #{comment.from == userid ? '删除' : '回复'}
+								each scomment in comment.scomments
+									.ife_article_scomment_box.clearfix(user="#{scomment.from == userid ? 'self': 'other'}",data-scommentid="#{scomment.scommentid}",data-userid="#{scomment.from}")
+										if scomment.fromAvatar == '/images/defaultAvatar.png'
+											- scomment.fromAvatar = '/images/ife_userDefaultAvatar_little.gif'
+										img.ife_article_scommentAvatar(src=scomment.fromAvatar,alt=scomment.fromUsername,width="40",height="40")
+										.ife_article_scomment_content
+											.ife_article_scomment_text.clearfix
+												strong.ife_article_scomment_username #{scomment.from == userid ? '我': scomment.fromUsername}：&nbsp;回复&nbsp;#{scomment.to == userid ? '我': scomment.toUsername}：
+												p.ife_article_scomment_txt !{scomment.content}
+											p.ife_article_scomment_time
+												em.ife_article_scomment_relatime #{moment(new Date(scomment.createAt)).fromNow()}
+												- var s_praiseArr = scomment.praise.split(',');
+												- var s_praiseLength = s_praiseArr.length;
+												- var hassSelf = s_praiseArr.indexOf(userid) == -1 ? false : true;
+												if scomment.praise == ''
+													a.ife_article_scomment_praise(href="javascript:void(0);",total="0",my="0",data-userid="#{userid}",data-scommentid="#{scomment.scommentid}") &nbsp;赞
+												else if hassSelf
+													a.ife_article_scomment_praise(href="javascript:void(0);",total=s_praiseLength,my="1",style="display:inline-block;",data-userid="#{userid}",data-scommentid="#{scomment.scommentid}") #{s_praiseLength}&nbsp;取消赞
+												else if !hassSelf
+													a.ife_article_scomment_praise(href="javascript:void(0);",total=s_praiseLength,my="0",data-userid="#{userid}",data-scommentid="#{scomment.scommentid}") #{s_praiseLength}&nbsp;赞
+												a.ife_article_scomment_operate(href="javascript:void(0);",data-userid="#{scomment.from}",data-username="#{scomment.fromUsername}",data-scommentid="#{scomment.scommentid}",data-commentid="#{comment.commentid}") #{scomment.from == userid ? '删除' : '回复'}
+				.ife_article_text_box
+					include ./ife_comment

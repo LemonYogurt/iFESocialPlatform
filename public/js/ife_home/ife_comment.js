@@ -4,7 +4,7 @@ function CommentComponent() {
 }
 
 CommentComponent.prototype.publishTextarea = function () {
-	$('.ife_rightMain').on('focus', '.ife_comment_content_hiddenInput', function (e) {
+	$('.ife_weiboRightContentBody').on('focus', '.ife_comment_content_hiddenInput', function (e) {
 		var _$elem = $(e.target).closest('.ife_comment_content_hiddenInput');
 		// 移除回复提示内容
 		_$elem.next().find('.ife_comment_content_input .J_reply_comment_tip').remove();
@@ -23,7 +23,7 @@ CommentComponent.prototype.publishTextarea = function () {
 };
 
 CommentComponent.prototype.addFaceIcon = function () {
-	$('.ife_rightMain').on('click', '.J_comment_face_icon', function () {
+	$('.ife_weiboRightContentBody').on('click', '.J_comment_face_icon', function () {
 		var _$elem = $(this).next();
 		console.log(_$elem);
         var flag = _$elem.is(':hidden');
@@ -42,7 +42,7 @@ CommentComponent.prototype.addFaceIcon = function () {
 
 // 添加表情
 CommentComponent.prototype.appendFace = function() {
-	$('.ife_rightMain').on('click', '.ife_comment_face_con li', function () {
+	$('.ife_weiboRightContentBody').on('click', '.ife_comment_face_con li', function () {
 		var img = $(this).find("img").clone();
 		var $appendElem = $(this).parent().parent().parent().prev().find('.ife_comment_content_ta');
 		var _$publishBtn = $(this).parent().parent().next();
@@ -58,7 +58,7 @@ CommentComponent.prototype.appendFace = function() {
 };
 
 CommentComponent.prototype.initTextarea = function () {
-	$('.ife_rightMain').on('keyup', '.ife_comment_content_input .ife_comment_content_ta', function () {
+	$('.ife_weiboRightContentBody').on('keyup', '.ife_comment_content_input .ife_comment_content_ta', function () {
 		var _$publishBtn = $(this).parent().next().find('.ife_comment_publishBtn');
 		if ($(this).html() == '') {
        		_$publishBtn.removeClass('ife_comment_publishBtnValue');
@@ -72,7 +72,7 @@ CommentComponent.prototype.initTextarea = function () {
 // 发表按钮
 CommentComponent.prototype.initPublishBtn = function () {
 	var self = this;
-	$('.ife_rightMain').on('click', '.ife_comment_publishBtn', function () {
+	$('.ife_weiboRightContentBody').on('click', '.ife_comment_publishBtn', function () {
 		var _$publishBtn = $(this);
 		var _$articleContent = _$publishBtn.parent().parent().parent().parent().parent();
 		var _$articleTextBox = _$articleContent.find('.ife_article_text_box');
@@ -212,7 +212,7 @@ CommentComponent.prototype.initPublishBtn = function () {
 
 // 增加赞和撤销赞
 CommentComponent.prototype.addPraise = function () {
-	$('.ife_rightMain').on('click', '.ife_article_comment_praise', function () {
+	$('.ife_weiboRightContentBody').on('click', '.ife_article_comment_praise', function () {
 		var oldTotal = parseInt($(this).attr('total'));
 		var my = parseInt($(this).attr('my'));
 		var commentid = $(this).data('commentid');
@@ -260,7 +260,7 @@ CommentComponent.prototype.addPraise = function () {
 
 // 增加和取消子评论的赞
 CommentComponent.prototype.addReplyPraise = function () {
-	$('.ife_rightMain').on('click', '.ife_article_scomment_praise', function () {
+	$('.ife_weiboRightContentBody').on('click', '.ife_article_scomment_praise', function () {
 		var oldTotal = parseInt($(this).attr('total'));
 		var my = parseInt($(this).attr('my'));
 		var scommentid = $(this).data('scommentid');
@@ -311,12 +311,13 @@ CommentComponent.prototype.addReplyPraise = function () {
 // 
 // 回复和删除子评论的功能：
 CommentComponent.prototype.replySComment = function () {
-	$('.ife_rightMain').on('click', '.ife_article_scomment_operate', function () {
+	$('.ife_weiboRightContentBody').on('click', '.ife_article_scomment_operate', function () {
 		// 获取文本框
 		// str回复提示框：
 		var scommentid = $(this).data('scommentid');
 		var username = $(this).data('username');
 		var userid = $(this).data('userid');
+		var $currentSComment = $(this).parent().parent().parent();
 		var _$mainComment = $(this).parent().parent().parent().parent().parent().parent();
 		var commentid = _$mainComment.data('commentid');
 		var _$articleContent = _$mainComment.parent();
@@ -329,6 +330,31 @@ CommentComponent.prototype.replySComment = function () {
 		// 这里缓存commentid是因为子评论最终要挂载的位置就是主评论下面
 		var str = '<span class="J_reply_comment_tip" data-username="'+username+'" data-commentid="'+commentid+'" data-userid="'+userid+'">回复&nbsp;<span>'+username+'：</span></span>'
 		if ($(this).html() == '删除') {
+			$.confirm({
+	            autoClose: 'cancel|6000',
+	            title: '删除回复',
+        		content: '您确定要删除该回复吗？',
+	            confirm: function(){
+	                $.ajax({
+	                    url: '/comment/sdel',
+	                    type: 'DELETE',
+	                    data: {userid: userid, commentid: commentid, scommentid: scommentid},
+	                    success: function (data) {
+	                        window.printMsg('success', data.msg, true);
+	                        $currentSComment.addClass('animated bounceOut');
+	                        setTimeout(function () {
+	                            $currentSComment.hide(500, function () {
+	                                $currentSComment.remove();    
+	                            });
+	                        }, 1000);
+	                    },
+	                    error: function(obj) {
+	                        window.printMsg('error', JSON.parse(obj.responseText).msg, true);
+	                    }
+	                });
+	            },
+	            cancel: function(){}
+        	});
 		} else if ($(this).html() == '回复') {
 			_$textareaHiddenElem.hide();
 			_$textBox.show(500, function() {
@@ -343,14 +369,16 @@ CommentComponent.prototype.replySComment = function () {
 // 回复和删除功能：
 // 要在操作按钮上得到评论的id和当前评论用户的id
 CommentComponent.prototype.replyComment = function () {
-	$('.ife_rightMain').on('click', '.ife_article_comment_operate', function () {
+	$('.ife_weiboRightContentBody').on('click', '.ife_article_comment_operate', function () {
 		// 获取文本框
 		// str回复提示框：
 		var commentid = $(this).data('commentid');
+		var articleid = $(this).data('articleid');
 		// 这里的username指的是需要回复的用户名
 		var username = $(this).data('username');
 		// 要回复的用户id
 		var userid = $(this).data('userid');
+		var $currentComment = $(this).parent().parent().parent().parent();
 		var _$articleContent = $(this).parent().parent().parent().parent().parent();
 		var _$textareaHiddenElem = _$articleContent.find('.ife_comment_content_hiddenInput');
 		var _$textBox = _$articleContent.find('.ife_comment_content_inputbox');
@@ -360,6 +388,34 @@ CommentComponent.prototype.replyComment = function () {
 		}
 		var str = '<span class="J_reply_comment_tip" data-username="'+username+'" data-userid="'+userid+'" data-commentid="'+commentid+'">回复&nbsp;<span>'+username+'：</span></span>'
 		if ($(this).html() == '删除') {
+			$.confirm({
+	            autoClose: 'cancel|6000',
+	            title: '删除评论',
+        		content: '您确定要删除该评论吗？',
+	            confirm: function(){
+	                $.ajax({
+	                    url: '/comment/del',
+	                    type: 'DELETE',
+	                    data: {userid: userid, articleid: articleid, commentid: commentid},
+	                    success: function (data) {
+	                        window.printMsg('success', data.msg, true);
+	                        // $currentComment.hide(500, function () {
+                         //        $currentComment.remove();    
+                         //    });
+	                        $currentComment.addClass('animated bounceOut');
+	                        setTimeout(function () {
+	                            $currentComment.hide(500, function () {
+	                                $currentComment.remove();    
+	                            });
+	                        }, 1000);
+	                    },
+	                    error: function(obj) {
+	                        window.printMsg('error', JSON.parse(obj.responseText).msg, true);
+	                    }
+	                });
+	            },
+	            cancel: function(){}
+        	});
 		} else if ($(this).html() == '回复') {
 			_$textareaHiddenElem.hide();
 			_$textBox.show(500, function() {
@@ -370,8 +426,6 @@ CommentComponent.prototype.replyComment = function () {
 		}
 	});
 };
-
-
 var comment = new CommentComponent();
 comment.publishTextarea();
 comment.addFaceIcon();

@@ -68,7 +68,7 @@ router.delete('/del', function (req, res, next) {
             delCurrentPost: function (done) {
                 redisClient.lrange('currentpost:userid:' + userid, 0, -1, function (err, result) {
                     if (err) {
-                        done({msg: '查询当前用户文章链表失败'});;
+                        done({msg: '查询当前用户文章链表失败'});
                     } else {
                         if (result) {
                             async.forEachSeries(result, function (item, done) {

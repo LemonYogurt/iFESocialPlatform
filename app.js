@@ -12,6 +12,7 @@ var index = require('./app/router');
 var user = require('./app/router/user');
 var article = require('./app/router/article');
 var comment = require('./app/router/comment');
+var home = require('./app/router/home');
 
 var app = express();
 var port = process.env.PORT || 3000;
@@ -45,6 +46,7 @@ app.use('/', index);
 app.use('/user', user);
 app.use('/article', article);
 app.use('/comment', comment);
+app.use('/home', home);
 
 if ('development' === app.get('env')) {
 	app.set('showStackError', true);

@@ -1,15 +1,16 @@
 .ife_wrap .ife_leftNav{
+	position:relative;
 	width:150px;
 	min-height:680px;
 	display:inline-block;
 	vertical-align:top;
 }
-.ife_leftNav .ife_leftBodyActive{
+/*.ife_leftNav .ife_leftBodyActive{
 	position:fixed;
 	width:150px;
-	top:66px;
-	left:136px;
-}
+	top:0px;
+	left:0px;
+}*/
 .ife_leftNav .ife_leftBody{
 	width:150px;
 	padding-bottom:18px;

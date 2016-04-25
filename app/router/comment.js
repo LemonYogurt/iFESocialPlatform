@@ -4,6 +4,180 @@ var ObjectId = require('bson').ObjectId;
 var redisClient = require('../config').redisClient;
 var router = express.Router();
 
+router.delete('/sdel', function (req, res, next) {
+	var userid = req.body.userid;
+	var scommentid = req.body.scommentid;
+	var commentid = req.body.commentid;
+	var flag = true;
+	var comment = {};
+
+	if (userid == req.session.user._id) {
+		async.series({
+			judgeComment: function (done) {
+				redisClient.hgetall('comment:commentid:' + commentid, function (err, result) {
+					if (err) {
+						done({msg: '查询评论失败'});
+					} else {
+						if (result) {
+							flag = true;
+							comment = result;
+							done(null);
+						} else {
+							flag = false;
+							done(null);
+						}
+					}
+				});
+			},
+			delComment: function (done) {
+				if (flag) {
+					if (comment.reply) {
+						var reply = comment.reply;
+						var replyArr = reply.split(',');
+						if (replyArr.indexOf(scommentid) != -1) {
+							var index = replyArr.indexOf(scommentid);
+							replyArr.splice(index, 1);
+							redisClient.hset('comment:commentid:' + commentid, 'reply', replyArr.toString(), function (err, result) {
+								if (err) {
+									done({msg: '设置评论的reply属性失败'});
+								} else {
+									done(null);
+								}
+							});
+						} else {
+							done(null);
+						}
+					} else {
+						done(null);
+					}
+				} else {
+					done(null);
+				}
+			},
+			delSComment: function (done) {
+				delSComment(scommentid, function (err) {
+					if (err) {
+						done(err);
+					} else {
+						done(null);
+					}
+				});
+			}
+		}, function (err, results) {
+			if (err) {
+				return res.status(403).json(err);
+			} else {
+				return res.status(200).json({msg: '删除回复成功'});
+			}
+		});
+	} else {
+		return res.status(401).json({msg: '您不可以删除其他用户的回复'});
+	}
+});
+
+router.delete('/del', function (req, res, next) {
+	var userid = req.body.userid;
+	var articleid = req.body.articleid;
+	var commentid = req.body.commentid;
+	var flag = true; // true表示文章在redis中，false表示文章在mongo中
+	var article = {};
+	// ①：判断当前文章是否存在
+	if (userid == req.session.user._id) {
+		async.series({
+			judgeArticle: function(done) {
+	            // 返回一个json
+	            // 如果能查到文章的话，说明文章还在redis中，global或者currentpost:userid中
+	            redisClient.hgetall('article:articleid:' + articleid, function(err, result) {
+	                if (err) {
+	                    done({ msg: '查询文章失败' });
+	                } else {
+	                	if (result) {
+		                    flag = true;
+		                    article = result;
+		                    done(null);
+		                } else {
+		                    flag = false;
+		                    done(null);
+		                }
+	                }
+	            });
+	        },
+	        // 文章删除成功
+	        delArticleComment: function (done) {
+	        	if (flag) {
+	        		var commentsid = article.commentsid;
+	        		console.log()
+	        		if (commentsid) {
+	        			var commentArr = commentsid.split(',');
+	        			var index = commentArr.indexOf(commentid);
+	        			if (index != -1) {
+	        				commentArr.splice(index, 1);
+	        				commentsid = commentArr.toString();
+	        				redisClient.hset('article:articleid:' + articleid, 'commentsid', commentsid, function (err, result) {
+	        					if (err) {
+	        						done({msg: '重新设置评论失败'});
+	        					} else {
+	        						done(null);
+	        					}
+	        				});
+	        			} else {
+	        				done(null);
+	        			}
+	        		} else {
+	        			done(null);
+	        		}
+	        	} else {
+	        		done(null);
+	        	}
+	        },
+	        delCommentAndSComment: function (done) {
+	        	if (flag) {
+	        		delComment(commentid, function (err, comment) {
+	                    var reply = comment.reply;
+	                    if (reply) {
+	                        var replyArr = reply.split(',');
+	                        async.forEachSeries(replyArr, function (item, done) {
+	                            delSComment(item, function (err) {
+	                                if (err) {
+	                                    done(err);
+	                                } else {
+	                                    done(null);
+	                                }
+	                            });
+	                        }, function (err) {
+	                            if (err) {
+	                                done(err);
+	                            } else {
+	                                done(null);
+	                            }
+	                        });
+	                    } else {
+	                        done(null);
+	                    }
+	                });
+	        	} else {
+	        		done(null);
+	        	}
+	        },
+	        delMongoComment: function (done) {
+	        	if (!flag) {
+	        		done(null);
+	        	} else {
+	        		done(null);
+	        	}
+	        }
+		}, function (err, results) {
+			if (err) {
+				return res.status(403).json(err);
+			} else {
+				return res.status(200).json({msg: '删除评论成功'});
+			}
+		});
+	} else {
+		return res.status(401).json({msg: '您不可以删除其他用户的评论'});
+	}
+});
+
 // 撤销评论赞
 router.post('/cancelReplyPraise', function (req, res, next) {
 	var scommentid = req.body.scommentid;
@@ -262,5 +436,53 @@ router.post('/normal', function (req, res, next) {
 		return res.status(200).json(results.findComment);
 	});
 });
+
+function delComment(commentid, cb) {
+    var comment = {};
+    async.series({
+        getComment: function(done) {
+            redisClient.hgetall('comment:commentid:' + commentid, function(err, result) {
+                if (err) {
+                    done({ msg: '查询评论失败' });
+                }
+                if (result) {
+                    comment = result;
+                    comment.commentid = commentid;
+                    done(null, result);
+                } else {
+                    done(null);
+                }
+            });
+        },
+        delComment: function (done) {
+            redisClient.del('comment:commentid:' + commentid, function (err, result) {
+                if (err) {
+                    done({msg: '评论删除失败'});
+                } else {
+                    done(null, result);
+                }
+            });
+        }
+    }, function(err, result) {
+        cb(err, comment);
+    });
+}
+
+function delSComment(scommentid, cb) {
+    async.series({
+        delSComment: function(done) {
+            redisClient.del('replycomment:replycommentid:' + scommentid, function(err, result) {
+                if (err) {
+                    done({ msg: '查询回复失败' });
+                } else {
+                    done(null, result);
+                }
+            });
+        }
+    }, function(err, result) {
+        cb(err);
+    });
+}
+
 
 module.exports = router;

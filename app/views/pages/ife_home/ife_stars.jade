@@ -1,13 +1,11 @@
 extend ../../layout
 
 block headerContent
-	link(rel="stylesheet",href="/css/ife_home/lightbox.css")
-	link(rel="stylesheet",href="/css/ife_home/jquery-confirm.css")
-	link(rel="stylesheet",href="/css/ife_home/ife_nav.css")
-	link(rel="stylesheet",href="/css/ife_home/ife_article.css")
-	link(rel="stylesheet",href="/css/ife_home/ife_comment.css")
-	link(rel="stylesheet",href="/css/ife_home/ife_home.css")
-	link(rel="stylesheet",href="/css/ife_home/ife_find.css")
+	link(rel="stylesheet",href="/css/ife_nav.css")
+	link(rel="stylesheet",href="/css/ife_article.css")
+	link(rel="stylesheet",href="/css/ife_home.css")
+	link(rel="stylesheet",href="/css/ife_find.css")
+	link(rel="stylesheet",href="/css/jquery-confirm.css")
 	style.
 		/* 微博内容部分 */
 		.ife_weiboContent{
@@ -25,11 +23,11 @@ block content
 				li
 					a(href="/home/detail/#{userid}/a5df375d7c972248177e8b4407c8808c") 
 						| 我的关注
-						i
+						i(style="display:block;")
 				li
 					a(href="/home/detail/#{userid}/92a2b5cb9c6906035c2864fa225e1940") 
 						| 我的文章
-						i(style="display:block;")
+						i
 				li
 					a(href="/home/detail/#{userid}/1ed1645edd706dc379effe13f3edcacf") 
 						| 我的粉丝
@@ -39,7 +37,7 @@ block content
 				.ife_weiboLeftContentUserInfo
 					ul
 						li
-							strong #{stars ? stars : 0}
+							strong#J_home_stars #{stars ? stars : 0}
 							em 关注
 						li
 							strong #{fans ? fans : 0}
@@ -96,12 +94,9 @@ block content
 									a(href="javascript:void(0);") 鬼道-徐凯
 						.ife_weiboweirelativemore
 							a(href="javascript:void(0);") 查看更多&nbsp;>
-			.ife_weiboRightContentBody
-				include ./ife_article
+			.ife_weiboRightContentBody()
+				include ./ife_userlist_stars
 				include ./ife_loading
 block footerContent
-	script(src="/js/ife_home/lightbox-2.6.min.js")
-	script(src="/js/ife_home/jquery-confirm.js")
-	script(src="/js/ife_home/ife_home.js")
-	script(src="/js/ife_home/ife_textarea.js")
-	script(src="/js/ife_home/ife_comment.js")
+	script(src="/js/jquery-confirm.js")
+	script(src="/js/ife_home.js")
