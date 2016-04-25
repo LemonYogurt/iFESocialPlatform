@@ -2,20 +2,20 @@
 	.ife_sideUserInfo
 		.ife_sideUserInfoBg
 			.ife_sideUserAvatar
-				a(href="javascript:void(0);")
+				a(href="/home/detail/#{userid}/92a2b5cb9c6906035c2864fa225e1940")
 					img(src="#{avatar}",width="60",height="60")
 			h2 #{username}
 			ul.clearfix
 				li.pull-left
-					a(href="")
+					a(href="/home/detail/#{userid}/a5df375d7c972248177e8b4407c8808c")
 						strong#J_starsCount #{stars}
 						span 关注
 				li.pull-left
-					a(href="javascript:void(0);") 
+					a(href="/home/detail/#{userid}/1ed1645edd706dc379effe13f3edcacf") 
 						strong #{fans}
 						span 粉丝
 				li.pull-left
-					a(href="javascript:void(0);")
+					a(href="/home/detail/#{userid}/92a2b5cb9c6906035c2864fa225e1940")
 						strong#J_currentUserArticleNum #{currentUserArticleNum ? currentUserArticleNum : 0}
 						span 文章
 	.ife_sideNewestUser
@@ -29,7 +29,8 @@
 					li.empty
 					li.userInfo.J_sideLiUserCount
 						p.pull-left.p_img
-							img(src=reguser['avatar'],width="30",height="30")
+							a(href="/home/detail/#{reguser._id}/92a2b5cb9c6906035c2864fa225e1940")
+								img(src=reguser['avatar'],width="30",height="30")
 						p.pull-left.p_userinfo
 							strong	#{reguser['username']}
 							span #{moment(reguser['createTime']).fromNow()}注册
@@ -41,7 +42,8 @@
 					li.empty.J_sideLiEmptyhidden
 					li.userInfo.J_sideLiUserInfoHidden
 						p.pull-left.p_img
-							img(src=reguser['avatar'],width="30",height="30")
+							a(href="/home/detail/#{reguser._id}/92a2b5cb9c6906035c2864fa225e1940")
+								img(src=reguser['avatar'],width="30",height="30")
 						p.pull-left.p_userinfo
 							strong	#{reguser['username']}
 							span #{moment(reguser['createTime']).fromNow()}注册

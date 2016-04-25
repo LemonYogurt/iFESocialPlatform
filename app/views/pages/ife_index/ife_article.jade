@@ -5,7 +5,8 @@ each article in completeArticle
 				a.ife_article_close(href="javascript:void(0);",data-articleid="#{article.articleid}",data-userid="#{article.userid}") &times;
 			if article.avatar == '/images/defaultAvatar.png'
 				- article.avatar = '/images/ife_userDefaultAvatar_little.gif'
-			img.ife_article_avatar(src=article.avatar,alt=article.username,width="50",height="50")
+			a(href="/home/detail/#{article.userid}/92a2b5cb9c6906035c2864fa225e1940")
+				img.ife_article_avatar(src=article.avatar,alt=article.username,width="50",height="50")
 			.ife_article_content
 				.ife_article_main(style="margin-bottom:#{article.picURL == ''? '20px;' : '10px;'}")
 					h2.ife_article_username(data-userid="#{article.userid}") #{article.username}
@@ -49,7 +50,8 @@ each article in completeArticle
 						.ife_article_comment_box.clearfix(user="#{comment.from == userid ? 'self': 'other'}")
 							if comment.fromAvatar == '/images/defaultAvatar.png'
 								- comment.fromAvatar = '/images/ife_userDefaultAvatar_little.gif'
-							img.ife_article_commentAvatar(src=comment.fromAvatar,alt=comment.fromUsername,width="40",height="40")
+							a(href="/home/detail/#{comment.from}/92a2b5cb9c6906035c2864fa225e1940")
+								img.ife_article_commentAvatar(src=comment.fromAvatar,alt=comment.fromUsername,width="40",height="40")
 							.ife_article_comment_content
 								.ife_article_comment_text.clearfix
 									strong.ife_article_comment_username #{comment.from == userid ? '我': comment.fromUsername}：
@@ -70,7 +72,8 @@ each article in completeArticle
 									.ife_article_scomment_box.clearfix(user="#{scomment.from == userid ? 'self': 'other'}",data-scommentid="#{scomment.scommentid}",data-userid="#{scomment.from}")
 										if scomment.fromAvatar == '/images/defaultAvatar.png'
 											- scomment.fromAvatar = '/images/ife_userDefaultAvatar_little.gif'
-										img.ife_article_scommentAvatar(src=scomment.fromAvatar,alt=scomment.fromUsername,width="40",height="40")
+										a(href="/home/detail/#{scomment.from}/92a2b5cb9c6906035c2864fa225e1940")
+											img.ife_article_scommentAvatar(src=scomment.fromAvatar,alt=scomment.fromUsername,width="40",height="40")
 										.ife_article_scomment_content
 											.ife_article_scomment_text.clearfix
 												strong.ife_article_scomment_username #{scomment.from == userid ? '我': scomment.fromUsername}：&nbsp;回复&nbsp;#{scomment.to == userid ? '我': scomment.toUsername}：

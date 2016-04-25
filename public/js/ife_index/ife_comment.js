@@ -137,7 +137,7 @@ CommentComponent.prototype.initPublishBtn = function () {
 							"57161e84c9f38d924576f66e"
 						*/
 						var commentStr = '<div class="ife_article_comment_list" data-commentid="'+data.commentid+'">\
-							                  <div user="self" class="ife_article_comment_box clearfix"><img src="'+data.avatar+'" alt="头像" width="40" height="40" class="ife_article_commentAvatar">\
+							                  <div user="self" class="ife_article_comment_box clearfix"><a href="/home/detail/'+data.from+'/92a2b5cb9c6906035c2864fa225e1940"><img src="'+data.avatar+'" alt="头像" width="40" height="40" class="ife_article_commentAvatar"></a>\
 							                    <div class="ife_article_comment_content">\
 							                      <div class="ife_article_comment_text clearfix"><strong class="ife_article_comment_username">我：</strong>\
 							                        <p class="ife_article_comment_txt">'+data.content+'</p>\
@@ -176,7 +176,7 @@ CommentComponent.prototype.initPublishBtn = function () {
 				data: {commentid: commentid, to: userid, content: content},
 				success: function (data) {
 					window.printMsg('success', data.msg, true);
-					var strReplyComment = '<div data-scommentid="'+data.replycommentid+'" data-userid="'+data.from+'" user="self" class="ife_article_scomment_box clearfix"><img src="'+data.avatar+'" alt="头像" width="40" height="40" class="ife_article_scommentAvatar">\
+					var strReplyComment = '<div data-scommentid="'+data.replycommentid+'" data-userid="'+data.from+'" user="self" class="ife_article_scomment_box clearfix"><a href="/home/detail/'+data.from+'/92a2b5cb9c6906035c2864fa225e1940"><img src="'+data.avatar+'" alt="头像" width="40" height="40" class="ife_article_scommentAvatar"></a>\
 			                        <div class="ife_article_scomment_content">\
 			                          <div class="ife_article_scomment_text clearfix"><strong class="ife_article_scomment_username">我：&nbsp;回复&nbsp;'+username+'：</strong>\
 			                            <p class="ife_article_scomment_txt">'+data.content+'</p>\

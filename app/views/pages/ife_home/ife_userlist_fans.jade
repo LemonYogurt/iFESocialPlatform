@@ -2,8 +2,9 @@
 	ul.ife_lsuserbox
 		each item in fansArr
 			li.clearfix
-				p.ife_lsuseravatar 
-					img(src=item.avatar,width="50",height="50")
+				p.ife_lsuseravatar
+					a(href="/home/detail/#{item.userid}/92a2b5cb9c6906035c2864fa225e1940")
+						img(src=item.avatar,width="50",height="50")
 				div.ife_lsuserinfo
 					strong #{item.username}
 					.ife_lsusercontent.clearfix
@@ -19,9 +20,12 @@
 					p.ife_lsuserregtime
 						| 注册时间&nbsp;&nbsp;
 						span #{moment(new Date(item.createTime)).fromNow()}
-					if starids.indexOf(item.userid) == -1
-						a.ife_lsuserbtn.ife_lsuserbtnstars(href="javascript:void(0);",data-userid="#{item.userid}")
-							span +
-							span &nbsp;关注
-					else 
-						a.ife_lsuserbtn.ife_lsuserbtncancelstars(href="javascript:void(0);",data-userid="#{item.userid}") 取消关注
+					if userid == item.userid
+						a.ife_lsuserbtn(href="javascript:void(0);",data-userid="#{item.userid}") 这是Me&nbsp;^_^
+					else
+						if starids.indexOf(item.userid) == -1
+							a.ife_lsuserbtn.ife_lsuserbtnstars(href="javascript:void(0);",data-userid="#{item.userid}")
+								span +
+								span &nbsp;关注
+						else 
+							a.ife_lsuserbtn.ife_lsuserbtncancelstars(href="javascript:void(0);",data-userid="#{item.userid}") 取消关注

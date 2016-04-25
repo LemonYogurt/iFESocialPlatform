@@ -35,6 +35,15 @@ router.post('/avatarUpload', function(req, res, next) {
                     }
                 });
             },
+            updateRedisAvatar: function (done) {
+                redisClient.set('users:userid:' + user._id + ':avatar', '/upload/' + avatarName, function (err, result) {
+                    if (err) {
+                        done({msg: 'redis设置头像失败'});
+                    } else {
+                        done(null, result);
+                    }
+                });
+            },
             updateMongo: function (done) {
                 var update = { $set: { avatar: '/upload/' + avatarName } };
                 User.findOne({ username: req.session.user.username }, function(err, doc) {

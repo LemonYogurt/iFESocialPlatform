@@ -152,6 +152,10 @@
 	border-radius:2px;
 	margin-bottom:16px;
 }
+.ife_weiboContentBody .ife_weiboLeftContentBody .ife_weiboLeftContentUserInfo a{
+	text-decoration: none;
+	color:#333;
+}
 .ife_weiboContentBody .ife_weiboLeftContentBody .ife_weiboLeftContentUserInfo ul{
 	margin:0;
 	padding:0;
@@ -240,10 +244,15 @@
 .ife_weiboLeftContentBody .ife_weiboweirelative li p:first-of-type img{
 	border-radius:25px;
 }
+.ife_weiboLeftContentBody .ife_weiboweirelative li p:first-of-type img:hover{
+	transition:all .8s linear;
+	transform:rotateY(360deg);
+}
 .ife_weiboLeftContentBody .ife_weiboweirelative li p:last-of-type{
 	width:50px;
 	height:25px;
 	line-height:25px;
+	text-align:center;
 	margin:10px 0 0 0;
 	white-space: nowrap;
     overflow: hidden;

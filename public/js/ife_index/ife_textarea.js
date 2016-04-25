@@ -132,7 +132,7 @@ publishContent.prototype.publicBtn = function() {
                         ife_article_main = '<div class="ife_article_main">';
                     }
                     var str = '<div class="ife_article">\
-                                <div class="ife_article_box clearfix"><a href="javascript:void(0);" class="ife_article_close" data-articleid="'+articleData.articleid+'" data-userid="'+articleData.userid+'">&times;</a><img src="' + articleData.avatar + '" alt="用户头像" width="50" height="50" class="ife_article_avatar">\
+                                <div class="ife_article_box clearfix"><a href="javascript:void(0);" class="ife_article_close" data-articleid="'+articleData.articleid+'" data-userid="'+articleData.userid+'">&times;</a><a href="/home/detail/'+articleData.userid+'/92a2b5cb9c6906035c2864fa225e1940"><img src="' + articleData.avatar + '" alt="用户头像" width="50" height="50" class="ife_article_avatar"></a>\
                                   <div class="ife_article_content">\
                                     ' + ife_article_main + '\
                                       <h2 class="ife_article_username" data-userid="' + articleData.userid + '">' + articleData.username + '</h2>\
@@ -363,7 +363,7 @@ publishContent.prototype.deleteArticle = function () {
                         $parent.addClass('animated bounceOut');
                         setTimeout(function () {
                             $parent.hide(500, function () {
-                                $parent.remove();    
+                                $parent.remove();
                             });
                         }, 1000);
                     },

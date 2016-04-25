@@ -1,11 +1,11 @@
 extend ../../layout
 
 block headerContent
-	link(rel="stylesheet",href="/css/ife_nav.css")
-	link(rel="stylesheet",href="/css/ife_article.css")
-	link(rel="stylesheet",href="/css/ife_home.css")
-	link(rel="stylesheet",href="/css/ife_find.css")
-	link(rel="stylesheet",href="/css/jquery-confirm.css")
+	link(rel="stylesheet",href="/css/ife_home/ife_nav.css")
+	link(rel="stylesheet",href="/css/ife_home/ife_article.css")
+	link(rel="stylesheet",href="/css/ife_home/ife_home.css")
+	link(rel="stylesheet",href="/css/ife_home/ife_find.css")
+	link(rel="stylesheet",href="/css/ife_home/jquery-confirm.css")
 	style.
 		/* 微博内容部分 */
 		.ife_weiboContent{
@@ -21,82 +21,56 @@ block content
 		.ife_weiboContentTitle
 			ul
 				li
-					a(href="/home/detail/#{userid}/a5df375d7c972248177e8b4407c8808c") 
-						| 我的关注
+					a(href="/home/detail/#{tempuserid}/a5df375d7c972248177e8b4407c8808c") 
+						| #{other? '他的关注': '我的关注'}
 						i(style="display:block;")
 				li
-					a(href="/home/detail/#{userid}/92a2b5cb9c6906035c2864fa225e1940") 
-						| 我的文章
+					a(href="/home/detail/#{tempuserid}/92a2b5cb9c6906035c2864fa225e1940") 
+						| #{other? '他的文章': '我的文章'}
 						i
 				li
-					a(href="/home/detail/#{userid}/1ed1645edd706dc379effe13f3edcacf") 
-						| 我的粉丝
+					a(href="/home/detail/#{tempuserid}/1ed1645edd706dc379effe13f3edcacf") 
+						| #{other? '他的粉丝': '我的粉丝'}
 						i
 		.ife_weiboContentBody.clearfix
 			.ife_weiboLeftContentBody
 				.ife_weiboLeftContentUserInfo
 					ul
 						li
-							strong#J_home_stars #{stars ? stars : 0}
-							em 关注
+							a(href="/home/detail/#{tempuserid}/a5df375d7c972248177e8b4407c8808c")
+								strong#J_home_stars #{stars ? stars : 0}
+								em 关注
 						li
-							strong #{fans ? fans : 0}
-							em 粉丝
+							a(href="/home/detail/#{tempuserid}/1ed1645edd706dc379effe13f3edcacf")
+								strong#J_home_fans #{fans ? fans : 0}
+								em 粉丝
 						li
-							strong #{currentpostnum ? currentpostnum : 0}
-							em 文章
+							a(href="/home/detail/#{tempuserid}/92a2b5cb9c6906035c2864fa225e1940")
+								strong#J_home_articles #{currentpostnum ? currentpostnum : 0}
+								em 文章
 				if other
 					.ife_weiboweirelative
 						h2 微关系
 						h4 
 							| 共同关注
-							span (6)
+							span (#{weiStars.length})
 						ul.clearfix
-							li
-								p
-									img(src="/images/ife_userDefaultAvatar_little.gif",width="50",height="50")
-								p
-									a(href="javascript:void(0);") 鬼道-徐凯
-							li
-								p
-									img(src="/images/ife_userDefaultAvatar_little.gif",width="50",height="50")
-								p
-									a(href="javascript:void(0);") 鬼道-徐凯
-							li
-								p
-									img(src="/images/ife_userDefaultAvatar_little.gif",width="50",height="50")
-								p
-									a(href="javascript:void(0);") 鬼道-徐凯
-							li
-								p
-									img(src="/images/ife_userDefaultAvatar_little.gif",width="50",height="50")
-								p
-									a(href="javascript:void(0);") 鬼道-徐凯
-							li
-								p
-									img(src="/images/ife_userDefaultAvatar_little.gif",width="50",height="50")
-								p
-									a(href="javascript:void(0);") 鬼道-徐凯
-							li
-								p
-									img(src="/images/ife_userDefaultAvatar_little.gif",width="50",height="50")
-								p
-									a(href="javascript:void(0);") 鬼道-徐凯
-							li
-								p
-									img(src="/images/ife_userDefaultAvatar_little.gif",width="50",height="50")
-								p
-									a(href="javascript:void(0);") 鬼道-徐凯
-							li
-								p
-									img(src="/images/ife_userDefaultAvatar_little.gif",width="50",height="50")
-								p
-									a(href="javascript:void(0);") 鬼道-徐凯
-						.ife_weiboweirelativemore
-							a(href="javascript:void(0);") 查看更多&nbsp;>
+							if weiStars && weiStars.length > 0
+								each stars in weiStars
+									li
+										p
+											img(src=stars.avatar,width="50",height="50")
+										p
+											a(href="javascript:void(0);") #{stars.username}
+						if weiStars && weiStars.length > 8
+							.ife_weiboweirelativemore
+								a(href="/home/detail/#{tempuserid}/a5df375d7c972248177e8b4407c8808c") 查看更多&nbsp;>
+						else
+							.ife_weiboweirelativemore
+								a(href="javascript:void(0);") 没有更多共同关注了
 			.ife_weiboRightContentBody()
 				include ./ife_userlist_stars
 				include ./ife_loading
 block footerContent
-	script(src="/js/jquery-confirm.js")
-	script(src="/js/ife_home.js")
+	script(src="/js/ife_home/jquery-confirm.js")
+	script(src="/js/ife_home/ife_home.js")

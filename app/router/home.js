@@ -10,9 +10,11 @@ var router = express.Router();
 // fans: 1ed1645edd706dc379effe13f3edcacf
 // stars: a5df375d7c972248177e8b4407c8808c
 
+// decide userid = currentuser
 // stars
 router.get('/detail/:id/a5df375d7c972248177e8b4407c8808c', function (req, res, next) {
 	var tempid = req.params.id;
+    var tempUser = {};
 	var user = req.session.user;
 	var starids = [];
     var starArr = [];
@@ -91,9 +93,6 @@ router.get('/detail/:id/a5df375d7c972248177e8b4407c8808c', function (req, res, n
                 starArr.sort(function (a, b) {
                     return new Date(b.createTime) - new Date(a.createTime);
                 });
-                for (var i = 0; i < starArr.length; i++) {
-                    console.log(starArr[i].username);
-                }
 				res.render('pages/ife_home/ife_stars', {
 					userid: user._id,
 					username: user.username,
@@ -106,20 +105,175 @@ router.get('/detail/:id/a5df375d7c972248177e8b4407c8808c', function (req, res, n
 					// 大坑啊，jade渲染模板的时候不能写self属性啊
                     starArr: starArr,
                     starids: starids,
-					other: false
+					other: false,
+                    tempuserid: user._id,
+                    tempusername: user.username
 				});
 			}
 		});
 	} else {
-
+        var interStarsList = [];
+        var interStarsListArr = [];
+        async.series({
+            // 获取stars的信息：
+            getStarsId: function (done) {
+                redisClient.smembers('stars:userid:' + tempid, function (err, results) {
+                    if (err) {
+                        done({msg: '查询关注者集合失败'});
+                    } else {
+                        starids = results;
+                        done(null, results);
+                    }
+                });
+            },
+            getStarsInfo: function (done) {
+                async.series({
+                    getStarsUserInfo: function (done) {
+                        console.log(starids);
+                        async.forEachSeries(starids, function (item, done) {
+                            getUserCompleteInfo(item, function (err, user) {
+                                if (err) {
+                                    done(err);
+                                } else {
+                                    console.log(user);
+                                    for (var k in user) {
+                                        console.log(k + '------' + user[k]);
+                                    }
+                                    starArr.push(user);
+                                    done(null);
+                                }
+                            });
+                        }, function (err) {
+                            if (err) {
+                                done(err);
+                            } else {
+                                done(null);
+                            }
+                        });
+                    },
+                    getStarsId: function (done) {
+                        redisClient.smembers('stars:userid:' + user._id, function (err, results) {
+                            if (err) {
+                                done({msg: '查询当前用户的关注者集合失败'});
+                            } else {
+                                starids = results;
+                                done(null, results);
+                            }
+                        });
+                    }
+                }, function (err, results) {
+                    if (err) {
+                        done(err);
+                    } else {
+                        done(null, results);
+                    }
+                });
+            },
+            getTempUser: function (done) {
+                getUserCompleteInfo(tempid, function (err, user) {
+                    if (err) {
+                        done(err);
+                    } else {
+                        tempUser = user;
+                        done(null);
+                    }
+                });
+            },
+            getCurrentUserStars: function (done) {
+                redisClient.smembers('stars:userid:' + user._id, function (err, results) {
+                    if (err) {
+                        done({msg: '查询当前的用户关注者集合失败'});
+                    } else {
+                        if (results && results.length > 0) {
+                            done(null, results);
+                        } else {
+                            results = [];
+                            done(null, results);
+                        }
+                    }
+                });
+            },
+            getInterStarsId: function (done) {
+                redisClient.sinter('stars:userid:' + user._id, 'stars:userid:' + tempid, function (err, result) {
+                    if (err) {
+                        done({msg: '求共同关注用户id失败'});
+                    } else {
+                        if (result && result.length > 0) {
+                            interStarsList = result;
+                        } else {
+                            interStarsList = [];
+                        }
+                        done(null, result);
+                    }
+                });
+            },
+            getInterStarsInfo: function (done) {
+                async.forEachSeries(interStarsList, function (item, done) {
+                    getUserCompleteInfo(item, function (err, user) {
+                        if (err) {
+                            done(err);
+                        } else {
+                            interStarsListArr.push(user);
+                            done(null);
+                        }
+                    });
+                }, function (err) {
+                    if (err) {
+                        done(err);
+                    } else {
+                        done(null);
+                    }
+                });
+            }
+        }, function (err, results) {
+            if (err) {
+                return res.status(403).json(err);
+            } else {
+                starArr.sort(function (a, b) {
+                    return new Date(b.createTime) - new Date(a.createTime);
+                });
+                for (var i = 0; i < starArr; i++) {
+                    for (var k in starArr[i]) {
+                        console.log(k +'-----' + starArr[i][k]);
+                    }
+                }
+                console.log('--------------');
+                for (var j = 0; j < results.getCurrentUserStars.length; j++) {
+                    console.log(results.getCurrentUserStars[j]);
+                }
+                console.log('-----------------');
+                for (var q = 0; j < starids.length; q++) {
+                    console.log(starids.length[q]);
+                }
+                res.render('pages/ife_home/ife_stars', {
+                    userid: user._id,
+                    username: user.username,
+                    avatar: tempUser.avatar,
+                    // 不是因为其他人就不需要上传头像了，而是因为当前用户是不可以对其他用户上传头像
+                    avatarFlag: true,
+                    createTime: tempUser.createTime,
+                    currentpostnum: tempUser.articles,
+                    fans: tempUser.fans,
+                    stars: tempUser.stars,
+                    // 大坑啊，jade渲染模板的时候不能写self属性啊
+                    starArr: starArr, // 这里查的其他用户的stars信息，
+                    starids: starids, // 这里应该是当前用户的stars信息
+                    other: true,
+                    tempuserid: tempid,
+                    tempusername: tempUser.username,
+                    currentUserStars: results.getCurrentUserStars,
+                    weiStars: interStarsListArr
+                });
+            }
+        });
 	}
 });
-
 
 
 // fans
 router.get('/detail/:id/1ed1645edd706dc379effe13f3edcacf', function (req, res, next) {
 	var tempid = req.params.id;
+    var tempUser = {};
     var user = req.session.user;
     var fansids = [];
     var fansArr = [];
@@ -227,12 +381,154 @@ router.get('/detail/:id/1ed1645edd706dc379effe13f3edcacf', function (req, res, n
                     // 大坑啊，jade渲染模板的时候不能写self属性啊
                     fansArr: fansArr,
                     starids: starids,
-                    other: false
+                    other: false,
+                    tempuserid: user._id,
+                    tempusername: user.username
                 });
             }
         });
     } else {
-
+        var interStarsList = [];
+        var interStarsListArr = [];
+        async.series({
+            getStarsId: function (done) {
+                redisClient.smembers('stars:userid:' + user._id, function (err, results) {
+                    if (err) {
+                        done({msg: '查询当前关注者集合失败'});
+                    } else {
+                        starids = results;
+                        done(null, results);
+                    }
+                });
+            },
+            // 获取stars的信息：
+            getFansInfo: function (done) {
+                async.series({
+                    getFansId: function (done) {
+                        redisClient.smembers('fans:userid:' + tempid, function (err, results) {
+                            if (err) {
+                                done({msg: '查询关注者集合失败'});
+                            } else {
+                                fansids = results;
+                                done(null, results);
+                            }
+                        });
+                    },
+                    getFansUserInfo: function (done) {
+                        async.forEachSeries(fansids, function (item, done) {
+                            getUserCompleteInfo(item, function (err, user) {
+                                if (err) {
+                                    done(err);
+                                } else {
+                                    fansArr.push(user);
+                                    done(null);
+                                }
+                            });
+                        }, function (err) {
+                            if (err) {
+                                done(err);
+                            } else {
+                                done(null);
+                            }
+                        });
+                    }
+                }, function (err, results) {
+                    if (err) {
+                        done(err);
+                    } else {
+                        done(null, results);
+                    }
+                });
+            },
+            getTempUser: function (done) {
+                getUserCompleteInfo(tempid, function (err, user) {
+                    if (err) {
+                        done(err);
+                    } else {
+                        tempUser = user;
+                        done(null);
+                    }
+                });
+            },
+            getCurrentUserStars: function (done) {
+                redisClient.smembers('stars:userid:' + user._id, function (err, results) {
+                    if (err) {
+                        done({msg: '查询当前的用户关注者集合失败'});
+                    } else {
+                        if (results && results.length > 0) {
+                            done(null, results);
+                        } else {
+                            results = [];
+                            done(null, results);
+                        }
+                    }
+                });
+            },
+            getInterStarsId: function (done) {
+                redisClient.sinter('stars:userid:' + user._id, 'stars:userid:' + tempid, function (err, result) {
+                    if (err) {
+                        done({msg: '求共同关注用户id失败'});
+                    } else {
+                        if (result && result.length > 0) {
+                            interStarsList = result;
+                        } else {
+                            interStarsList = [];
+                        }
+                        done(null, result);
+                    }
+                });
+            },
+            getInterStarsInfo: function (done) {
+                async.forEachSeries(interStarsList, function (item, done) {
+                    getUserCompleteInfo(item, function (err, user) {
+                        if (err) {
+                            done(err);
+                        } else {
+                            interStarsListArr.push(user);
+                            done(null);
+                        }
+                    });
+                }, function (err) {
+                    if (err) {
+                        done(err);
+                    } else {
+                        done(null);
+                    }
+                });
+            }
+        }, function (err, results) {
+            if (err) {
+                return res.status(403).json(err);
+            } else {
+                fansArr.sort(function (a, b) {
+                    return new Date(b.createTime) - new Date(a.createTime);
+                });
+                for (var i = 0; i < fansArr.length; i++) {
+                    console.log(fansArr[i].username);
+                }
+                for (var i = 0; i < fansids.length; i++) {
+                    console.log(fansids[i]);
+                }
+                res.render('pages/ife_home/ife_fans', {
+                    userid: user._id,
+                    username: user.username,
+                    avatar: tempUser.avatar,
+                    avatarFlag: true,
+                    createTime: tempUser.createTime,
+                    currentpostnum: tempUser.articles,
+                    fans: tempUser.fans,
+                    stars: tempUser.stars,
+                    // 大坑啊，jade渲染模板的时候不能写self属性啊
+                    fansArr: fansArr, // 这是其他用户的fans信息
+                    starids: starids, // 这是当前用户的stars信息
+                    other: true,
+                    tempuserid: tempid,
+                    tempusername: tempUser.username,
+                    currentUserStars: results.getCurrentUserStars,
+                    weiStars: interStarsListArr
+                });
+            }
+        }); 
     }
 });
 
@@ -240,6 +536,7 @@ router.get('/detail/:id/1ed1645edd706dc379effe13f3edcacf', function (req, res, n
 // 查询出这个人所有的文章
 router.get('/detail/:id/92a2b5cb9c6906035c2864fa225e1940', function (req, res, next) {
 	var tempid = req.params.id;
+    var tempUser = {};
 	var user = req.session.user;
     var articleListId = [];
     var completeArticle = [];
@@ -334,12 +631,142 @@ router.get('/detail/:id/92a2b5cb9c6906035c2864fa225e1940', function (req, res, n
 					stars: results.stars,
 					// 大坑啊，jade渲染模板的时候不能写self属性啊
 					other: false,
-                    completeArticle: completeArticle
+                    completeArticle: completeArticle,
+                    tempuserid: user._id,
+                    tempusername: user.username
 				});
 			}
 		});
 	} else {
+        var interStarsList = [];
+        var interStarsListArr = [];
+        async.series({
+            getArticleListId: function (done) {
+                redisClient.lrange('currentpost:userid:' + tempid, 0, -1, function (err, result) {
+                    if (err) {
+                        done({msg: '查询当前用户文章列表失败'});
+                    } else {
+                        if (result && result.length > 0) {
+                            articleListId = result;
+                            done(null);
+                        } else {
+                            done(null);
+                        }
+                    }
+                });
+            },
+            // 得到完整的文章
+            getCompleteArticle: function (done) {
+                async.forEachSeries(articleListId, function (item, done) {
+                    getArticleInfo(item, function(err, article) {
+                        if (err) {
+                            done(err);
+                        } else {
+                            completeArticle.push(article);
+                            done(null);
+                        }
+                    });
+                }, function (err) {
+                    if (err) {
+                        done(err);
+                    } else {
+                        done(null);
+                    }
+                });
+            },
+            getTempUser: function (done) {
+                getUserCompleteInfo(tempid, function (err, user) {
+                    if (err) {
+                        done(err);
+                    } else {
+                        tempUser = user;
+                        done(null);
+                    }
+                });
+            },
+            getCurrentUserStars: function (done) {
+                redisClient.smembers('stars:userid:' + user._id, function (err, results) {
+                    if (err) {
+                        done({msg: '查询当前的用户关注者集合失败'});
+                    } else {
+                        if (results && results.length > 0) {
+                            done(null, results);
+                        } else {
+                            results = [];
+                            done(null, results);
+                        }
+                    }
+                });
+            },
+            getInterStarsId: function (done) {
+                redisClient.sinter('stars:userid:' + user._id, 'stars:userid:' + tempid, function (err, result) {
+                    if (err) {
+                        done({msg: '求共同关注用户id失败'});
+                    } else {
+                        if (result && result.length > 0) {
+                            interStarsList = result;
+                        } else {
+                            interStarsList = [];
+                        }
+                        done(null, result);
+                    }
+                });
+            },
+            getInterStarsInfo: function (done) {
+                async.forEachSeries(interStarsList, function (item, done) {
+                    getUserCompleteInfo(item, function (err, user) {
+                        if (err) {
+                            done(err);
+                        } else {
+                            interStarsListArr.push(user);
+                            done(null);
+                        }
+                    });
+                }, function (err) {
+                    if (err) {
+                        done(err);
+                    } else {
+                        done(null);
+                    }
+                });
+            }
+        }, function (err, results) {
+            if (err) {
+                return res.status(403).json(err);
+            } else {
+                completeArticle.sort(function (a, b) {
+                    return new Date(b.createAt) - new Date(a.createAt);
+                });
 
+                for (var i = 0; i < completeArticle.length; i++) {
+                    completeArticle[i].comments.sort(function (a, b) {
+                        return new Date(a.createAt) - new Date(b.createAt);
+                    });
+                    for (var j = 0; j < completeArticle[i].comments.length; j++) {
+                        completeArticle[i].comments[j].scomments.sort(function (a, b) {
+                            return new Date(a.createAt) - new Date(b.createAt);
+                        });
+                    }
+                }
+                res.render('pages/ife_home/ife_home', {
+                    userid: user._id,
+                    username: user.username,
+                    avatar: tempUser.avatar,
+                    avatarFlag: true,
+                    createTime: tempUser.createTime,
+                    currentpostnum: tempUser.articles,
+                    fans: tempUser.fans,
+                    stars: tempUser.stars,
+                    // 大坑啊，jade渲染模板的时候不能写self属性啊
+                    other: true,
+                    completeArticle: completeArticle,
+                    tempuserid: tempid,
+                    tempusername: tempUser.username,
+                    currentUserStars: results.getCurrentUserStars,
+                    weiStars: interStarsListArr
+                });
+            }
+        });
 	}
 });
 module.exports = router;

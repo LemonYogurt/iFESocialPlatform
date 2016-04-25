@@ -360,6 +360,7 @@ publishContent.prototype.deleteArticle = function () {
                     data: {userid: userid, articleid: articleid},
                     success: function (data) {
                         window.printMsg('success', data.msg, true);
+                        $('#J_home_articles').html(parseInt($('#J_home_articles').html()) - 1);
                         $parent.addClass('animated bounceOut');
                         setTimeout(function () {
                             $parent.hide(500, function () {

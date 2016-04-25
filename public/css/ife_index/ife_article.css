@@ -64,7 +64,7 @@
 }
 /* 当鼠标移动到用户头像上时，Y轴旋转360度 */
 .ife_article_box .ife_article_avatar:hover{
-	transition:all .6s linear;
+	transition:all .8s linear;
 	transform:rotateY(360deg);
 }
 /* 文章部分 */

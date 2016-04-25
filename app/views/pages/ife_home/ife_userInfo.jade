@@ -3,13 +3,18 @@
 		p.ife_weiboUserAvatar
 			a.ife_userAvatar(href="javascript:void(0);")
 				img#J_userAvatar(src=avatar,width="100",height="100")
-				if !avatarFlag
+				if avatar == '/images/ife_userDefaultAvatar_little.gif'
 					input#J_uploadAvatar(type="file",name="avatar",style="display:none;")
 		.ife_weiboUsername
-			h1 #{username}
+			h1 #{tempusername}
 		.ife_weiboCreateTime
 			h6 注册时间：#{moment(new Date(createTime)).fromNow()}
-		.ife_weibouserfocus
-			a.ife_weibouserfocusbtn(href="javascript:void(0);")
-				span +
-				span &nbsp;关注
+		if other
+			if currentUserStars.indexOf(tempuserid) == -1
+				.ife_weibouserfocus(style="display:block;")
+					a.ife_weibouserfocusbtn.J_weibouserfocusbtnStars(href="javascript:void(0);",data-userid="#{tempuserid}")
+						span +
+						span &nbsp;关注
+			else
+				.ife_weibouserfocus(style="display:block;")
+					a.ife_weibouserfocusbtn.J_weibouserfocusbtnCancelStars(href="javascript:void(0);",data-userid="#{tempuserid}") 取消关注
