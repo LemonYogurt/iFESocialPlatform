@@ -19,7 +19,7 @@
 						strong#J_currentUserArticleNum #{currentUserArticleNum ? currentUserArticleNum : 0}
 						span 文章
 	.ife_sideNewestUser
-		h2 最新注册用户
+		h2 未关注的最新注册用户
 		ul
 			//- 这里要作一个限制，用户只能看到前6条，其他的当用户关注之后，才可以显示出来
 			- var count = 0;
@@ -54,10 +54,10 @@
 			li.empty
 		if latestreguserlink.length > 6
 			.findMoreUser
-				a.J_lookMoreLatestRegUser(href="javascript:void(0);") 查看更多&nbsp;>
+				a.J_lookMoreLatestRegUser(href="/find") 查看更多&nbsp;>
 		else if latestreguserlink.length == 0
 			.findMoreUser
-				a(href="javascript:void(0);") 没有最新注册的用户
+				a(href="javascript:void(0);") 没有未关注的新用户
 		else
 			.findMoreUser(style="display:none;")
-				a(href="javascript:void(0);") 没有最新注册的用户
+				a(href="javascript:void(0);") 没有未关注的新用户

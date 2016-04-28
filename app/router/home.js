@@ -6,6 +6,21 @@ var redisClient = require('../config').redisClient;
 
 var router = express.Router();
 
+router.post('/find', function (req, res, next) {
+    var username = req.body.username;
+    redisClient.get('users:username:' + username + ':userid', function (err, result) {
+        if (err) {
+            return res.status(403).json({msg: '查询用户失败'});
+        } else {
+            if (result) {
+                return res.status(200).json({msg: '查询成功', userid: result});
+            } else {
+                return res.status(403).json({msg: '对不起没有该用户'});
+            }
+        }
+    });
+});
+
 // article: 92a2b5cb9c6906035c2864fa225e1940
 // fans: 1ed1645edd706dc379effe13f3edcacf
 // stars: a5df375d7c972248177e8b4407c8808c

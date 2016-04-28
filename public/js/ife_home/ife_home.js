@@ -197,6 +197,18 @@ HomeUserInfo.prototype.userInfoCancelStars = function () {
 HomeUserInfo.prototype.findUser = function () {
 	$('#J_findUserNavInputBtn').click(function () {
 		var value = $('#J_findUserNavInput').val();
+		$.ajax({
+			url: '/home/find',
+			type: 'POST',
+			data: {username: value},
+			success: function (data) {
+                window.printMsg('success', data.msg, true);
+                window.location.href = window.location.protocol + '//' + window.location.host + '/home/detail/' + data.userid + '/92a2b5cb9c6906035c2864fa225e1940';
+            },
+            error: function(obj) {
+                window.printMsg('error', JSON.parse(obj.responseText).msg, true);
+            }
+		})
 	});
 };
 var homeUserInfo = new HomeUserInfo();
@@ -206,3 +218,4 @@ homeUserInfo.cancelStars();
 homeUserInfo.stars();
 homeUserInfo.userInfoStars();
 homeUserInfo.userInfoCancelStars();
+homeUserInfo.findUser();

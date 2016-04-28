@@ -128,7 +128,7 @@ publishContent.prototype.publicBtn = function() {
                     var imgStr = '';
                     var ife_article_main = '<div class="ife_article_main" style="margin-bottom:20px;">';
                     if (articleData.picURL != '') {
-                        imgStr = '<div class="ife_article_picCon"><img src="' + articleData.picURL + '" alt="文章图片" class="ife_article_pic"></div>';
+                        imgStr = '<div class="ife_article_picCon"><a href="'+articleData.picURL+'" data-lightbox="roadtrip"><img src="' + articleData.picURL + '" alt="文章图片" class="ife_article_pic"></a></div>';
                         ife_article_main = '<div class="ife_article_main">';
                     }
                     var str = '<div class="ife_article">\

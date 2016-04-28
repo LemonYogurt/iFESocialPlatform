@@ -1,39 +1,40 @@
 extend ../../layout
 
 block headerContent
-	link(rel="stylesheet",href="/css/ife_chat/ife_nav.css")
-	link(rel="stylesheet",href="/css/ife_chat/ife_leftBody.css")
-	link(rel="stylesheet",href="/css/ife_chat/ife_chatbox.css")
-	link(rel="stylesheet",href="/css/ife_chat/ife_textarea.css")
-	link(rel="stylesheet",href="/css/ife_chat/ife_contacts.css")
+	link(rel="stylesheet",href="/css/ife_find/jquery-confirm.css")
+	link(rel="stylesheet",href="/css/ife_find/ife_nav.css")
+	link(rel="stylesheet",href="/css/ife_find/ife_leftBody.css")
+	link(rel="stylesheet",href="/css/ife_find/ife_sideBody.css")
+	link(rel="stylesheet",href="/css/ife_find/ife_find.css")
 	style.
 		.ife_wrap{
 			width:1000px;
+			min-height:680px;
 			margin:50px auto 0;
 			padding:16px 0 0 0;
 			font-size:0;
 			background-color:rgba(231,116,3,0.15);
-			position:relative;
-		}
-		.ife_wrap .ife_leftNav{
-			min-height:592px;
 		}
 		.ife_wrap .ife_rightBody{
 			width:850px;
+			min-height:680px;
 			display:inline-block;
 		}
 		.ife_wrap .ife_rightBody .ife_rightMain{
 			width:600px;
+			min-height:680px;
 			margin-right:10px;
 			display:inline-block;
 			vertical-align:top;
 		}
 		.ife_wrap .ife_rightBody .ife_sideMain{
 			width:230px;
+			min-height:680px;
 			margin-right:10px;
 			position:relative;
 			display:inline-block;
 		}
+
 block content
 	// 导航部分
 	include ./ife_nav
@@ -55,9 +56,12 @@ block content
 						i.pull-right.ife_leftarrow
 		.ife_rightBody
 			.ife_rightMain
-				include ./ife_chatbox
-			include ./ife_contacts
+				include ./ife_title
+				include ./ife_userlist
+				include ./ife_loading
+			include ./ife_sideBody
+
 block footerContent
-	script(src="/js/ife_chat/socket.io.js")
-	script(src="/js/ife_chat/ife_socket.js")
-	script(src="/js/ife_chat/ife_textarea.js")
+	script(src="/js/ife_find/jquery-confirm.js")
+	script(src="/js/ife_find/ife_find.js")
+	script(src="/js/ife_find/ife_sideBody.js")

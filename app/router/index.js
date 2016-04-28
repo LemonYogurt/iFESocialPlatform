@@ -338,18 +338,17 @@ router.get('/', function(req, res, next) {
     }
 });
 
-router.get('/login', function(req, res, next) {
-    res.render('pages/ife_valitor');
-});
-
 router.get('/chat', function(req, res, next) {
-    res.render('pages/ife_chat/ife_chat');
-});
-router.get('/find', function(req, res, next) {
-    res.render('pages/ife_find/ife_index');
-});
-router.get('/home', function(req, res, next) {
-    res.render('pages/ife_home/ife_home');
+    if (!req.session.user) {
+        res.render('pages/ife_valitor');
+    } else {
+        var user = req.session.user;
+        res.render('pages/ife_chat/ife_chat', {
+            username: user.username,
+            userid: user._id,
+            avatar: user.avatar
+        });
+    }
 });
 
 module.exports = router;

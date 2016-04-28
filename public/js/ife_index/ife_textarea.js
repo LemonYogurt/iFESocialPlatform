@@ -128,7 +128,7 @@ publishContent.prototype.publicBtn = function() {
                     var imgStr = '';
                     var ife_article_main = '<div class="ife_article_main" style="margin-bottom:20px;">';
                     if (articleData.picURL != '') {
-                        imgStr = '<div class="ife_article_picCon"><img src="' + articleData.picURL + '" alt="文章图片" class="ife_article_pic"></div>';
+                        imgStr = '<div class="ife_article_picCon"><a href="'+articleData.picURL+'" data-lightbox="roadtrip"><img src="' + articleData.picURL + '" alt="文章图片" class="ife_article_pic"></a></div>';
                         ife_article_main = '<div class="ife_article_main">';
                     }
                     var str = '<div class="ife_article">\
@@ -377,6 +377,24 @@ publishContent.prototype.deleteArticle = function () {
     });
 };
 
+publishContent.prototype.findUser = function () {
+    $('#J_findUserNavInputBtn').click(function () {
+        var value = $('#J_findUserNavInput').val();
+        $.ajax({
+            url: '/home/find',
+            type: 'POST',
+            data: {username: value},
+            success: function (data) {
+                window.printMsg('success', data.msg, true);
+                window.location.href = window.location.protocol + '//' + window.location.host + '/home/detail/' + data.userid + '/92a2b5cb9c6906035c2864fa225e1940';
+            },
+            error: function(obj) {
+                window.printMsg('error', JSON.parse(obj.responseText).msg, true);
+            }
+        })
+    });
+};
+
 /*
 $.confirm({
                 //autoClose: 'cancel|6000',
@@ -398,3 +416,4 @@ pc.uploadPic();
 pc.appendFace();
 pc.articlePraise();
 pc.deleteArticle();
+pc.findUser();

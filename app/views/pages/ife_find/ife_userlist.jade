@@ -1,25 +1,31 @@
 .ife_lastestuser
-	- var arr = [1, 2, 3, 4, 5, 6, 7, 8];
 	ul.ife_lsuserbox
-		- for (var a in arr)
+		each item in latestreguserlinkUser
 			li.clearfix
-				p.ife_lsuseravatar 
-					img(src="/images/ife_userDefaultAvatar_little.gif",width="50",height="50")
+				p.ife_lsuseravatar
+					a(href="/home/detail/#{item.userid}/92a2b5cb9c6906035c2864fa225e1940")
+						img(src=item.avatar,width="50",height="50")
 				div.ife_lsuserinfo
-					strong 黄轩的微博
+					strong #{item.username}
 					.ife_lsusercontent.clearfix
 						p 
 							| 关注&nbsp;&nbsp;
-							span 197
+							span #{item.stars}
 						p
 							| 粉丝&nbsp;&nbsp;
-							span 12345
+							span #{item.fans}
 						p
 							| 文章&nbsp;&nbsp;
-							span 1406
+							span #{item.articles}
 					p.ife_lsuserregtime
 						| 注册时间&nbsp;&nbsp;
-						span 2014-09-09
-					a.ife_lsuserbtn(href="javascript:void(0);")
-						span +
-						span &nbsp;关注
+						span #{moment(new Date(item.createTime)).fromNow()}
+					if userid == item.userid
+						a.ife_lsuserbtn(href="javascript:void(0);",data-userid="#{item.userid}") 这是Me&nbsp;^_^
+					else
+						if starids.indexOf(item.userid) == -1
+							a.ife_lsuserbtn.ife_lsuserbtnstars(href="javascript:void(0);",data-userid="#{item.userid}")
+								span +
+								span &nbsp;关注
+						else 
+							a.ife_lsuserbtn.ife_lsuserbtncancelstars(href="javascript:void(0);",data-userid="#{item.userid}") 取消关注
