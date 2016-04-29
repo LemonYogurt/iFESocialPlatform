@@ -307,7 +307,6 @@ function getCompleteArticle(articleid, cb) {
             var commentsid = article.commentsid;
             if (commentsid) {
 	            var commentsidArr = commentsid.split(',');
-                //console.log(commentsidArr);
 	            async.forEachSeries(commentsidArr, function(item, done) {
 	                getComment(item, function(err, comment) {
 	                    if (err) {
@@ -315,18 +314,14 @@ function getCompleteArticle(articleid, cb) {
 	                    } else {
 	                        comment.scomments = [];
 	                        var reply = comment.reply;
-                            console.log(reply);
-                            // console.log(comment);
 	                        if (reply) {
 	                        	var replyArr = reply.split(',');
-                                console.log(replyArr);
 		                        async.forEachSeries(replyArr, function(item, done) {
 		                            getSComment(item, function(err, scomment) {
 		                                if (err) {
                                             console.log(err);
 		                                    done(err);
 		                                } else {
-                                            console.log(scomment);
 		                                    comment.scomments.push(scomment);
 		                                    done(null);
 		                                }
@@ -336,7 +331,6 @@ function getCompleteArticle(articleid, cb) {
                                         console.log(err);
 		                                done(err);
 		                            } else {
-                                        console.log(comment);
 		                                article.comments.push(comment);
 		                                done(null);
 		                            }

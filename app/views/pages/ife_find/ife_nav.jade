@@ -12,7 +12,7 @@ nav.ife_weiboNav.nav.navbar-default
 		#iFENavBar.collapse.navbar-collapse
 			ul.nav.navbar-nav
 				li
-					a(href="/") 
+					a(href="/")
 						span.glyphicon.glyphicon-home
 						| &nbsp;首页
 			form.navbar-form.navbar-left
@@ -21,18 +21,18 @@ nav.ife_weiboNav.nav.navbar-default
 				a#J_findUserNavInputBtn(href="javascript:void(0);",style="margin-left:-30px;position:relative;top:2px;")
 					span.glyphicon.glyphicon-search
 			ul.nav.navbar-nav.navbar-right
-				li.active_c
-					a(href="/home/detail/#{userid}/92a2b5cb9c6906035c2864fa225e1940") 
+				li
+					a#J_ifeNavUserName(href="/home/detail/#{userid}/92a2b5cb9c6906035c2864fa225e1940",data-username="#{username}") 
 						span.glyphicon.glyphicon-user
 						| &nbsp;#{username}
 				li
-					a(href="#")
+					a(href="/chat")
 						span.glyphicon.glyphicon-comment
 						| &nbsp;聊天室
-				li
-					a(href="#")
+				li.active_c
+					a(href="/find")
 						span.glyphicon.glyphicon-send
-						| &nbsp;漂流瓶
+						| &nbsp;找人
 				li
 					a(href="/user/logout")
 						span.glyphicon.glyphicon-log-out

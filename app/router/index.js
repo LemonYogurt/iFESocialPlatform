@@ -42,7 +42,7 @@ router.get('/', function(req, res, next) {
     var currentUserArticleNum = 0;
 
     if (!session.user) {
-        res.render('pages/ife_valitor');
+        res.render('pages/ife_valitor/ife_valitor');
     } else {
         if (user.avatar == '/images/defaultAvatar.png') {
             user.avatar = '/images/ife_userDefaultAvatar_little.gif';
@@ -157,10 +157,6 @@ router.get('/', function(req, res, next) {
             // 根据拉取点获取用户文章的id
             getNeedPullArticleId: function (done) {
                 var newPullPoint = Date.now();
-                console.log('needPullUseid');
-                for (var i = 0; i < needPullUseid.length; i++) {
-                    console.log(needPullUseid[i]);
-                }
                 async.forEachSeries(needPullUseid, function (item, done) {
                     redisClient.zrangebyscore('fanspost:userid:' + item, parseInt(lastPullPoint) + 1, newPullPoint, function (err, result) {
                         if (err) {
@@ -176,7 +172,6 @@ router.get('/', function(req, res, next) {
                         done(err);
                     } else {
                         lastPullPoint = newPullPoint;
-                        console.log('pullArticleListId: ', pullArticleListId);
                         done(null);
                     }
                 });
@@ -334,19 +329,6 @@ router.get('/', function(req, res, next) {
                     currentUserArticleNum: currentUserArticleNum
                 });
             }
-        });
-    }
-});
-
-router.get('/chat', function(req, res, next) {
-    if (!req.session.user) {
-        res.render('pages/ife_valitor');
-    } else {
-        var user = req.session.user;
-        res.render('pages/ife_chat/ife_chat', {
-            username: user.username,
-            userid: user._id,
-            avatar: user.avatar
         });
     }
 });

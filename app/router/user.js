@@ -8,9 +8,9 @@ var bcrypt = require('bcryptjs');
 var ObjectId = require('bson').ObjectId;
 
 var encrypt = require('../util/encrypt');
-var User = require('../models/user');
 var redisClient = require('../config').redisClient;
 
+var User = require('../models/user');
 var router = express.Router();
 
 router.post('/avatarUpload', function(req, res, next) {
@@ -346,7 +346,6 @@ router.post('/register', function(req, res, next) {
                         // 此时redis中没有查到用户，所以要在mongodb中查询
                         User.findOne({ username: username }, function(err, doc) {
                             if (err) {
-                                console.log('findOne', err);
                                 done({ msg: '用户查询失败' });
                             }
                             // 如果没有查到，返回null
@@ -435,18 +434,6 @@ router.post('/register', function(req, res, next) {
 
 function getArticle(articleid, cb) {
     redisClient.hgetall('article:articleid:' + articleid, function(err, result) {
-        /*
-            {   content: '第三方',
-                picURL: '',
-                createAt: 'Thu Apr 21 2016 19:43:54 GMT+0800 (CST)',
-                userid: '57161fbac9f38d924576f671',
-                praise: '',
-                commentsid: '5718bd1d42e2c86c4c57d231,5718bcfc42e2c86c4c57d22d' 
-                articleid: '',
-                username: '',
-                avatar: ''
-            }
-        */
         if (err) {
             console.log(err);
         }

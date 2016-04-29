@@ -4,6 +4,7 @@ var ObjectId = require('bson').ObjectId;
 var redisClient = require('../config').redisClient;
 var router = express.Router();
 
+// 回复删除
 router.delete('/sdel', function (req, res, next) {
 	var userid = req.body.userid;
 	var scommentid = req.body.scommentid;
@@ -106,7 +107,6 @@ router.delete('/del', function (req, res, next) {
 	        delArticleComment: function (done) {
 	        	if (flag) {
 	        		var commentsid = article.commentsid;
-	        		console.log()
 	        		if (commentsid) {
 	        			var commentArr = commentsid.split(',');
 	        			var index = commentArr.indexOf(commentid);
@@ -266,7 +266,7 @@ router.post('/replyComment', function (req, res, next) {
 				if (err) {
 					done({msg: '查询主评论失败'});
 				}
-				if (result) {
+				if (result && result.length > 0) {
 					replyArr = replyArr.concat(result.split(','));
 				}
 				done(null, result);
@@ -432,7 +432,6 @@ router.post('/normal', function (req, res, next) {
 		results.findComment.msg = '评论成功';
 		results.findComment.avatar = req.session.user.avatar;
 		results.findComment.commentid = commentid;
-		console.log(results.findComment);
 		return res.status(200).json(results.findComment);
 	});
 });

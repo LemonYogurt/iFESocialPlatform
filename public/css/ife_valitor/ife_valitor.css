@@ -17,7 +17,7 @@ a{
 }
 /* 页面背景 */
 .ife_valitorBg{
-    background: url("../images/valitorBg.jpg") center 0 no-repeat fixed;
+    background: url(/images/valitorBg.jpg) center 0 no-repeat fixed;
     background-size: cover;
     -webkit-background-size: cover;
     position: absolute;

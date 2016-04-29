@@ -129,7 +129,7 @@
 }
 .ife_weiboContent .ife_weiboContentBody{
 	width:920px;
-	height:200px;
+	/*height:200px;*/
 }
 .ife_weiboContentBody .ife_weiboLeftContentBody{
 	float:left;
@@ -139,7 +139,7 @@
 .ife_weiboContentBody .ife_weiboRightContentBody{
 	float:left;
 	background:transparent;
-	height:200px;
+	/*height:200px;*/
 	width:600px;
 	border-radius:2px;
 }

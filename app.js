@@ -7,14 +7,18 @@ var RedisStore = require('connect-redis')(session);
 var mongoose = require('mongoose');
 var async = require('async');
 var moment = require('moment');
+
 var redisClient = require('./app/config').redisClient;
 var mongodbClient = require('./app/config').mongodbClient;
+var shell = require('./app/shell/exportArticleToMongo');
+
 var index = require('./app/router');
 var user = require('./app/router/user');
 var article = require('./app/router/article');
 var comment = require('./app/router/comment');
 var home = require('./app/router/home');
 var find = require('./app/router/find');
+var chat = require('./app/router/chat');
 
 var app = express();
 var port = process.env.PORT || 3000;
@@ -51,6 +55,7 @@ app.use('/article', article);
 app.use('/comment', comment);
 app.use('/home', home);
 app.use('/find', find);
+app.use('/chat', chat);
 
 if ('development' === app.get('env')) {
 	app.set('showStackError', true);
@@ -60,14 +65,20 @@ if ('development' === app.get('env')) {
 	app.locals.pretty = true;
 	mongoose.set('debug', true);
 }
-// 引入语言
+
 moment.locale('zh-cn');
 app.locals.moment = moment;
 var server = app.listen(port, function () {
 	console.log('Listening ', port, ' success...');
 });
 
-/* = */
+/* */
+setInterval(function () {
+	shell();
+}, 1000*60);
+
+
+/* chat S */
 
 var signedCookieParser = cookieParser('iFE');
 var io = require('socket.io').listen(server);
@@ -79,7 +90,6 @@ io.set('authorization', function (req, next) {
 				next(err);
 			} else {
 				if (session && session.user) {
-					console.log('进入了session');
 					req.session = session;
 					next(null, true);
 				} else {
@@ -99,13 +109,10 @@ var messages = [];
 	avatar
 	createAt
 */
-// 用于存放在线的人数
 var users = [];
-// 系统消息的信息
 var SYSTEM = {
 	username: 'i女神',
-	// 默认头像
-	avatar: '/images/ife_userDefaultAvatar_little.gif'
+	avatar: '/images/systemAvatar.png'
 };
 async.series({
 	getMessages: function (done) {
@@ -119,14 +126,12 @@ async.series({
 				} else {
 					messages = [];
 				}
-				console.log(messages);
 				done(null);
 			}
 		});
 	},
 	socketInit: function (done) {
 		io.sockets.on('connection', function (socket) {
-			console.log('进入了');
 			/**
 			 * 由于前面经过了中间件的处理，所以能运行到这里说明用户已经是登录过的
 			 */
@@ -173,19 +178,9 @@ async.series({
 						console.log(err);
 					}
 				});
-				/**
-				 * push之后，要通知所有人更新消息列表
-				 */
 				io.emit('message.add', message);
 			});
-
-			/**
-			 * 用户退出的处理
-			 */
 			socket.on('disconnect', function () {
-				/**
-				 * 注意：这里使用数组的indexOf方法是无法判断对象的
-				 */
 				var index = indexOf(users, user, '_id');
 				//users.splice(index, 1);
 				if (indexOf(users, user, '_id') >= 0) {
@@ -201,10 +196,6 @@ async.series({
 					createAt: new Date()
 				});
 			});
-
-			// socket.on('pleaseClose', function () {
-			// 	socket.disconnect();
-			// });
 		});
 		done(null);
 	}
@@ -213,8 +204,6 @@ async.series({
 		console.log(err);
 	}
 });
-
-
 
 function indexOf(arr, obj, attr) {
 	for (var i = 0; i < arr.length; i++) {

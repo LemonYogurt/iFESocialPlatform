@@ -6,7 +6,6 @@ function CommentComponent() {
 CommentComponent.prototype.publishTextarea = function () {
 	$('.ife_weiboRightContentBody').on('focus', '.ife_comment_content_hiddenInput', function (e) {
 		var _$elem = $(e.target).closest('.ife_comment_content_hiddenInput');
-		// 移除回复提示内容
 		_$elem.next().find('.ife_comment_content_input .J_reply_comment_tip').remove();
 		_$elem.next().find('.ife_comment_content_input .ife_comment_content_ta').css('textIndent', '');
 		_$elem.hide(200);

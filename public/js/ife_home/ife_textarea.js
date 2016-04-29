@@ -202,7 +202,9 @@ publishContent.prototype.faceBtn = function() {
     });
 
     $(document).click(function(e) {
+        console.log('faceBtn');
         if ($(e.target).closest('.ife_face_con').length != 1 && $(e.target).closest('#J_content_faceicon').length != 1) {
+            console.log('faceBtn');
             $('.ife_face_con').hide(500);
         }
     });
@@ -222,8 +224,10 @@ publishContent.prototype.uploadPicBtn = function() {
     });
 
     $(document).click(function(e) {
+        console.log('uploadPicBtn');
         if ($(e.target).closest('.ife_fileUploadTooltip').length != 1 && $(e.target).closest('#J_content_fileUpload').length != 1) {
             $('.ife_fileUploadTooltip').hide(500);
+            console.log('uploadPicBtn');
         }
     });
     $('#J_closePublishPic').click(function() {
@@ -378,24 +382,13 @@ publishContent.prototype.deleteArticle = function () {
     });
 };
 
-/*
-$.confirm({
-                //autoClose: 'cancel|6000',
-                confirm: function(){
-                   
-                },
-                cancel: function(){
-                  
-                }
-            });
-*/
 
 var pc = new publishContent();
-pc.initTextArea();
-pc.publicBtn();
-pc.faceBtn();
-pc.uploadPicBtn();
-pc.uploadPic();
-pc.appendFace();
+// pc.initTextArea();
+// pc.publicBtn();
+// pc.faceBtn();
+// pc.uploadPicBtn();
+// pc.uploadPic();
+// pc.appendFace();
 pc.articlePraise();
 pc.deleteArticle();

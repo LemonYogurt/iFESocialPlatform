@@ -48,7 +48,7 @@ ChatSocket.prototype.generateMessage = function (message) {
 	var str = '<div class="'+showDire+' clearfix">\
                     <div class="ife_chatpublishavatar">\
                         <a href="'+link+'" target="_blank">\
-                            <img title="'+message.username+'" src="'+message.avatar+'" width="50" height="50">\
+                            <img title="'+message.username+'" src="'+message.avatar+'" width="50" height="50" style="background:#fff;">\
                         </a>\
                     </div>\
                     <div class="ife_chatpushlishtext">\
@@ -102,6 +102,7 @@ chatSocket.on('allInfos', function (infos) {
     for (i = 0; i < chatSocket.users.length; i++) {
         chatSocket.generateUser(chatSocket.users[i]);
     }
+    $('#J_ifeContactNum').html(infos.users.length);
     chatSocket.scrollBottom(800);
 });
 // 得到信息后，提交到页面上
@@ -114,6 +115,7 @@ chatSocket.on('message.add', function (message) {
 chatSocket.on('user.add', function (user) {
     chatSocket.users.push(user);
     chatSocket.generateUser(user);
+    $('#J_ifeContactNum').html(parseInt($('#J_ifeContactNum').html()) + 1);
 });
 
 chatSocket.on('user.logout', function (user) {
@@ -127,4 +129,5 @@ chatSocket.on('user.logout', function (user) {
             $(v).remove();
         }
     });
+    $('#J_ifeContactNum').html(parseInt($('#J_ifeContactNum').html()) - 1);
 });

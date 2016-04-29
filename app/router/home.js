@@ -3,8 +3,85 @@ var async = require('async');
 var getUserCompleteInfo = require('../util/getUserCompleteInfo');
 var getArticleInfo = require('../util/getArticleInfo');
 var redisClient = require('../config').redisClient;
+var mongodbClient = require('./app/config').mongodbClient;
 
 var router = express.Router();
+
+router.get('/acquire/92a2b5cb9c6906035c2864fa225e1940', function (req, res, next) {
+    if (!req.session.user) {
+        res.redirect('/');
+    } else {
+        var user = req.session.user;
+        var tempid = req.query.userid;
+        var limit = req.query.limit;
+        var currentPage = req.query.page;
+        var skip = (currentPage - 1) * limit;
+        var articleListId = [];
+        var completeArticle = [];
+        if (currentPage < 7) {
+            async.series({
+                getArticleListId: function (done) {
+                    redisClient.lrange('currentpost:userid:' + tempid, skip, skip + 5, function (err, result) {
+                        if (err) {
+                            done({msg: '查询当前用户文章列表失败'});
+                        } else {
+                            if (result && result.length > 0) {
+                                articleListId = result;
+                                done(null);
+                            } else {
+                                done(null);
+                            }
+                        }
+                    });
+                },
+                // 得到完整的文章
+                getCompleteArticle: function (done) {
+                    async.forEachSeries(articleListId, function (item, done) {
+                        getArticleInfo(item, function(err, article) {
+                            if (err) {
+                                done(err);
+                            } else {
+                                completeArticle.push(article);
+                                done(null);
+                            }
+                        });
+                    }, function (err) {
+                        if (err) {
+                            done(err);
+                        } else {
+                            done(null);
+                        }
+                    });
+                }
+            }, function (err, results) {
+                if (err) {
+                    return res.status(403).json({msg:'分页查询失败'});
+                } else {
+                    completeArticle.sort(function (a, b) {
+                        return new Date(b.createAt) - new Date(a.createAt);
+                    });
+
+                    for (var i = 0; i < completeArticle.length; i++) {
+                        completeArticle[i].comments.sort(function (a, b) {
+                            return new Date(a.createAt) - new Date(b.createAt);
+                        });
+                        for (var j = 0; j < completeArticle[i].comments.length; j++) {
+                            completeArticle[i].comments[j].scomments.sort(function (a, b) {
+                                return new Date(a.createAt) - new Date(b.createAt);
+                            });
+                        }
+                    }
+                    var obj = {};
+                    obj.completeArticle = completeArticle;
+                    obj.msg = {msg: '请求成功'};
+                    return res.status(200).json(obj);
+                }
+            });
+        } else {
+            
+        }
+    }
+});
 
 router.post('/find', function (req, res, next) {
     var username = req.body.username;
@@ -144,16 +221,11 @@ router.get('/detail/:id/a5df375d7c972248177e8b4407c8808c', function (req, res, n
             getStarsInfo: function (done) {
                 async.series({
                     getStarsUserInfo: function (done) {
-                        console.log(starids);
                         async.forEachSeries(starids, function (item, done) {
                             getUserCompleteInfo(item, function (err, user) {
                                 if (err) {
                                     done(err);
                                 } else {
-                                    console.log(user);
-                                    for (var k in user) {
-                                        console.log(k + '------' + user[k]);
-                                    }
                                     starArr.push(user);
                                     done(null);
                                 }
@@ -247,19 +319,6 @@ router.get('/detail/:id/a5df375d7c972248177e8b4407c8808c', function (req, res, n
                 starArr.sort(function (a, b) {
                     return new Date(b.createTime) - new Date(a.createTime);
                 });
-                for (var i = 0; i < starArr; i++) {
-                    for (var k in starArr[i]) {
-                        console.log(k +'-----' + starArr[i][k]);
-                    }
-                }
-                console.log('--------------');
-                for (var j = 0; j < results.getCurrentUserStars.length; j++) {
-                    console.log(results.getCurrentUserStars[j]);
-                }
-                console.log('-----------------');
-                for (var q = 0; j < starids.length; q++) {
-                    console.log(starids.length[q]);
-                }
                 res.render('pages/ife_home/ife_stars', {
                     userid: user._id,
                     username: user.username,
@@ -378,12 +437,6 @@ router.get('/detail/:id/1ed1645edd706dc379effe13f3edcacf', function (req, res, n
                 fansArr.sort(function (a, b) {
                     return new Date(b.createTime) - new Date(a.createTime);
                 });
-                for (var i = 0; i < fansArr.length; i++) {
-                    console.log(fansArr[i].username);
-                }
-                for (var i = 0; i < fansids.length; i++) {
-                    console.log(fansids[i]);
-                }
                 res.render('pages/ife_home/ife_fans', {
                     userid: user._id,
                     username: user.username,
@@ -518,12 +571,6 @@ router.get('/detail/:id/1ed1645edd706dc379effe13f3edcacf', function (req, res, n
                 fansArr.sort(function (a, b) {
                     return new Date(b.createTime) - new Date(a.createTime);
                 });
-                for (var i = 0; i < fansArr.length; i++) {
-                    console.log(fansArr[i].username);
-                }
-                for (var i = 0; i < fansids.length; i++) {
-                    console.log(fansids[i]);
-                }
                 res.render('pages/ife_home/ife_fans', {
                     userid: user._id,
                     username: user.username,
@@ -546,6 +593,8 @@ router.get('/detail/:id/1ed1645edd706dc379effe13f3edcacf', function (req, res, n
         }); 
     }
 });
+
+
 
 // article
 // 查询出这个人所有的文章
@@ -585,7 +634,7 @@ router.get('/detail/:id/92a2b5cb9c6906035c2864fa225e1940', function (req, res, n
                 });
             },
             getArticleListId: function (done) {
-                redisClient.lrange('currentpost:userid:' + user._id, 0, -1, function (err, result) {
+                redisClient.lrange('currentpost:userid:' + user._id, 0, 5, function (err, result) {
                     if (err) {
                         done({msg: '查询当前用户文章列表失败'});
                     } else {
@@ -657,7 +706,7 @@ router.get('/detail/:id/92a2b5cb9c6906035c2864fa225e1940', function (req, res, n
         var interStarsListArr = [];
         async.series({
             getArticleListId: function (done) {
-                redisClient.lrange('currentpost:userid:' + tempid, 0, -1, function (err, result) {
+                redisClient.lrange('currentpost:userid:' + tempid, 0, 5, function (err, result) {
                     if (err) {
                         done({msg: '查询当前用户文章列表失败'});
                     } else {

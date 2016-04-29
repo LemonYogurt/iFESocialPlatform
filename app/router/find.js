@@ -5,8 +5,6 @@ var redisClient = require('../config').redisClient;
 var router = express.Router();
 
 router.get('/', function(req, res, next) {
-    var session = req.session;
-    var user = session.user;
     /**
      *  SideBody数据
      */
@@ -17,9 +15,11 @@ router.get('/', function(req, res, next) {
     var latestreguserlinkid = [];
     var latestreguserlinkUser = [];
     var starids = [];
-    if (!session.user) {
-        res.render('pages/ife_valitor');
+    if (!req.session.user) {
+        res.redirect('/');
     } else {
+        var session = req.session;
+        var user = session.user;
         if (user.avatar == '/images/defaultAvatar.png') {
             user.avatar = '/images/ife_userDefaultAvatar_little.gif';
         }

@@ -210,7 +210,7 @@ function delComment(commentid, cb) {
                     	fromUsername: '',
                     	reply: '5718b74a42e2c86c4c57d21b'
                     	fromavatar: '',
-                    	commentid: ''						
+                    	commentid: ''	
                     }
                     */
                     comment = result;
