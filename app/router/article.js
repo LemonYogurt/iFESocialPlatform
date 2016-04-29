@@ -27,6 +27,19 @@ router.delete('/del', function (req, res, next) {
                     }
                 });
             },
+            // 之所以再维护一个集合，因为文章数量不仅仅是redis中的，而且还有mongodb中的
+            decrCurrentPostNum: function (done) {
+                if (userid) {
+                    redisClient.decr('currentpostnum:userid:' + userid, function (err, result) {
+                        if (err) {
+                            done({msg: '减少当前用户发布文章数量失败'});
+                        }
+                        done(null, result);
+                    });
+                } else {
+                    done(null);
+                }
+            },
             // 判断一下文章是否被删除了
             delFansPost: function (done) {
                 redisClient.zrangebyscore('fanspost:userid:' + userid, 0, Date.now(), function (err, result) {

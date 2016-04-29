@@ -2,8 +2,8 @@ var express = require('express');
 var async = require('async');
 var getUserCompleteInfo = require('../util/getUserCompleteInfo');
 var getArticleInfo = require('../util/getArticleInfo');
+var Article = require('../models/article');
 var redisClient = require('../config').redisClient;
-var mongodbClient = require('./app/config').mongodbClient;
 
 var router = express.Router();
 
@@ -13,8 +13,8 @@ router.get('/acquire/92a2b5cb9c6906035c2864fa225e1940', function (req, res, next
     } else {
         var user = req.session.user;
         var tempid = req.query.userid;
-        var limit = req.query.limit;
-        var currentPage = req.query.page;
+        var limit = parseInt(req.query.limit);
+        var currentPage = parseInt(req.query.page);
         var skip = (currentPage - 1) * limit;
         var articleListId = [];
         var completeArticle = [];
@@ -73,12 +73,37 @@ router.get('/acquire/92a2b5cb9c6906035c2864fa225e1940', function (req, res, next
                     }
                     var obj = {};
                     obj.completeArticle = completeArticle;
-                    obj.msg = {msg: '请求成功'};
+                    obj.msg = '分页查询成功';
                     return res.status(200).json(obj);
                 }
             });
         } else {
-            
+            currentPage = currentPage - 6;
+            Article.find({userid: tempid}).sort({createAt: -1}).skip((currentPage - 1) * limit).limit(limit).exec(function (err, docs) {
+                if (err) {
+                    return res.status(403).json(err);
+                } else {
+                    for (var i = 0; i < docs.length; i++) {
+                        var article = docs[i];
+                        article.articleid = article._id;
+                        article.praise = article.praise.toString();
+                        for (var j = 0; j < article.comments.length; j++) {
+                            var comment = article.comments[j];
+                            comment.commentid = comment._id;
+                            comment.praise = comment.praise.toString();
+                            for (var k = 0; k < comment.scomments.length; k++) {
+                                var scomment = comment.scomments[k];
+                                scomment.scommentid = scomment._id;
+                                scomment.praise = scomment.praise.toString();
+                            }
+                        }
+                    }
+                    var obj = {};
+                    obj.completeArticle = docs;
+                    obj.msg = '分页查询成功';
+                    return res.status(200).json(obj);
+                }
+            });
         }
     }
 });
@@ -604,6 +629,9 @@ router.get('/detail/:id/92a2b5cb9c6906035c2864fa225e1940', function (req, res, n
 	var user = req.session.user;
     var articleListId = [];
     var completeArticle = [];
+    if (!user) {
+        return res.redirect('/');
+    }
 	if (user._id == tempid) {
 		async.series({
 			stars: function(done) {

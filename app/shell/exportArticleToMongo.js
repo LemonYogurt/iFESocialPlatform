@@ -1,6 +1,5 @@
 'use strict';
 var async = require('async');
-var mongodbClient = require('../config').mongodbClient;
 var redisClient = require('../config').redisClient;
 var Article = require('../models/article');
 var getCompleteArticle = require('../util/getArticleInfo');
