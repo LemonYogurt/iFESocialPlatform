@@ -207,8 +207,10 @@ HomeUserInfo.prototype.bindScroll = function () {
 	var self = this;
 	$(window).scroll(function () {
 		// 是否是只有在超过1页的情况下才会进行页面的添加
-		if (self.pageNum > 1) {
-			console.log(self.pageNum);
+		var urlArr = window.location.href.split('/');
+		var urlSuffix = urlArr[urlArr.length - 1];
+
+		if (self.pageNum > 1 && urlSuffix == '92a2b5cb9c6906035c2864fa225e1940') {
 			var docHeight = $(document).height(); // 获取当前窗体的高度
 			var winHeight = $(window).height(); // 获取可视区的高度
 			var winScrollHeight = $(window).scrollTop(); // 获取滚动条滚动的距离
@@ -259,7 +261,7 @@ HomeUserInfo.prototype.bindClick = function () {
 	});
 };
 HomeUserInfo.prototype.bindChange = function () {
-	$('#J_uploadAvatar').change(function (e) {	
+	$('#J_uploadAvatar').change(function (e) {
 		var avatar = e.target.files[0];
 		var imgRep = /^image\/(jpeg|jpg|gif|png|bmp$)/i;
 		if (imgRep.test(avatar.type)) {
@@ -333,7 +335,7 @@ HomeUserInfo.prototype.cancelStars = function () {
 	                        	_$parent.addClass('animated bounceOut');
 		                        setTimeout(function () {
 		                            _$parent.hide(500, function () {
-		                                _$parent.remove();    
+		                                _$parent.remove();
 		                            });
 		                        }, 1000);
 	                        }

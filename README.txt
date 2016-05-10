@@ -4,7 +4,7 @@ set users:userid:*:avatarFlag true
 set users:userid:*:avatar path
 db.users.update({_id: *}, {$set: {avatar: path});
 
-#取消关注：
+#取消关注：很第三方第三方第三方第三方第三方第三方第三方水电费水电费第三方的师傅水电费阿凡达爱疯adsl减肥乐山大佛了多少级发了就乐山大佛九点十分第三方是的但是但是反倒是第三方地方第三方
 删除两个集合中的用户id
 srem stars:userid:* userid
 srem fans:userid:~* userid
@@ -77,7 +77,7 @@ db.users.insert({
 	password: hash,
 	avatar: avatar,
 	avatarFlag: avatarFlag,
-	createTime: createTime	
+	createTime: createTime
 });
 
 维护一个链表，用于保存最新注册的用户：
@@ -95,7 +95,7 @@ hgetall article:articleid:*
 	createAt: 'Thu Apr 21 2016 19:43:54 GMT+0800 (CST)',
 	userid: '57161fbac9f38d924576f671',
 	praise: '',
-	commentsid: '5718bd1d42e2c86c4c57d231,5718bcfc42e2c86c4c57d22d' 
+	commentsid: '5718bd1d42e2c86c4c57d231,5718bcfc42e2c86c4c57d22d'
 	articleid: '',
 	username: '',
 	avatar: ''
@@ -123,7 +123,7 @@ decr currentpostnum:userid:*
 删除为粉丝维护的文章集合
 查询出用户为粉丝维护的文章集合
 zrangebyscore fanspost:userid:* 0 Date.now()
-for 
+for
 hgetall article:articleid:*
 如果查询的结果为null，则进行删除
 zrem fanspost:userid:* articleid
@@ -220,12 +220,12 @@ ArticleSchema:
 	createAt: 'Thu Apr 21 2016 19:43:54 GMT+0800 (CST)',
 	userid: '57161fbac9f38d924576f671',
 	praise: '',
-	commentsid: '5718bd1d42e2c86c4c57d231,5718bcfc42e2c86c4c57d22d' 
+	commentsid: '5718bd1d42e2c86c4c57d231,5718bcfc42e2c86c4c57d22d'
 	articleid: '',
 	username: '',
 	avatar: ''
 }
-{ 
+{
 	articleid: '5718b49842e2c86c4c57d216',
 	to: '57161fbac9f38d924576f671',
 	toUsername: '',
@@ -236,7 +236,7 @@ ArticleSchema:
 	fromUsername: '',
 	reply: '5718b74a42e2c86c4c57d21b'
 	fromavatar: '',
-	commentid: ''	
+	commentid: ''
 }
 
 从Redis中获取到的数据
